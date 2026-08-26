@@ -38,7 +38,7 @@ export default function AuthModal({ isOpen, onClose, initialTab = "login" }) {
             <Sparkles className="h-5 w-5 text-amber-400 animate-pulse" />
           </div>
           <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white drop-shadow-sm">
-            {activeTab === "login" ? "Welcome Back" : "Join RENTROOMO"}
+            {activeTab === "login" ? "Welcome Back" : "Join RoomDekho"}
           </h2>
           <p className="mt-1 text-[11px] sm:text-xs text-slate-300">
             Log in or sign up to view room details & unlock roommate matches.

@@ -27,7 +27,7 @@ export default function Navbar() {
             R
           </div>
           <span className="text-xl font-extrabold tracking-tight text-slate-900">
-            RENTROOMO
+            RoomDekho
           </span>
         </Link>
 
