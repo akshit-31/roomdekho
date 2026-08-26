@@ -90,8 +90,6 @@ export default function RegisterForm() {
         </Button>
       </form>
 
-      <SocialLogin />
-
       <p className="mt-6 text-center text-sm text-gray-500">
         Already have an account?{" "}
         <Link to="/login" className="font-medium text-brand-600 hover:underline">

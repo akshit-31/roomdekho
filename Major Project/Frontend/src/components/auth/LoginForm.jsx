@@ -148,8 +148,6 @@ export default function LoginForm({ onSuccess, isModal = false }) {
         </Button>
       </form>
 
-      {!isAdminMode && <SocialLogin />}
-
       {/* Secret Eye Icon for Admin Access at bottom */}
       <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4">
         <p className="text-[11px] text-slate-400">
