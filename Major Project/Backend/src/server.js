@@ -27,6 +27,7 @@ import adminRoutes from "./routes/admin.js";
 import analyticsRoutes from "./routes/analytics.js";
 import documentRoutes from "./routes/documents.js";
 import paymentRoutes from "./routes/payments.js";
+import roommateRoutes from "./routes/roommates.js";
 
 const app=express();
 const server=http.createServer(app);
@@ -69,6 +70,7 @@ function mount(prefix){
   app.use(`${prefix}/analytics`,analyticsRoutes);
   app.use(`${prefix}/documents`,documentRoutes);
   app.use(`${prefix}/payments`,paymentRoutes);
+  app.use(`${prefix}/roommates`,roommateRoutes);
 }
 mount("/api/v1");
 mount("/api");
