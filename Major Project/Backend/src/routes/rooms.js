@@ -20,7 +20,7 @@ r.get("/",async(req,res)=>{
  const {rows}=await query(q,[...params,lim,off]); const c=await query(`SELECT COUNT(*) FROM rooms r WHERE ${where.join(" AND ")}`,params);
  ok(res,200,"Rooms fetched",{items:rows.map(roomRow),pagination:{page:Number(page)||1,limit:lim,total:Number(c.rows[0].count),pages:Math.ceil(Number(c.rows[0].count)/lim)}});
 });
-r.get("/mine",auth,owner,async(req,res)=>{const {rows}=await query("SELECT * FROM rooms WHERE owner_id=$1 ORDER BY created_at DESC",[req.user.id]);ok(res,200,"My rooms",rows)});
+r.get("/mine",auth,owner,async(req,res)=>{const {rows}=await query("SELECT * FROM rooms WHERE owner_id=$1 ORDER BY created_at DESC",[req.user.id]);ok(res,200,"My rooms",{items:rows.map(roomRow),total:rows.length})});
 r.get("/:id",async(req,res)=>{
  const {rows}=await query("SELECT r.*,u.name owner_name,u.avatar owner_avatar,u.is_kyc_verified owner_kyc FROM rooms r JOIN users u ON u.id=r.owner_id WHERE r.id=$1",[req.params.id]);
  if(!rows[0])return res.status(404).json({success:false,message:"Room not found"});
