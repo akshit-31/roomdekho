@@ -26,10 +26,13 @@ export default function App() {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  const isDashboardRoute = location.pathname.startsWith("/owner") || location.pathname.startsWith("/admin");
+  const isDashboardRoute =
+    location.pathname.startsWith("/owner") ||
+    location.pathname.startsWith("/admin") ||
+    location.pathname.startsWith("/vendor");
 
   return (
-    <div className="flex min-h-screen flex-col app-shell bg-slate-50 text-slate-900">
+    <div className="flex min-h-screen flex-col app-shell bg-[#F4F7FE] text-slate-900">
       {!isDashboardRoute && <Navbar />}
       <main className="flex-1">
         <AppRoutes />

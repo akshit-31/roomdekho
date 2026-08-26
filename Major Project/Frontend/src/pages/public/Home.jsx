@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import AuthModal from "../../components/auth/AuthModal";
 import { useAuth } from "../../hooks/useAuth";
+import VendorDashboard from "../vendor/VendorDashboard";
 
 import img1 from "../../image.png";
 import img2 from "../../image copy.png";
@@ -12,8 +14,14 @@ const SLIDE_IMAGES = [img1, img2, img3, img4];
 
 export default function Home() {
   const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [authModalOpen, setAuthModalOpen] = useState(false);
+
+  // If user is logged in, show the redesigned Vendor Dashboard view
+  if (isAuthenticated) {
+    return <VendorDashboard />;
+  }
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % SLIDE_IMAGES.length);
