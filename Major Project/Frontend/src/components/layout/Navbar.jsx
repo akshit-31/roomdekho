@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { Menu, X, LogOut, User, LayoutDashboard, ShieldCheck, DoorOpen, Users, Sparkles, Heart, CalendarDays, MessageCircle, Home, Phone, PlusCircle, MessageSquareWarning } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
+import customLogo from "../../image copy 3.png";
 
 const GENERAL_NAV_LINKS = [
   { to: "/", label: "Home", icon: Home, end: true },
@@ -51,12 +52,7 @@ export default function Navbar() {
         <div>
           <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
             <Link to="/" onClick={() => setDrawerOpen(false)} className="flex items-center gap-2.5">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500 text-white font-black text-lg shadow-md shadow-amber-500/20">
-                R
-              </div>
-              <span className="text-lg font-black tracking-tight text-slate-900">
-                RoomDekho
-              </span>
+              <img src={customLogo} alt="RoomDekho Logo" className="h-10 w-auto object-contain" />
             </Link>
             <button
               type="button"
@@ -133,12 +129,7 @@ export default function Navbar() {
 
             {/* Brand Logo */}
             <Link to="/" className="flex items-center gap-2 text-decoration-none">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500 text-white font-black text-xl shadow-md shadow-amber-500/20">
-                R
-              </div>
-              <span className="text-xl font-extrabold tracking-tight text-slate-900">
-                RoomDekho
-              </span>
+              <img src={customLogo} alt="RoomDekho Logo" className="h-10 w-auto object-contain" />
             </Link>
           </div>
 

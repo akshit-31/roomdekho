@@ -24,7 +24,7 @@ import {
   PlusCircle,
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
-import { searchApi } from "../../services/api/search.api";
+import customLogo from "../../image copy 3.png";
 
 const SIDEBAR_NAV = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -102,19 +102,9 @@ export default function VendorDashboard() {
       {/* 1. Integrated Left Sidebar Navigation (Matching Color Scheme) */}
       <aside className="w-64 flex-shrink-0 bg-white border-r border-slate-200/80 p-5 flex flex-col justify-between hidden md:flex sticky top-0 h-screen z-20">
         <div>
-          {/* Brand Logo - Same Orange Amber Theme */}
+          {/* Brand Logo - Custom Image */}
           <Link to="/" className="flex items-center gap-2.5 px-2 mb-8 text-decoration-none">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500 text-white font-black text-xl shadow-md shadow-amber-500/20">
-              R
-            </div>
-            <div>
-              <span className="text-xl font-extrabold tracking-tight text-slate-900 block leading-none">
-                RoomDekho
-              </span>
-              <span className="text-[10px] font-semibold text-amber-600 mt-1 block">
-                Find your perfect match
-              </span>
-            </div>
+            <img src={customLogo} alt="RoomDekho Logo" className="h-10 w-auto object-contain" />
           </Link>
 
           {/* Navigation Links with Amber Highlight */}
