@@ -1,61 +1,108 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, MapPin, Home as HomeIcon, SlidersHorizontal, Search } from "lucide-react";
-import heroRoomBg from "../../assets/images/hero-room.jpg";
+
+import img1 from "../../image.png";
+import img2 from "../../image copy.png";
+import img3 from "../../image copy 2.png";
+import img4 from "../../ef0c218f-6a1e-4f6d-b14f-a210f8c46a77.jfif";
+
+const SLIDE_IMAGES = [img1, img2, img3, img4];
 
 export default function Home() {
   const navigate = useNavigate();
+  const [currentSlide, setCurrentSlide] = useState(0);
   const [locationQuery, setLocationQuery] = useState("Jaipur, Rajasthan");
   const [propertyType, setPropertyType] = useState("All");
   const [category, setCategory] = useState("All");
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % SLIDE_IMAGES.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + SLIDE_IMAGES.length) % SLIDE_IMAGES.length);
+  };
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      nextSlide();
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
 
   const handleSearch = () => {
     navigate(`/rooms?q=${encodeURIComponent(locationQuery)}`);
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-5rem)] flex-col justify-center bg-slate-50 p-4 sm:p-6 lg:p-10">
-      {/* Hero Section Container - Expanded Full Screen Height for Laptop */}
-      <section className="relative mx-auto flex min-h-[75vh] w-full max-w-7xl flex-col justify-center overflow-hidden rounded-[3rem] bg-[#1a293e] text-white shadow-2xl">
-        {/* Background Image overlay */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src={heroRoomBg}
-            alt="Interior"
-            className="h-full w-full object-cover opacity-35"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#111c2e] via-[#1a293e]/85 to-transparent" />
-        </div>
+    <div className="flex min-h-[calc(100vh-5rem)] flex-col justify-center bg-slate-50 p-2 sm:p-4 lg:p-6">
+      {/* Hero Section Container - Expanded Full Screen Height & Full Width Fit */}
+      <section className="relative mx-auto flex min-h-[82vh] w-full max-w-[96vw] flex-col justify-center overflow-hidden rounded-[2.5rem] bg-[#1a293e] text-white shadow-2xl">
+        {/* Background Image Carousel */}
+        {SLIDE_IMAGES.map((img, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 z-0 transition-opacity duration-1000 ease-in-out ${
+              index === currentSlide ? "opacity-45 scale-100" : "opacity-0 scale-105 pointer-events-none"
+            }`}
+          >
+            <img
+              src={img}
+              alt={`Slide ${index + 1}`}
+              className="h-full w-full object-cover object-center"
+            />
+          </div>
+        ))}
+
+        {/* Gradient Overlay for Text Legibility */}
+        <div className="absolute inset-0 z-1 bg-gradient-to-t from-[#0f172a]/90 via-[#0f172a]/50 to-[#0f172a]/40" />
 
         {/* Carousel Arrow Controls */}
         <button
           type="button"
-          className="absolute left-8 top-1/2 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md transition-all hover:scale-110 hover:bg-white/40 active:scale-95"
+          onClick={prevSlide}
+          className="absolute left-6 top-1/2 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-slate-900/40 text-white backdrop-blur-md transition-all hover:scale-110 hover:bg-slate-900/70 active:scale-95 border border-white/20"
           aria-label="Previous slide"
         >
-          <ChevronLeft size={26} />
+          <ChevronLeft size={28} />
         </button>
 
         <button
           type="button"
-          className="absolute right-8 top-1/2 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md transition-all hover:scale-110 hover:bg-white/40 active:scale-95"
+          onClick={nextSlide}
+          className="absolute right-6 top-1/2 z-20 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-slate-900/40 text-white backdrop-blur-md transition-all hover:scale-110 hover:bg-slate-900/70 active:scale-95 border border-white/20"
           aria-label="Next slide"
         >
-          <ChevronRight size={26} />
+          <ChevronRight size={28} />
         </button>
 
+        {/* Slide Indicators Dots */}
+        <div className="absolute top-6 right-8 z-20 flex items-center gap-2 rounded-full bg-black/30 px-4 py-2 backdrop-blur-md border border-white/10">
+          {SLIDE_IMAGES.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentSlide(idx)}
+              className={`h-2.5 rounded-full transition-all ${
+                idx === currentSlide ? "w-7 bg-amber-500" : "w-2.5 bg-white/50 hover:bg-white"
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+
         {/* Hero Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center px-10 pt-16 pb-36 text-center sm:px-20 lg:px-32">
-          <h1 className="text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl xl:text-8xl drop-shadow-md">
+        <div className="relative z-10 flex flex-col items-center justify-center px-8 pt-12 pb-36 text-center sm:px-16 lg:px-28">
+          <h1 className="text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl xl:text-8xl drop-shadow-lg">
             Don't roam around!
           </h1>
-          <p className="mt-6 max-w-2xl text-lg font-medium text-slate-200 sm:text-xl lg:text-2xl leading-relaxed">
+          <p className="mt-6 max-w-2xl text-lg font-medium text-slate-200 sm:text-xl lg:text-2xl leading-relaxed drop-shadow-md">
             Find your desired house within 100 hours with 5 easy steps.
           </p>
         </div>
 
         {/* Floating Pill Search Bar */}
-        <div className="absolute bottom-8 left-1/2 z-30 w-[94%] -translate-x-1/2 max-w-5xl rounded-3xl bg-white p-3 shadow-2xl sm:bottom-12">
+        <div className="absolute bottom-8 left-1/2 z-30 w-[94%] -translate-x-1/2 max-w-5xl rounded-3xl bg-white p-3 shadow-2xl sm:bottom-10">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-4 items-center">
             {/* Location Input */}
             <div className="flex items-center gap-4 px-5 py-3 rounded-2xl border border-transparent hover:border-slate-200 transition-all">
