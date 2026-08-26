@@ -46,6 +46,9 @@ export default function VendorDashboard() {
     if (user?.role === "owner") {
       navigate("/owner/listings", { replace: true });
     }
+    if (user?.role === "admin") {
+      navigate("/admin/users", { replace: true });
+    }
   }, [user]);
 
   const [activeNav, setActiveNav] = useState("dashboard");
