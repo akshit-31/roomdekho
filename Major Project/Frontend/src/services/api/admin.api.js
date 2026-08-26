@@ -8,7 +8,7 @@ export const adminApi = {
   kycQueue: () => api.get("/admin/kyc"),
   reviewKyc: (userId, payload) => api.patch(`/admin/kyc/${userId}`, payload),
   reports: () => api.get("/admin/reports"),
-  analytics: () => api.get("/analytics/overview"),
+  analytics: () => api.get("/admin/analytics"),
   fraudAlerts: (params) => api.get("/admin/fraud-alerts", { params }),
   resolveFraudAlert: (id) => api.patch(`/admin/fraud-alerts/${id}/resolve`),
 };
