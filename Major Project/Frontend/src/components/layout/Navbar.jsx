@@ -203,14 +203,6 @@ export default function Navbar() {
               >
                 Login
               </Link>
-            )}
-
-            <Link
-              to={isAuthenticated ? (user?.role === "owner" ? "/owner/add-listing" : "/rooms") : "/login"}
-              className="rounded-xl bg-amber-500 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-amber-500/20 hover:bg-amber-600 transition-all active:scale-95"
-            >
-              Post Property
-            </Link>
           </div>
         </div>
       </header>
