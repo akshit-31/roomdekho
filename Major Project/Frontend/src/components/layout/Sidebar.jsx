@@ -1,20 +1,18 @@
 import { NavLink } from "react-router-dom";
 import clsx from "clsx";
 import {
-  LayoutDashboard, Home, Mail, CalendarCheck2, Wallet, Star,
-  Users, ShieldCheck, Flag, AlertTriangle, MessageSquareWarning,
-  CreditCard, BarChart3, Settings,
+  LayoutDashboard, Home, PlusCircle, User, Phone, MessageSquareWarning,
+  Users, ShieldCheck, Flag, AlertTriangle,
+  CreditCard, BarChart3, Settings, Star,
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 
 const OWNER_LINKS = [
-  { to: "/owner", label: "Overview", icon: LayoutDashboard, end: true },
-  { to: "/owner/listings", label: "Listings", icon: Home },
-  { to: "/owner/enquiries", label: "Enquiries", icon: Mail },
-  { to: "/owner/visits", label: "Visits", icon: CalendarCheck2 },
-  { to: "/owner/bookings", label: "Bookings", icon: CalendarCheck2 },
-  { to: "/owner/earnings", label: "Earnings", icon: Wallet },
-  { to: "/owner/reviews", label: "Reviews", icon: Star },
+  { to: "/owner/listings", label: "Room Details", icon: Home },
+  { to: "/owner/listings/new", label: "Add Room", icon: PlusCircle },
+  { to: "/profile", label: "Profile", icon: User },
+  { to: "/contact", label: "Contact", icon: Phone },
+  { to: "/admin/complaints", label: "Complaint", icon: MessageSquareWarning },
 ];
 
 const ADMIN_LINKS = [
