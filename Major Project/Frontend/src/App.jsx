@@ -15,7 +15,6 @@ import { useAuth } from "./hooks/useAuth";
  */
 export default function App() {
   const dispatch = useDispatch();
-  const [sidebarOpen, setSidebarOpen] = useState(() => window.innerWidth >= 1024);
   const { isAuthenticated } = useAuth();
   const location = useLocation();
 
@@ -30,19 +29,9 @@ export default function App() {
   const isDashboardRoute = location.pathname.startsWith("/owner") || location.pathname.startsWith("/admin");
 
   return (
-    <div
-      className={clsx(
-        "flex min-h-screen flex-col app-shell",
-        isDashboardRoute ? "" : sidebarOpen ? "lg:pl-56" : "lg:pl-0"
-      )}
-    >
-      {!isDashboardRoute && (
-        <Navbar
-          sidebarOpen={sidebarOpen}
-          onToggleSidebar={() => setSidebarOpen((value) => !value)}
-        />
-      )}
-      <main className="flex-1 pb-14 sm:pb-0">
+    <div className="flex min-h-screen flex-col app-shell bg-slate-50 text-slate-900">
+      {!isDashboardRoute && <Navbar />}
+      <main className="flex-1">
         <AppRoutes />
       </main>
       {!isDashboardRoute && <Footer />}

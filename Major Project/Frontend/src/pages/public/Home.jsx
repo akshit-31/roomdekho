@@ -1,43 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ShieldCheck, Sparkles, MessageCircle, Wallet, ArrowRight } from "lucide-react";
-import heroImage from "../../assets/images/hero-room.jpg";
-import placeholderRoom from "../../assets/images/placeholder-room.jpg";
-import SearchBar from "../../components/search/SearchBar";
+import { ChevronLeft, ChevronRight, MapPin, Home as HomeIcon, SlidersHorizontal, Search } from "lucide-react";
+import heroRoomBg from "../../assets/images/hero-room.jpg";
 import PropertyGrid from "../../components/property/PropertyGrid";
-import RoommateGrid from "../../components/roommate/RoommateGrid";
-import RotatingWord from "../../components/layout/RotatingWord";
-import { useAuth } from "../../hooks/useAuth";
-import { recommendationApi } from "../../services/api/recommendation.api";
 import { searchApi } from "../../services/api/search.api";
-
-const HIGHLIGHTS = [
-  {
-    icon: Sparkles,
-    title: "AI-matched roommates",
-    desc: "A compatibility score based on budget, schedule, and lifestyle — not guesswork.",
-    tint: "highlight-blue",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Verified listings & users",
-    desc: "KYC-backed owners and duplicate/scam detection keep the marketplace trustworthy.",
-    tint: "highlight-green",
-  },
-  {
-    icon: MessageCircle,
-    title: "Everything in one chat",
-    desc: "Message owners and roommates, schedule visits, and split expenses — no app-switching.",
-    tint: "highlight-purple",
-  },
-  {
-    icon: Wallet,
-    title: "Built-in expense tools",
-    desc: "Rent calculators and expense splitting so shared living stays simple.",
-    tint: "highlight-amber",
-  },
-];
-
+import { useEffect } from "react";
 
 const DEMO_ROOMS = [
   {
@@ -45,7 +12,6 @@ const DEMO_ROOMS = [
     title: "Modern room near Metro",
     rent: 8500,
     isVerified: true,
-    media: [{ url: placeholderRoom }],
     address: { locality: "Sector 62", city: "Noida" },
     occupancy: { genderPreference: "any" },
   },
@@ -54,7 +20,6 @@ const DEMO_ROOMS = [
     title: "Furnished room in a quiet area",
     rent: 9500,
     isVerified: true,
-    media: [{ url: placeholderRoom }],
     address: { locality: "Laxmi Nagar", city: "Delhi" },
     occupancy: { genderPreference: "any" },
   },
@@ -63,180 +28,169 @@ const DEMO_ROOMS = [
     title: "Bright room for working professionals",
     rent: 7800,
     isVerified: true,
-    media: [{ url: placeholderRoom }],
     address: { locality: "Vaishali", city: "Ghaziabad" },
     occupancy: { genderPreference: "male" },
   },
-  {
-    _id: "demo-room-4",
-    title: "Comfortable shared flat",
-    rent: 11000,
-    isVerified: true,
-    media: [{ url: placeholderRoom }],
-    address: { locality: "Indirapuram", city: "Ghaziabad" },
-    occupancy: { genderPreference: "any" },
-  },
-];
-
-const TICKER_ITEMS = [
-  "Verified rooms",
-  "Smart roommate matches",
-  "Easy visit booking",
-  "Secure conversations",
-  "Simple shared expenses",
 ];
 
 export default function Home() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const [locationQuery, setLocationQuery] = useState("Jaipur, Rajasthan");
+  const [propertyType, setPropertyType] = useState("All");
+  const [category, setCategory] = useState("All");
   const [rooms, setRooms] = useState([]);
-  const [roommates, setRoommates] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
       setLoading(true);
       try {
-        if (isAuthenticated) {
-          const { data } = await recommendationApi.home();
-          setRooms(data.data.recommendedRooms || []);
-          setRoommates(data.data.compatibleRoommates || []);
-        } else {
-          const { data } = await searchApi.searchRooms({
-            sortBy: "relevance",
-            limit: 6,
-          });
-          setRooms((data.data.items && data.data.items.length) ? data.data.items : DEMO_ROOMS);
-        }
+        const { data } = await searchApi.searchRooms({ limit: 6 });
+        setRooms(data?.data?.items?.length ? data.data.items : DEMO_ROOMS);
       } catch {
-        setRooms(isAuthenticated ? [] : DEMO_ROOMS);
+        setRooms(DEMO_ROOMS);
       } finally {
         setLoading(false);
       }
     }
-
     load();
-  }, [isAuthenticated]);
+  }, []);
 
-  const handleSearch = (q) => navigate(`/rooms?q=${encodeURIComponent(q)}`);
+  const handleSearch = () => {
+    navigate(`/rooms?q=${encodeURIComponent(locationQuery)}`);
+  };
 
   return (
-    <div>
-      <section className="hero-section">
-        <img src={heroImage} alt="A comfortable room" className="hero-image" />
-        <div className="hero-overlay" />
-
-        <div className="hero-content">
-          <div className="hero-copy">
-            <span className="hero-kicker">
-              <span className="hero-kicker-dot" />
-              A better way to find shared living
-            </span>
-
-            <h1>
-              Find your <RotatingWord words={["room.", "roommate."]} />
-            </h1>
-
-            <p>
-              Search verified rooms and PGs, then find people who actually fit
-              your budget, schedule, and lifestyle.
-            </p>
-
-            <SearchBar onSearch={handleSearch} />
-
-            <div className="hero-mini-links">
-              <button onClick={() => navigate("/rooms")}>
-                Browse rooms <ArrowRight size={15} />
-              </button>
-              <button onClick={() => navigate("/roommates")}>
-                Meet roommates <ArrowRight size={15} />
-              </button>
-            </div>
-          </div>
-
-          <div className="hero-card">
-            <div className="hero-card-top">
-              <span>Live marketplace</span>
-              <span className="hero-live">
-                <i /> Active
-              </span>
-            </div>
-            <div className="hero-card-number">Find a place that feels right.</div>
-            <div className="hero-card-line">
-              Rooms <span /> Roommates <span /> Matches
-            </div>
-          </div>
+    <div className="min-h-screen bg-slate-50 py-6 px-4 sm:px-8 lg:px-12">
+      {/* Hero Section Container */}
+      <section className="relative mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] bg-[#1e2d42] text-white shadow-2xl">
+        {/* Background Image overlay */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src={heroRoomBg}
+            alt="Interior"
+            className="h-full w-full object-cover opacity-25"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#172336] via-[#1e2d42]/90 to-transparent" />
         </div>
 
-        <div className="hero-ticker-wrap">
-          <div className="hero-ticker">
-            <div className="hero-ticker-track">
-              {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, index) => (
-                <span key={`${item}-${index}`}>
-                  <b>✦</b>
-                  {item}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+        {/* Carousel Arrow Controls */}
+        <button
+          type="button"
+          className="absolute left-6 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md transition-all hover:bg-white/40"
+          aria-label="Previous slide"
+        >
+          <ChevronLeft size={22} />
+        </button>
 
-      <section className="home-highlights mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {HIGHLIGHTS.map(({ icon: Icon, title, desc, tint }) => (
-            <div
-              key={title}
-              className={`home-highlight-card ${title === "Verified listings & users" ? "verified-card" : ""} rounded-2xl p-5 transition duration-200 hover:-translate-y-1`}
-            >
-              <span className={`inline-flex rounded-xl p-2.5 ${tint}`}>
-                <Icon size={20} />
-              </span>
-              <h3 className="mt-3 text-sm font-semibold text-gray-900">{title}</h3>
-              <p className="mt-1 text-xs leading-5 text-gray-500">{desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+        <button
+          type="button"
+          className="absolute right-6 top-1/2 z-20 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md transition-all hover:bg-white/40"
+          aria-label="Next slide"
+        >
+          <ChevronRight size={22} />
+        </button>
 
-      <section className="recent-rooms-section mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="recent-rooms-header">
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900">
-              {isAuthenticated ? "Recommended for you" : "Recently listed rooms"}
-            </h2>
-            <p>Fresh listings with clear rent, location and verification details.</p>
-          </div>
-          {!isAuthenticated && (
+        {/* Hero Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center px-8 pt-20 pb-32 text-center sm:px-16 lg:px-24">
+          <h1 className="text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
+            Don't roam around!
+          </h1>
+          <p className="mt-4 max-w-xl text-base font-normal text-slate-300 sm:text-lg">
+            Find your desired house within 100 hours with 5 easy steps.
+          </p>
+        </div>
+
+        {/* Floating Pill Search Bar */}
+        <div className="absolute bottom-6 left-1/2 z-30 w-[92%] -translate-x-1/2 max-w-4xl rounded-2xl bg-white p-2.5 shadow-2xl sm:bottom-8">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-4 items-center">
+            {/* Location Input */}
+            <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-transparent hover:border-slate-200 transition-all">
+              <MapPin size={18} className="text-amber-500 flex-shrink-0" />
+              <div className="text-left w-full">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  value={locationQuery}
+                  onChange={(e) => setLocationQuery(e.target.value)}
+                  className="w-full bg-transparent text-xs font-bold text-slate-800 focus:outline-none"
+                  placeholder="Jaipur, Rajasthan"
+                />
+              </div>
+            </div>
+
+            {/* Property Type Select */}
+            <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-transparent hover:border-slate-200 transition-all">
+              <HomeIcon size={18} className="text-amber-500 flex-shrink-0" />
+              <div className="text-left w-full">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  Property Type
+                </label>
+                <select
+                  value={propertyType}
+                  onChange={(e) => setPropertyType(e.target.value)}
+                  className="w-full bg-transparent text-xs font-bold text-slate-800 focus:outline-none cursor-pointer"
+                >
+                  <option value="All">All</option>
+                  <option value="Apartment">Apartment</option>
+                  <option value="Flat">PG / Shared Flat</option>
+                  <option value="Independent">Independent House</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Categories Select */}
+            <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-transparent hover:border-slate-200 transition-all">
+              <SlidersHorizontal size={18} className="text-amber-500 flex-shrink-0" />
+              <div className="text-left w-full">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                  Categories
+                </label>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full bg-transparent text-xs font-bold text-slate-800 focus:outline-none cursor-pointer"
+                >
+                  <option value="All">All</option>
+                  <option value="Furnished">Furnished</option>
+                  <option value="Semi-Furnished">Semi-Furnished</option>
+                  <option value="Unfurnished">Unfurnished</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Search Action Button */}
             <button
               type="button"
-              onClick={() => navigate("/rooms")}
-              className="text-xs font-bold text-brand-600 hover:text-brand-700"
+              onClick={handleSearch}
+              className="flex items-center justify-center gap-2 rounded-xl bg-amber-500 py-3.5 px-6 text-sm font-bold text-white shadow-lg shadow-amber-500/30 hover:bg-amber-600 transition-all active:scale-95"
             >
-              View all rooms →
+              <Search size={16} />
+              <span>Search</span>
             </button>
-          )}
+          </div>
         </div>
-        <PropertyGrid rooms={rooms} loading={loading} />
       </section>
 
-      {isAuthenticated && roommates.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-          <h2 className="mb-4 text-lg font-semibold text-gray-900">
-            Compatible roommates for you
-          </h2>
-          <RoommateGrid
-            roommates={roommates.map((m) => ({
-              _id: m.userId,
-              name: m.name,
-              avatarUrl: m.avatarUrl,
-            }))}
-            matchesById={Object.fromEntries(
-              roommates.map((m) => [m.userId, m])
-            )}
-          />
-        </section>
-      )}
+      {/* Featured Properties Section */}
+      <section className="mx-auto max-w-7xl pt-16 pb-12">
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-extrabold text-slate-900">Featured Properties</h2>
+            <p className="text-xs text-slate-500 mt-1">Explore top choices tailored for your comfort.</p>
+          </div>
+          <button
+            onClick={() => navigate("/rooms")}
+            className="text-xs font-bold text-amber-600 hover:underline"
+          >
+            View All →
+          </button>
+        </div>
+
+        <PropertyGrid rooms={rooms} loading={loading} />
+      </section>
     </div>
   );
 }
