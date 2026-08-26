@@ -54,17 +54,16 @@ export default function Home() {
       .catch(() => {});
   }, []);
 
-  // If user is logged in, redirect Owner and Admin roles to their respective dashboards
-  if (isAuthenticated) {
-    if (user?.role === "owner") {
-      navigate("/owner/listings", { replace: true });
-      return null;
+  // Redirect Owner and Admin roles inside useEffect to avoid rendering side-effects
+  useEffect(() => {
+    if (isAuthenticated) {
+      if (user?.role === "owner") {
+        navigate("/owner/listings", { replace: true });
+      } else if (user?.role === "admin") {
+        navigate("/admin/users", { replace: true });
+      }
     }
-    if (user?.role === "admin") {
-      navigate("/admin/users", { replace: true });
-      return null;
-    }
-  }
+  }, [isAuthenticated, user?.role, navigate]);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % SLIDE_IMAGES.length);
