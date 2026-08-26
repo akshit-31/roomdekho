@@ -52,7 +52,10 @@ export default function Navbar() {
         <div>
           <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100">
             <Link to="/" onClick={() => setDrawerOpen(false)} className="flex items-center gap-2.5">
-              <img src={customLogo} alt="RoomDekho Logo" className="h-10 w-auto object-contain" />
+              <img src={customLogo} alt="RoomDekho Logo" className="h-9 w-9 object-contain" />
+              <span className="text-xl font-extrabold tracking-tight text-slate-900">
+                RoomDekho
+              </span>
             </Link>
             <button
               type="button"
@@ -129,7 +132,10 @@ export default function Navbar() {
 
             {/* Brand Logo */}
             <Link to="/" className="flex items-center gap-2 text-decoration-none">
-              <img src={customLogo} alt="RoomDekho Logo" className="h-10 w-auto object-contain" />
+              <img src={customLogo} alt="RoomDekho Logo" className="h-9 w-9 object-contain" />
+              <span className="text-xl font-extrabold tracking-tight text-slate-900">
+                RoomDekho
+              </span>
             </Link>
           </div>
 

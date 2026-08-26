@@ -102,9 +102,17 @@ export default function VendorDashboard() {
       {/* 1. Integrated Left Sidebar Navigation (Matching Color Scheme) */}
       <aside className="w-64 flex-shrink-0 bg-white border-r border-slate-200/80 p-5 flex flex-col justify-between hidden md:flex sticky top-0 h-screen z-20">
         <div>
-          {/* Brand Logo - Custom Image */}
+          {/* Brand Logo - Custom Image + RoomDekho Text */}
           <Link to="/" className="flex items-center gap-2.5 px-2 mb-8 text-decoration-none">
-            <img src={customLogo} alt="RoomDekho Logo" className="h-10 w-auto object-contain" />
+            <img src={customLogo} alt="RoomDekho Logo" className="h-9 w-9 object-contain" />
+            <div>
+              <span className="text-xl font-extrabold tracking-tight text-slate-900 block leading-none">
+                RoomDekho
+              </span>
+              <span className="text-[10px] font-semibold text-amber-600 mt-1 block">
+                Find your perfect match
+              </span>
+            </div>
           </Link>
 
           {/* Navigation Links with Amber Highlight */}
