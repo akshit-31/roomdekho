@@ -8,11 +8,10 @@ const GENERAL_NAV_LINKS = [
   { to: "/", label: "Home", icon: Home, end: true },
   { to: "/rooms", label: "Find a Room", icon: DoorOpen },
   { to: "/roommates", label: "Find a Roommate", icon: Users },
-  { to: "/matches", label: "My Matches", icon: Sparkles },
   { to: "/favorites", label: "Favorites", icon: Heart },
-  { to: "/visits", label: "My Visits", icon: CalendarDays },
   { to: "/chat", label: "Messages", icon: MessageCircle },
-  { to: "/profile", label: "My Profile", icon: User },
+  { to: "/contact", label: "Complaint", icon: MessageSquareWarning },
+  { to: "/profile", label: "Profile", icon: User },
 ];
 
 const OWNER_NAV_LINKS = [
