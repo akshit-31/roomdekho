@@ -46,10 +46,13 @@ export default function Chat() {
         }).catch(() => {});
       }
     } else if (!conversationId && conversations.length === 0) {
-      // Auto-connect with default Super Admin or Owner to populate active chat thread
-      chatApi.createConversation(1).then(({ data }) => {
-        const newId = data.data?.id || data.data?._id;
-        if (newId) navigate(`/chat/${newId}`, { replace: true });
+      // Auto-connect both Super Admin (ID 1) and Room Owner (ID 3) into the active conversation list
+      Promise.all([
+        chatApi.createConversation(1), // Super Admin
+        chatApi.createConversation(3), // Room Owner
+      ]).then((results) => {
+        const firstId = results[0]?.data?.data?.id || results[0]?.data?.data?._id;
+        if (firstId) navigate(`/chat/${firstId}`, { replace: true });
       }).catch(() => {});
     }
   }, [resolvedConversation, targetUserId, conversationId, conversations.length]);
