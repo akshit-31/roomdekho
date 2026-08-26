@@ -224,29 +224,20 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. Popular Cities Section */}
+      {/* 3. Popular Cities Section - Display Only */}
       <section className="mx-auto w-full max-w-[90vw] py-4">
-        <div className="mb-6 flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-black tracking-tight text-slate-900">Popular Cities</h2>
-            <p className="text-xs font-semibold text-slate-500">Explore verified room listings in top hubs</p>
-          </div>
-          <button
-            onClick={() => navigate("/rooms")}
-            className="flex items-center gap-1 text-xs font-bold text-amber-600 hover:underline"
-          >
-            <span>View All</span> <ArrowRight size={14} />
-          </button>
+        <div className="mb-6">
+          <h2 className="text-2xl font-black tracking-tight text-slate-900">Popular Cities</h2>
+          <p className="text-xs font-semibold text-slate-500">Explore verified room listings in top hubs</p>
         </div>
 
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {POPULAR_CITIES.map((c) => (
             <div
               key={c.name}
-              onClick={() => navigate(`/rooms?city=${c.name}`)}
-              className="group relative h-40 overflow-hidden rounded-3xl border border-gray-100 shadow-md cursor-pointer transition-all hover:-translate-y-1 hover:shadow-xl"
+              className="relative h-40 overflow-hidden rounded-3xl border border-gray-100 shadow-md select-none"
             >
-              <img src={c.image} alt={c.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
+              <img src={c.image} alt={c.name} className="h-full w-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent p-4 flex flex-col justify-end">
                 <h3 className="text-lg font-black text-white">{c.name}</h3>
                 <p className="text-[11px] font-semibold text-amber-400">{c.count}</p>
