@@ -12,9 +12,12 @@ import Preferences from "../pages/profile/Preferences";
 import Privacy from "../pages/profile/Privacy";
 import Security from "../pages/profile/Security";
 
+import VendorDashboard from "../pages/vendor/VendorDashboard";
+
 export default function PrivateRoutes() {
   return (
     <Route element={<ProtectedRoute />}>
+      <Route path="/vendor" element={<VendorDashboard />} />
       <Route path="/roommates/:id" element={<RoommateDetails />} />
       <Route path="/roommates/me" element={<MyRoommateProfile />} />
       <Route path="/visits/:id" element={<VisitDetails />} />

@@ -55,8 +55,10 @@ export default function LoginForm({ onSuccess, isModal = false }) {
           navigate("/admin", { replace: true });
         } else if (userRole === "owner") {
           navigate("/owner", { replace: true });
+        } else if (selectedRole === "vendor" || userRole === "seeker" || userRole === "roommate") {
+          navigate("/vendor", { replace: true });
         } else {
-          const redirectTo = location.state?.from?.pathname || "/";
+          const redirectTo = location.state?.from?.pathname || "/vendor";
           navigate(redirectTo, { replace: true });
         }
       }
