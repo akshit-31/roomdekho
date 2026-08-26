@@ -12,7 +12,7 @@ import { isEmail } from "../../utils/validators";
 
 const LOGIN_ROLES = [
   { id: "owner", label: "Room Owner", icon: Building2 },
-  { id: "vendor", label: "Vendor / Partner", icon: UserCheck },
+  { id: "seeker", label: "User / Roommate", icon: UserCheck },
 ];
 
 export default function LoginForm({ onSuccess, isModal = false }) {
@@ -100,12 +100,12 @@ export default function LoginForm({ onSuccess, isModal = false }) {
           ? "Admin Gateway"
           : selectedRole === "owner"
           ? "Room Owner Login"
-          : "Vendor Partner Login"}
+          : "User / Roommate Login"}
       </h1>
       <p className="mt-1 text-xs text-slate-300">
         {isAdminMode
           ? "Enter administrator credentials."
-          : `Log in to manage your ${selectedRole === "owner" ? "properties" : "vendor services"}.`}
+          : `Log in to manage your ${selectedRole === "owner" ? "properties" : "profile & room search"}.`}
       </p>
 
       {serverError && (
@@ -144,7 +144,7 @@ export default function LoginForm({ onSuccess, isModal = false }) {
           className={`w-full font-bold ${isAdminMode ? "!bg-red-600 hover:!bg-red-700" : "!bg-amber-500 hover:!bg-amber-600"}`}
           loading={isSubmitting}
         >
-          {isAdminMode ? "Login as Admin" : `Login as ${selectedRole === "owner" ? "Room Owner" : "Vendor"}`}
+          {isAdminMode ? "Login as Admin" : `Login as ${selectedRole === "owner" ? "Room Owner" : "User / Roommate"}`}
         </Button>
       </form>
 
