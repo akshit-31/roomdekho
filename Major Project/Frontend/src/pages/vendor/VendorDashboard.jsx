@@ -27,11 +27,15 @@ import { useAuth } from "../../hooks/useAuth";
 import { searchApi } from "../../services/api/search.api";
 
 const SIDEBAR_NAV = [
-  { id: "room-details", label: "Room Details", icon: DoorOpen },
-  { id: "add-room", label: "Add Room", icon: PlusCircle },
+  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { id: "rooms", label: "Find Rooms", icon: DoorOpen },
+  { id: "roommates", label: "Find Roommates", icon: Users },
+  { id: "matches", label: "My Matches", icon: Heart },
+  { id: "messages", label: "Messages", icon: MessageCircle, badge: 2 },
+  { id: "saved", label: "Saved Listings", icon: Bookmark },
+  { id: "listings", label: "My Listings", icon: Building2 },
   { id: "profile", label: "Profile", icon: User },
-  { id: "contact", label: "Contact", icon: Phone },
-  { id: "complaint", label: "Complaint", icon: MessageSquareWarning },
+  { id: "settings", label: "Settings", icon: Settings },
 ];
 
 export default function VendorDashboard() {
@@ -113,11 +117,10 @@ export default function VendorDashboard() {
                 key={id}
                 onClick={() => {
                   setActiveNav(id);
-                  if (id === "room-details") navigate("/owner/listings");
-                  if (id === "add-room") navigate("/owner/listings/new");
+                  if (id === "rooms") navigate("/rooms");
+                  if (id === "roommates") navigate("/roommates");
+                  if (id === "messages") navigate("/chat");
                   if (id === "profile") navigate("/profile");
-                  if (id === "contact") navigate("/contact");
-                  if (id === "complaint") navigate("/admin/complaints");
                 }}
                 className={`flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-bold transition-all ${
                   activeNav === id
