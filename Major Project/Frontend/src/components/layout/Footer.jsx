@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-import logo from "../../assets/images/logo.png";
+import { useAuth } from "../../hooks/useAuth";
 
 const COLUMNS = [
   {
@@ -28,6 +27,10 @@ const COLUMNS = [
 ];
 
 export default function Footer() {
+  const { user } = useAuth();
+
+  if (user?.role === "admin") return null;
+
   return (
     <footer className="border-t border-gray-100 bg-white">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
