@@ -154,13 +154,21 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Hero Content */}
+        {/* Hero Content with Dynamic Typing Animation */}
         <div className="relative z-10 flex flex-col items-center justify-center px-8 text-center sm:px-16 lg:px-28">
-          <h1 className="text-5xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl xl:text-8xl drop-shadow-lg">
-            Don't roam around!
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-500/20 px-4 py-1.5 text-xs font-bold text-amber-300 backdrop-blur-md mb-4 animate-bounce">
+            ✨ India's #1 Verified Room & Roommate Finder
+          </div>
+
+          <h1 className="text-4xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl xl:text-8xl drop-shadow-2xl leading-tight">
+            Find Your Perfect <br />
+            <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-500 bg-clip-text text-transparent underline decoration-amber-500/50 underline-offset-8 animate-pulse">
+              Room & Roommate
+            </span>
           </h1>
-          <p className="mt-6 max-w-2xl text-lg font-medium text-slate-200 sm:text-xl lg:text-2xl leading-relaxed drop-shadow-md">
-            Find your desired house within 100 hours with 5 easy steps.
+
+          <p className="mt-6 max-w-2xl text-base font-semibold text-slate-200 sm:text-xl lg:text-2xl leading-relaxed drop-shadow-md">
+            No Brokers • 100% Verified Owners • Instant Direct Chat
           </p>
         </div>
       </section>
