@@ -150,52 +150,6 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Center Nav Links - Hidden for Room Owner & Admin */}
-          {user?.role !== "owner" && user?.role !== "admin" && (
-            <nav className="hidden md:flex items-center gap-8">
-              <NavLink
-                to="/"
-                className={({ isActive }) =>
-                  `text-sm font-semibold transition-colors ${
-                    isActive ? "text-amber-500 font-bold" : "text-slate-600 hover:text-slate-900"
-                  }`
-                }
-              >
-                About us
-              </NavLink>
-              <NavLink
-                to="/rooms"
-                className={({ isActive }) =>
-                  `text-sm font-semibold transition-colors ${
-                    isActive ? "text-amber-500 font-bold" : "text-slate-600 hover:text-slate-900"
-                  }`
-                }
-              >
-                Properties
-              </NavLink>
-              <NavLink
-                to="/roommates"
-                className={({ isActive }) =>
-                  `text-sm font-semibold transition-colors ${
-                    isActive ? "text-amber-500 font-bold" : "text-slate-600 hover:text-slate-900"
-                  }`
-                }
-              >
-                Pricing
-              </NavLink>
-              <NavLink
-                to="/contact"
-                className={({ isActive }) =>
-                  `text-sm font-semibold transition-colors ${
-                    isActive ? "text-amber-500 font-bold" : "text-slate-600 hover:text-slate-900"
-                  }`
-                }
-              >
-                Contact us
-              </NavLink>
-            </nav>
-          )}
-
           {/* Right Actions */}
           <div className="flex items-center gap-5">
             {isAuthenticated ? (

@@ -29,11 +29,7 @@ const COLUMNS = [
 ];
 
 export default function Footer() {
-  const { user } = useAuth();
-
-  if (user?.role === "admin") return null;
-
-  return (
+  return null;
     <footer className="border-t border-gray-100 bg-white">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
