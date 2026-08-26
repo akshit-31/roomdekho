@@ -64,7 +64,6 @@ export default function Home() {
       navigate("/admin/users", { replace: true });
       return null;
     }
-    return <VendorDashboard />;
   }
 
   const nextSlide = () => {
