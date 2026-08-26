@@ -21,6 +21,7 @@ import {
   MapPin,
   SlidersHorizontal,
   UserPlus,
+  PlusCircle,
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { searchApi } from "../../services/api/search.api";
