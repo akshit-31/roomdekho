@@ -167,8 +167,6 @@ export default function Home() {
         </div>
       </section>
 
-      </section>
-
       {/* 3. Popular Cities Section - Display Only */}
       <section className="mx-auto w-full max-w-[90vw] py-4">
         <div className="mb-6">
