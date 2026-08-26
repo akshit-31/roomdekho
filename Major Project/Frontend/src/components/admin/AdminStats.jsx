@@ -7,12 +7,12 @@ import { formatCurrency } from "../../utils/formatCurrency";
  */
 export default function AdminStats({ stats = {} }) {
   const cards = [
-    { label: "Total users", value: stats.totalUsers ?? 0, icon: Users },
+    { label: "Total users", value: stats.usersTotal ?? stats.totalUsers ?? 0, icon: Users },
     { label: "Active listings", value: stats.activeListings ?? 0, icon: Home },
     { label: "Pending KYC", value: stats.pendingKyc ?? 0, icon: ShieldAlert },
     { label: "Open reports", value: stats.openReports ?? 0, icon: Flag },
     { label: "Platform revenue", value: formatCurrency(stats.revenue ?? 0), icon: IndianRupee },
-    { label: "Booking conversion", value: `${stats.bookingConversion ?? 0}%`, icon: TrendingUp },
+    { label: "Booking conversion", value: `${stats.conversion ?? stats.bookingConversion ?? 0}%`, icon: TrendingUp },
   ];
 
   return (
