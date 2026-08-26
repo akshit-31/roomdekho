@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "../../assets/images/logo.png";
+import customLogo from "../../image copy 3.png";
 import RegisterForm from "../../components/auth/RegisterForm";
 
 export default function Register() {
@@ -7,8 +7,10 @@ export default function Register() {
     <div className="auth-page flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12">
       <div className="auth-card w-full max-w-sm">
         <Link to="/" className="mb-8 flex items-center justify-center gap-2">
-          <img src={logo} alt="Room Searcher & Roommate" className="h-9 w-9 rounded-lg" />
-          <span className="text-base font-semibold text-gray-900">Room Searcher</span>
+          <img src={customLogo} alt="RoomDekho Logo" className="h-9 w-9 object-contain" />
+          <span className="text-xl font-extrabold tracking-tight text-slate-900">
+            RoomDekho
+          </span>
         </Link>
         <RegisterForm />
       </div>
