@@ -89,26 +89,26 @@ export default function VendorDashboard() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#F4F7FE] text-slate-800 font-sans">
-      {/* 1. Left Sidebar Navigation */}
+    <div className="flex min-h-screen bg-slate-50 text-slate-800 font-sans">
+      {/* 1. Integrated Left Sidebar Navigation (Matching Color Scheme) */}
       <aside className="w-64 flex-shrink-0 bg-white border-r border-slate-200/80 p-5 flex flex-col justify-between hidden md:flex sticky top-0 h-screen z-20">
         <div>
-          {/* Brand Logo */}
+          {/* Brand Logo - Same Orange Amber Theme */}
           <Link to="/" className="flex items-center gap-2.5 px-2 mb-8 text-decoration-none">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white font-black text-lg shadow-md shadow-blue-500/20">
-              <DoorOpen size={20} />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500 text-white font-black text-xl shadow-md shadow-amber-500/20">
+              R
             </div>
             <div>
-              <span className="text-lg font-black tracking-tight text-blue-900 block leading-none">
+              <span className="text-xl font-extrabold tracking-tight text-slate-900 block leading-none">
                 RoomDekho
               </span>
-              <span className="text-[10px] font-semibold text-slate-400">
+              <span className="text-[10px] font-semibold text-amber-600 mt-1 block">
                 Find your perfect match
               </span>
             </div>
           </Link>
 
-          {/* Navigation Links */}
+          {/* Navigation Links with Amber Highlight */}
           <nav className="space-y-1">
             {SIDEBAR_NAV.map(({ id, label, icon: Icon, badge }) => (
               <button
@@ -122,16 +122,16 @@ export default function VendorDashboard() {
                 }}
                 className={`flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-bold transition-all ${
                   activeNav === id
-                    ? "bg-blue-50 text-blue-600 shadow-sm"
+                    ? "bg-amber-50 text-amber-600 shadow-sm border-l-4 border-amber-500"
                     : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <Icon size={18} className={activeNav === id ? "text-blue-600" : "text-slate-400"} />
+                  <Icon size={18} className={activeNav === id ? "text-amber-500" : "text-slate-400"} />
                   <span>{label}</span>
                 </div>
                 {badge && (
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-extrabold text-white">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-[10px] font-extrabold text-white">
                     {badge}
                   </span>
                 )}
@@ -152,8 +152,8 @@ export default function VendorDashboard() {
 
       {/* Main Body Wrap */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* 2. Top Header Bar */}
-        <header className="sticky top-0 z-10 flex h-20 items-center justify-between bg-white/80 backdrop-blur-md px-6 lg:px-10 border-b border-slate-200/60">
+        {/* Top Header Bar */}
+        <header className="sticky top-0 z-10 flex h-20 items-center justify-between bg-white/95 backdrop-blur-md px-6 lg:px-10 border-b border-slate-200/80">
           {/* Global Search Input */}
           <form onSubmit={handleSearchSubmit} className="relative w-full max-w-md">
             <Search size={17} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -162,7 +162,7 @@ export default function VendorDashboard() {
               placeholder="Search for rooms, locations or roommates..."
               value={locationQuery}
               onChange={(e) => setLocationQuery(e.target.value)}
-              className="w-full rounded-2xl border border-slate-200/80 bg-slate-50/80 pl-11 pr-4 py-2.5 text-xs font-semibold text-slate-700 focus:bg-white focus:border-blue-500 focus:outline-none transition-all"
+              className="w-full rounded-2xl border border-slate-200 bg-slate-50 pl-11 pr-4 py-2.5 text-xs font-semibold text-slate-700 focus:bg-white focus:border-amber-500 focus:outline-none transition-all"
             />
           </form>
 
@@ -174,13 +174,13 @@ export default function VendorDashboard() {
 
             <Link to="/notifications" className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100/80 text-slate-600 hover:bg-slate-200/80 transition-all">
               <Bell size={18} />
-              <span className="absolute right-2 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600 text-[9px] font-black text-white">
+              <span className="absolute right-2 top-2 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[9px] font-black text-white">
                 3
               </span>
             </Link>
 
             <Link to="/profile" className="flex items-center gap-3 border-l border-slate-200 pl-4">
-              <div className="h-10 w-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow">
+              <div className="h-10 w-10 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold text-sm shadow shadow-amber-500/20">
                 {user?.name?.[0]?.toUpperCase() || "U"}
               </div>
               <div className="hidden sm:block text-left">
@@ -198,14 +198,14 @@ export default function VendorDashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             {/* Center Main Feed (8 cols on LG) */}
             <div className="lg:col-span-8 space-y-8">
-              {/* 3. Hero Banner Card */}
-              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-50 via-indigo-50/60 to-blue-100/50 p-6 sm:p-8 border border-blue-100 shadow-sm">
+              {/* Hero Banner Card */}
+              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-amber-50 via-amber-100/40 to-amber-50 p-6 sm:p-8 border border-amber-200/60 shadow-sm">
                 <div className="relative z-10 max-w-lg">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3 py-1 text-[11px] font-bold text-blue-700 mb-3">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1 text-[11px] font-bold text-amber-800 mb-3 border border-amber-200">
                     Welcome back, {user?.name?.split(" ")[0] || "Partner"}! 👋
                   </span>
                   <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-snug">
-                    Find your perfect <span className="text-blue-600">room</span> or <span className="text-blue-600">roommate</span>
+                    Find your perfect <span className="text-amber-600">room</span> or <span className="text-amber-600">roommate</span>
                   </h2>
                   <p className="mt-2 text-xs font-medium text-slate-500">
                     Verified listings. Trusted people. Better matches.
@@ -217,7 +217,7 @@ export default function VendorDashboard() {
                       onClick={() => setModeToggle("rooms")}
                       className={`rounded-xl px-4 py-2 text-xs font-bold transition-all ${
                         modeToggle === "rooms"
-                          ? "bg-blue-600 text-white shadow-md shadow-blue-600/30"
+                          ? "bg-amber-500 text-white shadow-md shadow-amber-500/20"
                           : "bg-white text-slate-600 hover:bg-slate-100"
                       }`}
                     >
@@ -227,7 +227,7 @@ export default function VendorDashboard() {
                       onClick={() => setModeToggle("roommates")}
                       className={`rounded-xl px-4 py-2 text-xs font-bold transition-all ${
                         modeToggle === "roommates"
-                          ? "bg-blue-600 text-white shadow-md shadow-blue-600/30"
+                          ? "bg-amber-500 text-white shadow-md shadow-amber-500/20"
                           : "bg-white text-slate-600 hover:bg-slate-100"
                       }`}
                     >
@@ -239,7 +239,7 @@ export default function VendorDashboard() {
                 {/* Floating Filter Search Bar */}
                 <form onSubmit={handleSearchSubmit} className="mt-6 rounded-2xl bg-white p-2.5 shadow-lg border border-slate-100 grid grid-cols-1 sm:grid-cols-4 gap-2 items-center">
                   <div className="flex items-center gap-2 px-3 py-2 border-r border-slate-100">
-                    <MapPin size={16} className="text-blue-600 flex-shrink-0" />
+                    <MapPin size={16} className="text-amber-500 flex-shrink-0" />
                     <input
                       type="text"
                       placeholder="Delhi, Noida, Jaipur..."
@@ -250,7 +250,7 @@ export default function VendorDashboard() {
                   </div>
 
                   <div className="flex items-center gap-2 px-3 py-2 border-r border-slate-100">
-                    <Building2 size={16} className="text-blue-600 flex-shrink-0" />
+                    <Building2 size={16} className="text-amber-500 flex-shrink-0" />
                     <select
                       value={selectedType}
                       onChange={(e) => setSelectedType(e.target.value)}
@@ -264,7 +264,7 @@ export default function VendorDashboard() {
                   </div>
 
                   <div className="flex items-center gap-2 px-3 py-2">
-                    <SlidersHorizontal size={16} className="text-blue-600 flex-shrink-0" />
+                    <SlidersHorizontal size={16} className="text-amber-500 flex-shrink-0" />
                     <select
                       value={selectedBudget}
                       onChange={(e) => setSelectedBudget(e.target.value)}
@@ -278,14 +278,14 @@ export default function VendorDashboard() {
 
                   <button
                     type="submit"
-                    className="flex items-center justify-center gap-2 rounded-xl bg-blue-600 py-2.5 px-4 text-xs font-bold text-white shadow-md hover:bg-blue-700 transition-all"
+                    className="flex items-center justify-center gap-2 rounded-xl bg-amber-500 py-2.5 px-4 text-xs font-bold text-white shadow-md hover:bg-amber-600 transition-all"
                   >
                     <Search size={15} /> Search
                   </button>
                 </form>
               </div>
 
-              {/* 4. Real Database Rooms Section */}
+              {/* Real Database Rooms Section */}
               <section>
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-base font-extrabold text-slate-900">
@@ -293,7 +293,7 @@ export default function VendorDashboard() {
                   </h3>
                   <Link
                     to={modeToggle === "rooms" ? "/rooms" : "/roommates"}
-                    className="text-xs font-bold text-blue-600 hover:underline"
+                    className="text-xs font-bold text-amber-600 hover:underline"
                   >
                     View All →
                   </Link>
@@ -338,7 +338,7 @@ export default function VendorDashboard() {
                           </div>
 
                           <div className="flex items-baseline justify-between">
-                            <span className="text-sm font-black text-blue-600">
+                            <span className="text-sm font-black text-amber-600">
                               ₹{(room.rent || 7500).toLocaleString()}
                               <small className="text-[10px] font-medium text-slate-400">/month</small>
                             </span>
@@ -370,13 +370,13 @@ export default function VendorDashboard() {
                         onClick={() => navigate(`/roommates/${rm._id || rm.id}`)}
                         className="rounded-2xl bg-white border border-slate-200/80 p-4 text-center shadow-sm hover:shadow-md transition-all cursor-pointer"
                       >
-                        <div className="mx-auto h-14 w-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-extrabold text-base mb-2 border-2 border-blue-200">
+                        <div className="mx-auto h-14 w-14 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-extrabold text-base mb-2 border-2 border-amber-200">
                           {rm.name?.[0]?.toUpperCase() || "R"}
                         </div>
                         <h4 className="text-xs font-bold text-slate-900 truncate">{rm.name || "Roommate"}</h4>
                         <p className="text-[10px] text-slate-400 font-medium">{rm.role || "Seeker"}</p>
 
-                        <div className="my-2 inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-1 text-[10px] font-bold text-blue-600">
+                        <div className="my-2 inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-[10px] font-bold text-amber-600">
                           <Sparkles size={11} /> 92% Match
                         </div>
 
@@ -390,10 +390,10 @@ export default function VendorDashboard() {
 
             {/* Right Panel Widgets (4 cols on LG) */}
             <div className="lg:col-span-4 space-y-6">
-              {/* 5. User Profile Card */}
+              {/* User Profile Card */}
               <div className="rounded-3xl bg-white border border-slate-200/80 p-6 text-center shadow-sm">
                 <div className="relative inline-block mb-3">
-                  <div className="h-20 w-20 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 text-white font-extrabold text-2xl flex items-center justify-center mx-auto shadow-md border-4 border-white">
+                  <div className="h-20 w-20 rounded-full bg-gradient-to-tr from-amber-500 to-amber-600 text-white font-extrabold text-2xl flex items-center justify-center mx-auto shadow-md border-4 border-white">
                     {user?.name?.[0]?.toUpperCase() || "U"}
                   </div>
                   <span className="absolute bottom-0 right-0 flex items-center gap-1 rounded-full bg-emerald-500 px-2 py-0.5 text-[9px] font-black text-white shadow">
@@ -413,7 +413,7 @@ export default function VendorDashboard() {
 
                 <Link
                   to="/profile/edit"
-                  className="mt-3 inline-block text-xs font-bold text-blue-600 hover:underline"
+                  className="mt-3 inline-block text-xs font-bold text-amber-600 hover:underline"
                 >
                   Edit Profile
                 </Link>
@@ -421,24 +421,24 @@ export default function VendorDashboard() {
                 {/* Profile Stats */}
                 <div className="mt-6 grid grid-cols-3 gap-2 border-t border-slate-100 pt-4">
                   <Link to="/matches" className="text-center">
-                    <Heart size={16} className="mx-auto text-blue-600 mb-1" />
+                    <Heart size={16} className="mx-auto text-amber-500 mb-1" />
                     <span className="block text-sm font-black text-slate-900">12</span>
                     <span className="text-[10px] font-semibold text-slate-400">Matches</span>
                   </Link>
                   <Link to="/favorites" className="text-center">
-                    <Bookmark size={16} className="mx-auto text-blue-600 mb-1" />
+                    <Bookmark size={16} className="mx-auto text-amber-500 mb-1" />
                     <span className="block text-sm font-black text-slate-900">08</span>
                     <span className="text-[10px] font-semibold text-slate-400">Saved</span>
                   </Link>
                   <Link to="/chat" className="text-center">
-                    <MessageCircle size={16} className="mx-auto text-blue-600 mb-1" />
+                    <MessageCircle size={16} className="mx-auto text-amber-500 mb-1" />
                     <span className="block text-sm font-black text-slate-900">03</span>
                     <span className="text-[10px] font-semibold text-slate-400">Messages</span>
                   </Link>
                 </div>
               </div>
 
-              {/* 6. Quick Actions Card */}
+              {/* Quick Actions Card */}
               <div className="rounded-3xl bg-white border border-slate-200/80 p-5 shadow-sm">
                 <h4 className="text-xs font-extrabold text-slate-900 mb-4 uppercase tracking-wider">
                   Quick Actions
@@ -446,10 +446,10 @@ export default function VendorDashboard() {
                 <div className="space-y-2">
                   <Link
                     to="/owner/add-listing"
-                    className="flex items-center justify-between rounded-xl bg-slate-50 p-3 text-xs font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
+                    className="flex items-center justify-between rounded-xl bg-slate-50 p-3 text-xs font-bold text-slate-700 hover:bg-amber-50 hover:text-amber-600 transition-all"
                   >
                     <div className="flex items-center gap-2.5">
-                      <PlusCircle size={16} className="text-blue-600" />
+                      <PlusCircle size={16} className="text-amber-500" />
                       <span>Post a Room</span>
                     </div>
                     <ChevronRight size={15} className="text-slate-400" />
@@ -457,10 +457,10 @@ export default function VendorDashboard() {
 
                   <Link
                     to="/roommates/me"
-                    className="flex items-center justify-between rounded-xl bg-slate-50 p-3 text-xs font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
+                    className="flex items-center justify-between rounded-xl bg-slate-50 p-3 text-xs font-bold text-slate-700 hover:bg-amber-50 hover:text-amber-600 transition-all"
                   >
                     <div className="flex items-center gap-2.5">
-                      <UserPlus size={16} className="text-blue-600" />
+                      <UserPlus size={16} className="text-amber-500" />
                       <span>Post a Roommate Profile</span>
                     </div>
                     <ChevronRight size={15} className="text-slate-400" />
@@ -468,10 +468,10 @@ export default function VendorDashboard() {
 
                   <Link
                     to="/profile/preferences"
-                    className="flex items-center justify-between rounded-xl bg-slate-50 p-3 text-xs font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
+                    className="flex items-center justify-between rounded-xl bg-slate-50 p-3 text-xs font-bold text-slate-700 hover:bg-amber-50 hover:text-amber-600 transition-all"
                   >
                     <div className="flex items-center gap-2.5">
-                      <Settings size={16} className="text-blue-600" />
+                      <Settings size={16} className="text-amber-500" />
                       <span>Update Preferences</span>
                     </div>
                     <ChevronRight size={15} className="text-slate-400" />
@@ -479,8 +479,8 @@ export default function VendorDashboard() {
                 </div>
               </div>
 
-              {/* 7. Complete Your Profile Widget */}
-              <div className="rounded-3xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 p-6 shadow-sm">
+              {/* Complete Your Profile Widget */}
+              <div className="rounded-3xl bg-gradient-to-br from-amber-50 to-amber-100/50 border border-amber-200/60 p-6 shadow-sm">
                 <h4 className="text-sm font-extrabold text-slate-900">Complete Your Profile</h4>
                 <p className="text-xs text-slate-500 mt-1 mb-4">
                   Increase your match score by completing your profile details.
@@ -491,12 +491,12 @@ export default function VendorDashboard() {
                   <span>75%</span>
                 </div>
                 <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200 mb-5">
-                  <div className="h-full w-[75%] rounded-full bg-blue-600" />
+                  <div className="h-full w-[75%] rounded-full bg-amber-500" />
                 </div>
 
                 <Link
                   to="/profile/edit"
-                  className="flex w-full items-center justify-center rounded-xl bg-blue-600 py-3 text-xs font-bold text-white shadow-md hover:bg-blue-700 transition-all"
+                  className="flex w-full items-center justify-center rounded-xl bg-amber-500 py-3 text-xs font-bold text-white shadow-md hover:bg-amber-600 transition-all"
                 >
                   Complete Now
                 </Link>
