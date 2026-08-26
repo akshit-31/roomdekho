@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import AuthModal from "../../components/auth/AuthModal";
 import { useAuth } from "../../hooks/useAuth";
 import VendorDashboard from "../vendor/VendorDashboard";
+import OwnerDashboard from "../owner/OwnerDashboard";
 
 import img1 from "../../image.png";
 import img2 from "../../image copy.png";
@@ -13,13 +14,16 @@ import img4 from "../../ef0c218f-6a1e-4f6d-b14f-a210f8c46a77.jfif";
 const SLIDE_IMAGES = [img1, img2, img3, img4];
 
 export default function Home() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [authModalOpen, setAuthModalOpen] = useState(false);
 
-  // If user is logged in, show the redesigned Vendor Dashboard view
+  // If user is logged in, render role-specific dashboard
   if (isAuthenticated) {
+    if (user?.role === "owner") {
+      return <OwnerDashboard />;
+    }
     return <VendorDashboard />;
   }
 
