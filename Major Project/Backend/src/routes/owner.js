@@ -1,0 +1,4 @@
+import {Router} from "express";import {auth,owner} from "../middleware/auth.js";import {query} from "../config/db.js";import {ok} from "../utils/response.js";
+const r=Router();r.use(auth,owner);
+r.get("/dashboard",async(req,res)=>{const rooms=await query("SELECT COUNT(*) FROM rooms WHERE owner_id=$1",[req.user.id]);const visits=await query("SELECT COUNT(*) FROM visits WHERE owner_id=$1",[req.user.id]);ok(res,200,"Owner dashboard",{rooms:Number(rooms.rows[0].count),visits:Number(visits.rows[0].count)})});
+r.get("/enquiries",async(req,res)=>{const {rows}=await query(`SELECT v.*,r.title,u.name seeker_name,u.email seeker_email FROM visits v JOIN rooms r ON r.id=v.room_id JOIN users u ON u.id=v.seeker_id WHERE v.owner_id=$1 ORDER BY v.created_at DESC`,[req.user.id]);ok(res,200,"Enquiries fetched",rows)});export default r;

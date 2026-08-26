@@ -1,0 +1,12 @@
+import {Router} from "express";import {auth,admin} from "../middleware/auth.js";import {query} from "../config/db.js";import {ok} from "../utils/response.js";
+const r=Router();r.use(auth,admin);
+r.get("/users",async(req,res)=>{const {rows}=await query("SELECT id,name,email,role,is_blocked,is_kyc_verified,created_at FROM users ORDER BY created_at DESC");ok(res,200,"Users fetched",rows)});
+r.patch("/users/:id/ban",async(req,res)=>{const {rows}=await query("UPDATE users SET is_blocked=$1 WHERE id=$2 RETURNING id,name,is_blocked",[req.body.blocked!==false,req.params.id]);ok(res,200,"User updated",rows[0])});
+r.get("/listings",async(req,res)=>{const {rows}=await query("SELECT r.*,u.name owner_name FROM rooms r JOIN users u ON u.id=r.owner_id ORDER BY r.created_at DESC");ok(res,200,"Listings fetched",rows)});
+r.patch("/listings/:id/moderate",async(req,res)=>{const {rows}=await query("UPDATE rooms SET status=$1 WHERE id=$2 RETURNING *",[req.body.status||"published",req.params.id]);ok(res,200,"Listing moderated",rows[0])});
+r.get("/kyc",async(req,res)=>{const {rows}=await query("SELECT id,name,email,is_kyc_verified FROM users ORDER BY created_at DESC");ok(res,200,"KYC list fetched",rows)});
+r.patch("/kyc/:userId",async(req,res)=>{const {rows}=await query("UPDATE users SET is_kyc_verified=$1 WHERE id=$2 RETURNING id,name,is_kyc_verified",[req.body.verified!==false,req.params.userId]);ok(res,200,"KYC updated",rows[0])});
+r.get("/reports",async(req,res)=>{const {rows}=await query("SELECT * FROM reports ORDER BY created_at DESC");ok(res,200,"Reports fetched",rows)});
+r.get("/fraud-alerts",async(req,res)=>{const {rows}=await query("SELECT * FROM reports WHERE status='open' ORDER BY created_at DESC");ok(res,200,"Fraud alerts fetched",rows)});
+r.patch("/fraud-alerts/:id/resolve",async(req,res)=>{const {rows}=await query("UPDATE reports SET status='resolved' WHERE id=$1 RETURNING *",[req.params.id]);ok(res,200,"Fraud alert resolved",rows[0])});
+export default r;

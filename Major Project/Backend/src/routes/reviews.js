@@ -1,0 +1,5 @@
+import {Router} from "express";import {auth} from "../middleware/auth.js";import {query} from "../config/db.js";import {ok} from "../utils/response.js";
+const r=Router();
+r.get("/:targetType/:targetId",async(req,res)=>{const {rows}=await query("SELECT rv.*,u.name reviewer_name,u.avatar reviewer_avatar FROM reviews rv JOIN users u ON u.id=rv.reviewer_id WHERE target_type=$1 AND target_id=$2 ORDER BY created_at DESC",[req.params.targetType,req.params.targetId]);ok(res,200,"Reviews fetched",rows)});
+r.post("/",auth,async(req,res)=>{const b=req.body;if(!b.targetType||!b.targetId||!b.rating)return res.status(400).json({success:false,message:"Target and rating are required"});const {rows}=await query("INSERT INTO reviews(reviewer_id,target_type,target_id,rating,comment) VALUES($1,$2,$3,$4,$5) RETURNING *",[req.user.id,b.targetType,b.targetId,b.rating,b.comment]);ok(res,201,"Review added",rows[0])});
+r.post("/:id/report",auth,async(req,res)=>ok(res,200,"Review reported",{id:req.params.id}));export default r;

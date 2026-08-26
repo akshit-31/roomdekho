@@ -1,0 +1,40 @@
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fadeIn 0.2s ease-out; }
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+.animate-pulse-dot { animation: pulseDot 1s infinite; }
+
+.hero-rotator {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.hero-rotator-word {
+  display: inline-block;
+}
+
+@keyframes rotatorIn {
+  from { opacity: 0; transform: translateY(60%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rotatorOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-60%); }
+}
+
+.hero-rotator-in { animation: rotatorIn 260ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.hero-rotator-out { animation: rotatorOut 200ms cubic-bezier(0.55, 0, 1, 0.45) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-rotator-in,
+  .hero-rotator-out { animation: none; }
+}

@@ -1,0 +1,4 @@
+import {Router} from "express"; import {query} from "../config/db.js"; import {ok} from "../utils/response.js";
+const r=Router();
+r.get("/",async(req,res)=>{const {q,city,minRent,maxRent}=req.query;const w=["r.status='published'"],p=[],i=1;if(q){w.push(`(LOWER(r.title) LIKE LOWER($${i}) OR LOWER(r.city) LIKE LOWER($${i}) OR LOWER(r.locality) LIKE LOWER($${i}))`);p.push(`%${q}%`);i++}if(city){w.push(`LOWER(r.city)=LOWER($${i++})`);p.push(city)}if(minRent){w.push(`r.rent >= $${i++}`);p.push(Number(minRent))}if(maxRent){w.push(`r.rent <= $${i++}`);p.push(Number(maxRent))}const {rows}=await query(`SELECT r.*,u.name owner_name,u.is_kyc_verified owner_kyc FROM rooms r JOIN users u ON u.id=r.owner_id WHERE ${w.join(" AND ")} ORDER BY r.created_at DESC LIMIT 50`,p);ok(res,200,"Search results",{items:rows})});
+export default r;
