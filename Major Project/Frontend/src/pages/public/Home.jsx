@@ -19,11 +19,8 @@ export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [authModalOpen, setAuthModalOpen] = useState(false);
 
-  // If user is logged in, render role-specific dashboard
+  // If user is logged in, show the Vendor Dashboard view
   if (isAuthenticated) {
-    if (user?.role === "owner") {
-      return <OwnerDashboard />;
-    }
     return <VendorDashboard />;
   }
 
