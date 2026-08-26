@@ -1,23 +1,58 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search, MapPin, Building2, ShieldCheck, Zap, HeartHandshake, ArrowRight } from "lucide-react";
 import AuthModal from "../../components/auth/AuthModal";
 import { useAuth } from "../../hooks/useAuth";
 import VendorDashboard from "../vendor/VendorDashboard";
-import OwnerDashboard from "../owner/OwnerDashboard";
+import { searchApi } from "../../services/api/search.api";
 
 import img1 from "../../image.png";
 import img2 from "../../image copy.png";
-import img3 from "../../image copy 2.png";
+import img3 from "../../image copy.png";
 import img4 from "../../ef0c218f-6a1e-4f6d-b14f-a210f8c46a77.jfif";
 
 const SLIDE_IMAGES = [img1, img2, img3, img4];
+
+const POPULAR_CITIES = [
+  { name: "Delhi", count: "120+ Listings", image: img1 },
+  { name: "Noida", count: "85+ Listings", image: img2 },
+  { name: "Gurgaon", count: "150+ Listings", image: img3 },
+  { name: "Bengaluru", count: "200+ Listings", image: img4 },
+];
+
+const FEATURES = [
+  {
+    icon: ShieldCheck,
+    title: "100% Verified Owners",
+    desc: "Direct contact with real room owners. Zero fake brokers.",
+  },
+  {
+    icon: Zap,
+    title: "Fast 5-Step Booking",
+    desc: "Search, filter by city, chat directly, visit, and move in.",
+  },
+  {
+    icon: HeartHandshake,
+    title: "AI Roommate Match",
+    desc: "Find compatible roommates sharing similar preferences.",
+  },
+];
 
 export default function Home() {
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [selectedCity, setSelectedCity] = useState("Delhi");
+  const [selectedType, setSelectedType] = useState("");
+  const [featuredRooms, setFeaturedRooms] = useState([]);
+
+  // Fetch real PostgreSQL rooms preview for home page
+  useEffect(() => {
+    searchApi.searchRooms({ limit: 6 })
+      .then(({ data }) => setFeaturedRooms(data.data?.items || []))
+      .catch(() => {});
+  }, []);
 
   // If user is logged in, redirect Owner and Admin roles to their respective dashboards
   if (isAuthenticated) {
@@ -58,9 +93,16 @@ export default function Home() {
     return () => clearInterval(timer);
   }, []);
 
+  const handleSearchClick = () => {
+    const query = new URLSearchParams();
+    if (selectedCity) query.set("city", selectedCity);
+    if (selectedType) query.set("propertyType", selectedType);
+    navigate(`/rooms?${query.toString()}`);
+  };
+
   return (
-    <div className="flex min-h-[calc(100vh-5rem)] flex-col justify-center bg-slate-50 p-2 sm:p-4 lg:p-6">
-      {/* Hero Section Container - Expanded Full Screen Height & Full Width Fit */}
+    <div className="flex min-h-[calc(100vh-5rem)] flex-col bg-slate-50 p-2 sm:p-4 lg:p-6 space-y-12">
+      {/* 1. Hero Section Container */}
       <section className="relative mx-auto flex min-h-[85vh] w-full max-w-[96vw] flex-col justify-center overflow-hidden rounded-[2.5rem] bg-[#1a293e] text-white shadow-2xl">
         {/* Background Image Carousel */}
         {SLIDE_IMAGES.map((img, index) => (
@@ -122,6 +164,117 @@ export default function Home() {
           <p className="mt-6 max-w-2xl text-lg font-medium text-slate-200 sm:text-xl lg:text-2xl leading-relaxed drop-shadow-md">
             Find your desired house within 100 hours with 5 easy steps.
           </p>
+        </div>
+      </section>
+
+      {/* 2. Interactive Quick Search Floating Card Section */}
+      <section className="mx-auto w-full max-w-[90vw] -mt-16 relative z-30">
+        <div className="rounded-3xl border border-gray-100 bg-white p-5 sm:p-7 shadow-xl backdrop-blur-xl">
+          <h2 className="mb-4 text-xs font-bold uppercase tracking-wider text-amber-600">Quick Room Search</h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {/* City Dropdown */}
+            <div className="space-y-1.5">
+              <label className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
+                <MapPin size={15} className="text-amber-500" /> City
+              </label>
+              <select
+                value={selectedCity}
+                onChange={(e) => setSelectedCity(e.target.value)}
+                className="w-full rounded-2xl border border-gray-200 bg-slate-50 px-4 py-3 text-xs font-bold text-slate-800 focus:bg-white focus:border-amber-500 focus:outline-none transition-all"
+              >
+                <option value="Delhi">Delhi</option>
+                <option value="Noida">Noida</option>
+                <option value="Gurgaon">Gurgaon</option>
+                <option value="Bengaluru">Bengaluru</option>
+                <option value="Jaipur">Jaipur</option>
+                <option value="Mumbai">Mumbai</option>
+              </select>
+            </div>
+
+            {/* Property Type Dropdown */}
+            <div className="space-y-1.5">
+              <label className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
+                <Building2 size={15} className="text-amber-500" /> Property Type
+              </label>
+              <select
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
+                className="w-full rounded-2xl border border-gray-200 bg-slate-50 px-4 py-3 text-xs font-bold text-slate-800 focus:bg-white focus:border-amber-500 focus:outline-none transition-all"
+              >
+                <option value="">All Property Types</option>
+                <option value="apartment">Apartment</option>
+                <option value="flat">Shared Flat</option>
+                <option value="independent">House / Villa</option>
+                <option value="pg">PG / Hostel</option>
+              </select>
+            </div>
+
+            {/* Search Submit Button */}
+            <div className="flex items-end">
+              <button
+                type="button"
+                onClick={handleSearchClick}
+                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-amber-500 py-3 text-xs font-bold text-white shadow-lg shadow-amber-500/25 hover:bg-amber-600 transition-all active:scale-95"
+              >
+                <Search size={16} />
+                <span>Search Verified Rooms</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Popular Cities Section */}
+      <section className="mx-auto w-full max-w-[90vw] py-4">
+        <div className="mb-6 flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-black tracking-tight text-slate-900">Popular Cities</h2>
+            <p className="text-xs font-semibold text-slate-500">Explore verified room listings in top hubs</p>
+          </div>
+          <button
+            onClick={() => navigate("/rooms")}
+            className="flex items-center gap-1 text-xs font-bold text-amber-600 hover:underline"
+          >
+            <span>View All</span> <ArrowRight size={14} />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {POPULAR_CITIES.map((c) => (
+            <div
+              key={c.name}
+              onClick={() => navigate(`/rooms?city=${c.name}`)}
+              className="group relative h-40 overflow-hidden rounded-3xl border border-gray-100 shadow-md cursor-pointer transition-all hover:-translate-y-1 hover:shadow-xl"
+            >
+              <img src={c.image} alt={c.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent p-4 flex flex-col justify-end">
+                <h3 className="text-lg font-black text-white">{c.name}</h3>
+                <p className="text-[11px] font-semibold text-amber-400">{c.count}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 4. Why Choose RoomDekho Features Grid */}
+      <section className="mx-auto w-full max-w-[90vw] py-4">
+        <div className="rounded-3xl bg-amber-500/10 border border-amber-500/20 p-8 sm:p-12">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-black text-slate-900 tracking-tight">Why Choose RoomDekho?</h2>
+            <p className="mt-1 text-xs font-bold text-slate-600">The safest platform for room hunting & roommate discovery</p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+            {FEATURES.map((f) => (
+              <div key={f.title} className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100 text-center flex flex-col items-center">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500 text-white font-black shadow-md shadow-amber-500/20">
+                  <f.icon size={22} />
+                </div>
+                <h3 className="text-base font-extrabold text-slate-900">{f.title}</h3>
+                <p className="mt-2 text-xs font-semibold text-slate-500 leading-relaxed">{f.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
