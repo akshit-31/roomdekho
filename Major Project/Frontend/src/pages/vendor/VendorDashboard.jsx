@@ -154,6 +154,19 @@ export default function VendorDashboard() {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Header Bar */}
         <header className="sticky top-0 z-10 flex h-20 items-center justify-between bg-white/95 backdrop-blur-md px-6 lg:px-10 border-b border-slate-200/80">
+          {/* Mobile Hamburger Drawer Trigger */}
+          <button
+            type="button"
+            onClick={() => {
+              const el = document.getElementById("vendor-sidebar");
+              if (el) el.classList.toggle("hidden");
+            }}
+            className="md:hidden flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 transition-all mr-3"
+            aria-label="Toggle navigation menu"
+          >
+            <Search size={18} />
+          </button>
+
           {/* Global Search Input */}
           <form onSubmit={handleSearchSubmit} className="relative w-full max-w-md">
             <Search size={17} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />

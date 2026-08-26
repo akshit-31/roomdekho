@@ -27,6 +27,7 @@ export default function App() {
   }, [location.pathname]);
 
   const isDashboardRoute =
+    (isAuthenticated && location.pathname === "/") ||
     location.pathname.startsWith("/owner") ||
     location.pathname.startsWith("/admin") ||
     location.pathname.startsWith("/vendor");
