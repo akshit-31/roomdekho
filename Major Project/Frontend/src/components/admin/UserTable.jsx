@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { MessageCircle } from "lucide-react";
 import defaultAvatar from "/images/default-avatar.jpg";
 import ConfirmDialog from "../common/ConfirmDialog";
 import Button from "../common/Button";
 import EmptyState from "../common/EmptyState";
 import { adminApi } from "../../services/api/admin.api";
+import { chatApi } from "../../services/api/chat.api";
 import { formatDate } from "../../utils/formatDate";
 
 const ROLE_STYLES = {
@@ -14,9 +17,24 @@ const ROLE_STYLES = {
 };
 
 export default function UserTable({ users = [], onChanged }) {
+  const navigate = useNavigate();
   const [target, setTarget] = useState(null);
   const [reason, setReason] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const handleStartChat = async (userId) => {
+    try {
+      const { data } = await chatApi.createConversation(userId);
+      const convId = data.data?.id || data.data?._id;
+      if (convId) {
+        navigate(`/chat/${convId}`);
+      } else {
+        navigate(`/chat?userId=${userId}`);
+      }
+    } catch {
+      navigate(`/chat?userId=${userId}`);
+    }
+  };
 
   if (!users.length) return <EmptyState title="No users found" />;
 
@@ -70,9 +88,19 @@ export default function UserTable({ users = [], onChanged }) {
                 )}
               </td>
               <td className="px-4 py-3">
-                {!u.isBanned && (
-                  <Button size="sm" variant="danger" onClick={() => setTarget(u)}>Ban</Button>
-                )}
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleStartChat(u._id)}
+                    className="flex items-center gap-1 rounded-xl bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-600 hover:bg-amber-100 transition-all border border-amber-200"
+                  >
+                    <MessageCircle size={14} />
+                    <span>Chat</span>
+                  </button>
+                  {!u.isBanned && (
+                    <Button size="sm" variant="danger" onClick={() => setTarget(u)}>Ban</Button>
+                  )}
+                </div>
               </td>
             </tr>
           ))}
