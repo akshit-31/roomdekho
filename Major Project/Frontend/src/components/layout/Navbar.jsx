@@ -131,15 +131,17 @@ export default function Navbar() {
       <header className="sticky top-0 z-30 bg-white/95 border-b border-gray-100 backdrop-blur-md">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 sm:px-10 lg:px-12">
           <div className="flex items-center gap-4">
-            {/* Universal Hamburger Icon Trigger */}
-            <button
-              type="button"
-              onClick={() => setDrawerOpen(true)}
-              className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm active:scale-95"
-              aria-label="Open Navigation Drawer"
-            >
-              <Menu size={20} />
-            </button>
+            {/* Universal Hamburger Icon Trigger - Rendered Only When Authenticated */}
+            {isAuthenticated && (
+              <button
+                type="button"
+                onClick={() => setDrawerOpen(true)}
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm active:scale-95"
+                aria-label="Open Navigation Drawer"
+              >
+                <Menu size={20} />
+              </button>
+            )}
 
             {/* Brand Logo */}
             <Link to="/" className="flex items-center gap-2 text-decoration-none">
