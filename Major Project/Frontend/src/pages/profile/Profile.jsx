@@ -42,13 +42,16 @@ export default function Profile() {
     );
   }
 
-  if (status === "loading" || !profile) return <Loader label="Loading your profile..." />;
+  const { user } = useAuth();
+  const currentProfile = profile || user;
+
+  if (!currentProfile) return <Loader label="Loading your profile..." />;
 
   return (
     <PageContainer title="Profile">
       <div className="space-y-5">
-        <ProfileHeader profile={profile} />
-        <VerificationStatus profile={profile} />
+        <ProfileHeader profile={currentProfile} />
+        <VerificationStatus profile={currentProfile} />
 
         <div className="divide-y divide-gray-50 overflow-hidden rounded-2xl border border-gray-100 bg-white">
           {LINKS.map(({ to, label, desc, icon: Icon }) => (

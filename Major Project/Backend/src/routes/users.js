@@ -5,7 +5,14 @@ import {ok} from "../utils/response.js";
 const r=Router();
 r.get("/me",auth,async(req,res)=>{
  const p=await query("SELECT * FROM profiles WHERE user_id=$1",[req.user.id]);
- ok(res,200,"Profile fetched",{user:req.user,profile:p.rows[0]||null});
+ const user = {
+   ...req.user,
+   _id: req.user.id,
+   avatarUrl: req.user.avatar,
+   kyc: { status: req.user.is_kyc_verified ? "verified" : "not_submitted" },
+   profile: p.rows[0] || null
+ };
+ ok(res,200,"Profile fetched", user);
 });
 r.put("/me",auth,async(req,res)=>{
  const {name,phone,avatar}=req.body;
