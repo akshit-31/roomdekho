@@ -1,84 +1,44 @@
-import Select from "../common/Select";
+import { MapPin } from "lucide-react";
 import Button from "../common/Button";
-import LocationSearch from "./LocationSearch";
-import RadiusFilter from "./RadiusFilter";
-import RentRange from "./RentRange";
-import {
-  PROPERTY_TYPES, SHARING_TYPES, FURNISHING_TYPES, GENDER_PREFERENCES, AMENITIES,
-} from "../../utils/constants";
+
+const CITIES = ["Delhi", "Noida", "Gurgaon", "Bengaluru", "Jaipur", "Mumbai"];
 
 /**
- * Full advanced-search panel — combines location/radius/rent with the
- * property attribute filters. Shape matches the query params accepted by
- * GET /search (server/src/modules/search/search.service.js).
+ * Filter panel simplified strictly to City selection as requested.
  */
 export default function SearchFilters({ filters, onChange, onReset, onApply }) {
   const set = (patch) => onChange({ ...filters, ...patch });
 
-  const toggleAmenity = (a) => {
-    const current = filters.amenities ? filters.amenities.split(",").filter(Boolean) : [];
-    const next = current.includes(a) ? current.filter((x) => x !== a) : [...current, a];
-    set({ amenities: next.join(",") });
-  };
-  const selectedAmenities = filters.amenities ? filters.amenities.split(",") : [];
-
   return (
-    <div className="space-y-5 rounded-2xl border border-gray-100 bg-white p-5">
+    <div className="space-y-5 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-gray-900">Advanced filters</h2>
-        <button onClick={onReset} className="text-xs font-medium text-brand-600 hover:underline">Reset</button>
+        <h2 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+          <MapPin size={16} className="text-amber-500" /> Filter by City
+        </h2>
+        <button onClick={onReset} className="text-xs font-semibold text-amber-600 hover:underline">
+          Reset
+        </button>
       </div>
 
-      <LocationSearch
-        value={filters.city ? { label: filters.city } : null}
-        onSelect={({ lat, lng, label }) => set({ lat, lng, city: label })}
-      />
-
-      <RadiusFilter
-        value={Number(filters.radiusKm) || 5}
-        onChange={(radiusKm) => set({ radiusKm })}
-        disabled={!filters.lat || !filters.lng}
-      />
-
-      <RentRange
-        min={filters.rentMin}
-        max={filters.rentMax}
-        onChange={({ rentMin, rentMax }) => set({ rentMin, rentMax })}
-      />
-
-      <Select label="Property type" placeholder="Any" options={PROPERTY_TYPES}
-        value={filters.propertyType || ""} onChange={(e) => set({ propertyType: e.target.value })} />
-
-      <Select label="Sharing type" placeholder="Any" options={SHARING_TYPES}
-        value={filters.sharingType || ""} onChange={(e) => set({ sharingType: e.target.value })} />
-
-      <Select label="Furnishing" placeholder="Any" options={FURNISHING_TYPES}
-        value={filters.furnishing || ""} onChange={(e) => set({ furnishing: e.target.value })} />
-
-      <Select label="Gender preference" placeholder="Any" options={GENDER_PREFERENCES}
-        value={filters.genderPreference || ""} onChange={(e) => set({ genderPreference: e.target.value })} />
-
-      <div>
-        <p className="mb-2 text-sm font-medium text-gray-700">Amenities</p>
-        <div className="flex flex-wrap gap-2">
-          {AMENITIES.map((a) => (
-            <button
-              key={a}
-              type="button"
-              onClick={() => toggleAmenity(a)}
-              className={`rounded-full border px-3 py-1 text-xs font-medium ${
-                selectedAmenities.includes(a)
-                  ? "border-brand-500 bg-brand-50 text-brand-700"
-                  : "border-gray-200 text-gray-600 hover:bg-gray-50"
-              }`}
-            >
-              {a.replace(/_/g, " ")}
-            </button>
+      <div className="space-y-2">
+        <label className="block text-xs font-bold text-gray-700">Select City</label>
+        <select
+          value={filters.city || ""}
+          onChange={(e) => set({ city: e.target.value })}
+          className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-xs font-semibold text-gray-800 focus:bg-white focus:border-amber-500 focus:outline-none transition-all cursor-pointer"
+        >
+          <option value="">All Cities</option>
+          {CITIES.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
           ))}
-        </div>
+        </select>
       </div>
 
-      <Button className="w-full" onClick={onApply}>Apply filters</Button>
+      <Button className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold" onClick={onApply}>
+        Apply Filter
+      </Button>
     </div>
   );
 }
