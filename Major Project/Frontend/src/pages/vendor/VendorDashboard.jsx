@@ -16,9 +16,11 @@ import {
   ChevronRight,
   ShieldCheck,
   Heart,
-  PlusCircle,
   Phone,
   MessageSquareWarning,
+  MapPin,
+  SlidersHorizontal,
+  UserPlus,
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { searchApi } from "../../services/api/search.api";
