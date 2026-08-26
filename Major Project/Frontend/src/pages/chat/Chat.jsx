@@ -6,6 +6,7 @@ import ChatWindow from "../../components/chat/ChatWindow";
 import EmptyState from "../../components/common/EmptyState";
 import { useChat } from "../../hooks/useChat";
 import { useAuth } from "../../hooks/useAuth";
+import { chatApi } from "../../services/api/chat.api";
 
 /**
  * Single-page chat shell: two-pane on desktop, one-pane-at-a-time on
@@ -35,10 +36,17 @@ export default function Chat() {
   }, [conversations, conversationId, targetUserId]);
 
   useEffect(() => {
-    if (resolvedConversation) {
-      navigate(`/chat/${resolvedConversation._id}`, { replace: true });
+    if (targetUserId && !conversationId) {
+      if (resolvedConversation) {
+        navigate(`/chat/${resolvedConversation._id}`, { replace: true });
+      } else {
+        chatApi.createConversation(targetUserId).then(({ data }) => {
+          const newId = data.data?.id || data.data?._id;
+          if (newId) navigate(`/chat/${newId}`, { replace: true });
+        }).catch(() => {});
+      }
     }
-  }, [resolvedConversation]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [resolvedConversation, targetUserId, conversationId]);
 
   const selectConversation = (id) => {
     navigate(`/chat/${id}`);
