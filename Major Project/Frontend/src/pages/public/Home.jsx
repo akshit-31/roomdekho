@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import AuthModal from "../../components/auth/AuthModal";
+import { useAuth } from "../../hooks/useAuth";
 
 import img1 from "../../image.png";
 import img2 from "../../image copy.png";
@@ -9,7 +11,9 @@ import img4 from "../../ef0c218f-6a1e-4f6d-b14f-a210f8c46a77.jfif";
 const SLIDE_IMAGES = [img1, img2, img3, img4];
 
 export default function Home() {
+  const { isAuthenticated } = useAuth();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % SLIDE_IMAGES.length);
@@ -19,6 +23,17 @@ export default function Home() {
     setCurrentSlide((prev) => (prev - 1 + SLIDE_IMAGES.length) % SLIDE_IMAGES.length);
   };
 
+  // Auto-open Glassmorphism Login modal on initial screen load if user is not authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      const timer = setTimeout(() => {
+        setAuthModalOpen(true);
+      }, 400);
+      return () => clearTimeout(timer);
+    }
+  }, [isAuthenticated]);
+
+  // Auto carousel slide timer
   useEffect(() => {
     const timer = setInterval(() => {
       nextSlide();
@@ -92,6 +107,13 @@ export default function Home() {
           </p>
         </div>
       </section>
+
+      {/* Auto-Triggered Glassmorphism Login Popup Modal */}
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        initialTab="login"
+      />
     </div>
   );
 }
