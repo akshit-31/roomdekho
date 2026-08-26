@@ -19,8 +19,12 @@ export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [authModalOpen, setAuthModalOpen] = useState(false);
 
-  // If user is logged in, show the Vendor Dashboard view
+  // If user is logged in, redirect Owner role strictly to /owner/listings, else show Vendor Dashboard
   if (isAuthenticated) {
+    if (user?.role === "owner") {
+      navigate("/owner/listings", { replace: true });
+      return null;
+    }
     return <VendorDashboard />;
   }
 

@@ -41,6 +41,13 @@ const SIDEBAR_NAV = [
 export default function VendorDashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user?.role === "owner") {
+      navigate("/owner/listings", { replace: true });
+    }
+  }, [user]);
+
   const [activeNav, setActiveNav] = useState("dashboard");
   const [modeToggle, setModeToggle] = useState("rooms");
   const [rooms, setRooms] = useState([]);
