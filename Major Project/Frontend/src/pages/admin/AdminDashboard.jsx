@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Users, Home, ShieldAlert, Flag, AlertTriangle, CreditCard } from "lucide-react";
+import { Users, DoorOpen, MessageSquareWarning, MessageCircle } from "lucide-react";
 import AdminStats from "../../components/admin/AdminStats";
 import Loader from "../../components/common/Loader";
 import { adminApi } from "../../services/api/admin.api";
 
 const SHORTCUTS = [
-  { to: "/admin/users", label: "Users", icon: Users },
-  { to: "/admin/listings", label: "Listing moderation", icon: Home },
-  { to: "/admin/kyc", label: "KYC queue", icon: ShieldAlert },
-  { to: "/admin/reports", label: "Reports", icon: Flag },
-  { to: "/admin/fraud", label: "Fraud detection", icon: AlertTriangle },
-  { to: "/admin/payments", label: "Payments", icon: CreditCard },
+  { to: "/admin/users", label: "User Management", icon: Users },
+  { to: "/admin/listings", label: "Room Details", icon: DoorOpen },
+  { to: "/admin/complaints", label: "Complaint Management", icon: MessageSquareWarning },
+  { to: "/chat", label: "Chat Management", icon: MessageCircle },
 ];
 
 export default function AdminDashboard() {

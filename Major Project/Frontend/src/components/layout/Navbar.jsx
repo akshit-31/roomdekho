@@ -23,6 +23,13 @@ const OWNER_NAV_LINKS = [
   { to: "/admin/complaints", label: "Complaint", icon: MessageSquareWarning },
 ];
 
+const ADMIN_NAV_LINKS = [
+  { to: "/admin/users", label: "User Management", icon: Users },
+  { to: "/admin/listings", label: "Room Details", icon: DoorOpen },
+  { to: "/admin/complaints", label: "Complaint Management", icon: MessageSquareWarning },
+  { to: "/chat", label: "Chat Management", icon: MessageCircle },
+];
+
 export default function Navbar() {
   const { user, isAuthenticated, logout } = useAuth();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -39,7 +46,12 @@ export default function Navbar() {
     }
   };
 
-  const navLinks = user?.role === "owner" ? OWNER_NAV_LINKS : GENERAL_NAV_LINKS;
+  const navLinks =
+    user?.role === "admin"
+      ? ADMIN_NAV_LINKS
+      : user?.role === "owner"
+      ? OWNER_NAV_LINKS
+      : GENERAL_NAV_LINKS;
 
   return (
     <>
