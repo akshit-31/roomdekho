@@ -1,4 +1,4 @@
-import { Route } from "react-router-dom";
+import { Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "../components/common/ProtectedRoute";
 
 import RoommateDetails from "../pages/roommates/RoommateDetails";
@@ -17,7 +17,7 @@ import VendorDashboard from "../pages/vendor/VendorDashboard";
 export default function PrivateRoutes() {
   return (
     <Route element={<ProtectedRoute />}>
-      <Route path="/vendor" element={<VendorDashboard />} />
+      <Route path="/vendor" element={<Navigate to="/" replace />} />
       <Route path="/roommates/:id" element={<RoommateDetails />} />
       <Route path="/roommates/me" element={<MyRoommateProfile />} />
       <Route path="/visits/:id" element={<VisitDetails />} />
