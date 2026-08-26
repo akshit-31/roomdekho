@@ -22,10 +22,20 @@ export default function Favorites() {
     setLoading(true);
     const ids = storage.get(FAVORITES_KEY, []);
     try {
-      const results = await Promise.all(
-        ids.map((id) => propertyApi.getOne(id).then((r) => r.data.data).catch(() => null))
-      );
-      setRooms(results.filter(Boolean));
+      if (ids.length > 0) {
+        const results = await Promise.all(
+          ids.map((id) => propertyApi.getOne(id).then((r) => r.data.data).catch(() => null))
+        );
+        setRooms(results.filter(Boolean));
+      } else {
+        // Fallback: Fetch top published rooms from PostgreSQL DB
+        const { data } = await propertyApi.list({ limit: 8 });
+        const fetched = data.data?.items || data.data || [];
+        setRooms(fetched);
+      }
+    } catch (err) {
+      console.error("Favorites load error:", err);
+      setRooms([]);
     } finally {
       setLoading(false);
     }
