@@ -167,61 +167,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. Interactive Quick Search Floating Card Section */}
-      <section className="mx-auto w-full max-w-[90vw] -mt-16 relative z-30">
-        <div className="rounded-3xl border border-gray-100 bg-white p-5 sm:p-7 shadow-xl backdrop-blur-xl">
-          <h2 className="mb-4 text-xs font-bold uppercase tracking-wider text-amber-600">Quick Room Search</h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            {/* City Dropdown */}
-            <div className="space-y-1.5">
-              <label className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
-                <MapPin size={15} className="text-amber-500" /> City
-              </label>
-              <select
-                value={selectedCity}
-                onChange={(e) => setSelectedCity(e.target.value)}
-                className="w-full rounded-2xl border border-gray-200 bg-slate-50 px-4 py-3 text-xs font-bold text-slate-800 focus:bg-white focus:border-amber-500 focus:outline-none transition-all"
-              >
-                <option value="Delhi">Delhi</option>
-                <option value="Noida">Noida</option>
-                <option value="Gurgaon">Gurgaon</option>
-                <option value="Bengaluru">Bengaluru</option>
-                <option value="Jaipur">Jaipur</option>
-                <option value="Mumbai">Mumbai</option>
-              </select>
-            </div>
-
-            {/* Property Type Dropdown */}
-            <div className="space-y-1.5">
-              <label className="flex items-center gap-1.5 text-xs font-bold text-slate-700">
-                <Building2 size={15} className="text-amber-500" /> Property Type
-              </label>
-              <select
-                value={selectedType}
-                onChange={(e) => setSelectedType(e.target.value)}
-                className="w-full rounded-2xl border border-gray-200 bg-slate-50 px-4 py-3 text-xs font-bold text-slate-800 focus:bg-white focus:border-amber-500 focus:outline-none transition-all"
-              >
-                <option value="">All Property Types</option>
-                <option value="apartment">Apartment</option>
-                <option value="flat">Shared Flat</option>
-                <option value="independent">House / Villa</option>
-                <option value="pg">PG / Hostel</option>
-              </select>
-            </div>
-
-            {/* Search Submit Button */}
-            <div className="flex items-end">
-              <button
-                type="button"
-                onClick={handleSearchClick}
-                className="flex w-full items-center justify-center gap-2 rounded-2xl bg-amber-500 py-3 text-xs font-bold text-white shadow-lg shadow-amber-500/25 hover:bg-amber-600 transition-all active:scale-95"
-              >
-                <Search size={16} />
-                <span>Search Verified Rooms</span>
-              </button>
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* 3. Popular Cities Section - Display Only */}
