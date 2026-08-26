@@ -45,8 +45,14 @@ export default function Chat() {
           if (newId) navigate(`/chat/${newId}`, { replace: true });
         }).catch(() => {});
       }
+    } else if (!conversationId && conversations.length === 0) {
+      // Auto-connect with default Super Admin or Owner to populate active chat thread
+      chatApi.createConversation(1).then(({ data }) => {
+        const newId = data.data?.id || data.data?._id;
+        if (newId) navigate(`/chat/${newId}`, { replace: true });
+      }).catch(() => {});
     }
-  }, [resolvedConversation, targetUserId, conversationId]);
+  }, [resolvedConversation, targetUserId, conversationId, conversations.length]);
 
   const selectConversation = (id) => {
     navigate(`/chat/${id}`);
