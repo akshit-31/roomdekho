@@ -151,8 +151,8 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Center Nav Links - Hidden for Room Owner */}
-          {user?.role !== "owner" && (
+          {/* Center Nav Links - Hidden for Room Owner & Admin */}
+          {user?.role !== "owner" && user?.role !== "admin" && (
             <nav className="hidden md:flex items-center gap-8">
               <NavLink
                 to="/"
