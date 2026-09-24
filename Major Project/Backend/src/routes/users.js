@@ -4,21 +4,51 @@ import {auth} from "../middleware/auth.js";
 import {ok} from "../utils/response.js";
 const r=Router();
 r.get("/me",auth,async(req,res)=>{
- const p=await query("SELECT * FROM profiles WHERE user_id=$1",[req.user.id]);
- const user = {
-   ...req.user,
-   _id: req.user.id,
-   avatarUrl: req.user.avatar,
-   kyc: { status: req.user.is_kyc_verified ? "verified" : "not_submitted" },
-   profile: p.rows[0] || null
- };
- ok(res,200,"Profile fetched", user);
+  const uRes = await query("SELECT id,name,email,phone,role,avatar,is_kyc_verified,created_at FROM users WHERE id=$1",[req.user.id]);
+  const userRow = uRes.rows[0] || req.user;
+  const p = await query("SELECT * FROM profiles WHERE user_id=$1",[req.user.id]);
+  const profileData = p.rows[0] || {};
+  const user = {
+    ...userRow,
+    _id: userRow.id,
+    avatarUrl: userRow.avatar,
+    bio: profileData.bio || "",
+    gender: profileData.gender || "",
+    age: profileData.age || null,
+    occupation: profileData.occupation || "",
+    dob: profileData.dob || "",
+    kyc: { status: userRow.is_kyc_verified ? "verified" : "not_submitted" },
+    profile: profileData
+  };
+  ok(res,200,"Profile fetched", user);
 });
 r.put("/me",auth,async(req,res)=>{
- const {name,phone,avatar}=req.body;
- await query("UPDATE users SET name=COALESCE($1,name),phone=COALESCE($2,phone),avatar=COALESCE($3,avatar),updated_at=now() WHERE id=$4",[name,phone,avatar,req.user.id]);
- const {rows}=await query("SELECT id,name,email,phone,role,avatar,is_kyc_verified FROM users WHERE id=$1",[req.user.id]);
- ok(res,200,"Profile updated",{user:rows[0]});
+  const {name,phone,avatar,bio,gender,age,occupation,dob}=req.body;
+  await query("UPDATE users SET name=COALESCE($1,name),phone=COALESCE($2,phone),avatar=COALESCE($3,avatar),updated_at=now() WHERE id=$4",[name,phone,avatar,req.user.id]);
+  if(bio !== undefined || gender !== undefined || age !== undefined || occupation !== undefined || dob !== undefined) {
+    await query(
+      `INSERT INTO profiles(user_id,bio,gender,age,occupation,dob) VALUES($1,$2,$3,$4,$5,$6)
+       ON CONFLICT(user_id) DO UPDATE SET bio=EXCLUDED.bio,gender=EXCLUDED.gender,age=EXCLUDED.age,occupation=EXCLUDED.occupation,dob=EXCLUDED.dob,updated_at=now()`,
+      [req.user.id, bio||null, gender||null, age||null, occupation||null, dob||null]
+    );
+  }
+  const uRes = await query("SELECT id,name,email,phone,role,avatar,is_kyc_verified FROM users WHERE id=$1",[req.user.id]);
+  const userRow = uRes.rows[0];
+  const p = await query("SELECT * FROM profiles WHERE user_id=$1",[req.user.id]);
+  const profileData = p.rows[0] || {};
+  const user = {
+    ...userRow,
+    _id: userRow.id,
+    avatarUrl: userRow.avatar,
+    bio: profileData.bio || "",
+    gender: profileData.gender || "",
+    age: profileData.age || null,
+    occupation: profileData.occupation || "",
+    dob: profileData.dob || "",
+    kyc: { status: userRow.is_kyc_verified ? "verified" : "not_submitted" },
+    profile: profileData
+  };
+  ok(res,200,"Profile updated", user);
 });
 r.get("/:id",async(req,res)=>{
  const {rows}=await query("SELECT id,name,avatar,role,is_kyc_verified,created_at FROM users WHERE id=$1",[req.params.id]);

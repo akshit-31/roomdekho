@@ -78,7 +78,13 @@ export default function UserTable({ users = [], onChanged }) {
               <td className="px-4 py-3">
                 <span className={`rounded-full px-2 py-0.5 text-xs font-medium capitalize ${ROLE_STYLES[u.role]}`}>{u.role}</span>
               </td>
-              <td className="px-4 py-3 text-xs capitalize text-gray-600">{u.kyc?.status?.replace("_", " ") || "not submitted"}</td>
+              <td className="px-4 py-3 text-xs capitalize text-gray-600">
+                <div className="flex items-center gap-1.5">
+                  <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${u.kyc?.status === "verified" ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-700"}`}>
+                    {u.kyc?.status?.replace("_", " ") || "not submitted"}
+                  </span>
+                </div>
+              </td>
               <td className="px-4 py-3 text-xs text-gray-500">{formatDate(u.createdAt)}</td>
               <td className="px-4 py-3">
                 {u.isBanned ? (
@@ -97,6 +103,22 @@ export default function UserTable({ users = [], onChanged }) {
                     <MessageCircle size={14} />
                     <span>Chat</span>
                   </button>
+
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await adminApi.updateKyc(u._id, u.kyc?.status !== "verified");
+                      onChanged?.();
+                    }}
+                    className={`rounded-xl px-2.5 py-1 text-xs font-bold transition-all border ${
+                      u.kyc?.status === "verified"
+                        ? "bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-200"
+                        : "bg-green-600 text-white border-green-600 hover:bg-green-700 shadow-sm"
+                    }`}
+                  >
+                    {u.kyc?.status === "verified" ? "Unverify KYC" : "Verify Account"}
+                  </button>
+
                   {!u.isBanned && (
                     <Button size="sm" variant="danger" onClick={() => setTarget(u)}>Ban</Button>
                   )}

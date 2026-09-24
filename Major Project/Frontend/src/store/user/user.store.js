@@ -17,7 +17,9 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(fetchMe.pending, (state) => { state.status = "loading"; })
       .addCase(fetchMe.fulfilled, (state, action) => { state.profile = action.payload; state.status = "succeeded"; })
+      .addCase(fetchMe.rejected, (state) => { state.status = "failed"; })
       .addCase(updateProfile.fulfilled, (state, action) => { state.profile = action.payload; });
   },
 });
