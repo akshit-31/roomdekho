@@ -35,7 +35,36 @@ const io=new Server(server,{cors:{origin:process.env.CLIENT_URL||"http://localho
 app.set("io",io);
 
 io.on("connection",(socket)=>{
+  const authUserId = socket.handshake.auth?.userId;
+  if (authUserId) {
+    socket.join(`user:${authUserId}`);
+  }
+
   socket.on("joinConversation",(id)=>socket.join(`conversation:${id}`));
+  socket.on("chat:join",(id)=>socket.join(`conversation:${id}`));
+
+  socket.on("chat:typing",({conversationId,userId,isTyping})=>{
+    socket.to(`conversation:${conversationId}`).emit("chat:typing",{userId,isTyping});
+  });
+
+  socket.on("chat:message",async(payload)=>{
+    try {
+      const convId = payload.conversationId;
+      const text = payload.message?.text || payload.text || payload.body;
+      const senderId = authUserId || payload.senderId || payload.userId;
+      if (convId && text) {
+        const { rows } = await query(
+          "INSERT INTO messages(conversation_id, sender_id, body) VALUES($1, $2, $3) RETURNING *",
+          [convId, senderId || 1, text]
+        );
+        const msg = { ...rows[0], _id: String(rows[0].id), text: rows[0].body };
+        io.to(`conversation:${convId}`).emit("chat:message", msg);
+        io.to(`conversation:${convId}`).emit("message:new", msg);
+      }
+    } catch (err) {
+      console.error("Socket chat error:", err);
+    }
+  });
 });
 
 app.use(helmet());

@@ -55,8 +55,11 @@ export async function initDB() {
       cleanliness VARCHAR(40),
       smoking BOOLEAN,
       pets BOOLEAN,
+      dob VARCHAR(40),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
     );
+
+    ALTER TABLE profiles ADD COLUMN IF NOT EXISTS dob VARCHAR(40);
 
     CREATE TABLE IF NOT EXISTS rooms (
       id BIGSERIAL PRIMARY KEY,

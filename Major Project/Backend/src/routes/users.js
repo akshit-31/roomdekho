@@ -53,8 +53,40 @@ r.put("/me",auth,async(req,res)=>{
 r.get("/:id",async(req,res)=>{
  const {rows}=await query("SELECT id,name,avatar,role,is_kyc_verified,created_at FROM users WHERE id=$1",[req.params.id]);
  if(!rows[0]) return res.status(404).json({success:false,message:"User not found"});
- const p=await query("SELECT bio,gender,age,occupation,budget_min,budget_max,preferred_locations,personality_tags,sleep_schedule,food_preference,cleanliness,smoking,pets FROM profiles WHERE user_id=$1",[req.params.id]);
- ok(res,200,"User fetched",{user:rows[0],profile:p.rows[0]||null});
+ const u = rows[0];
+ const p=await query("SELECT bio,gender,age,occupation,budget_min,budget_max,preferred_locations,personality_tags,sleep_schedule,food_preference,cleanliness,smoking,pets,dob FROM profiles WHERE user_id=$1",[req.params.id]);
+ const pr = p.rows[0] || {};
+ const adapted = {
+   _id: String(u.id),
+   id: String(u.id),
+   userId: String(u.id),
+   name: u.name,
+   avatar: u.avatar,
+   avatarUrl: u.avatar,
+   role: u.role,
+   isKycVerified: Boolean(u.is_kyc_verified),
+   kyc: { status: u.is_kyc_verified ? "verified" : "not_submitted" },
+   bio: pr.bio || "Looking for a friendly roommate to share an apartment.",
+   gender: pr.gender || "Any",
+   age: pr.age || null,
+   occupation: pr.occupation || "",
+   dob: pr.dob || "",
+   preferences: {
+     budgetMin: Number(pr.budget_min || 0),
+     budgetMax: Number(pr.budget_max || 0),
+     preferredLocations: pr.preferred_locations || [],
+     personalityTags: pr.personality_tags || [],
+     sleepSchedule: pr.sleep_schedule || "",
+     food: pr.food_preference || "",
+     foodPreference: pr.food_preference || "",
+     cleanliness: pr.cleanliness || "",
+     smoking: pr.smoking,
+     pets: pr.pets
+   },
+   user: u,
+   profile: pr
+ };
+ ok(res,200,"User fetched", adapted);
 });
 r.get("/me/devices",auth,async(req,res)=>{const {rows}=await query("SELECT id,name,created_at FROM devices WHERE user_id=$1 ORDER BY created_at DESC",[req.user.id]);ok(res,200,"Devices fetched",rows)});
 r.delete("/me/devices/:deviceId",auth,async(req,res)=>{await query("DELETE FROM devices WHERE id=$1 AND user_id=$2",[req.params.deviceId,req.user.id]);ok(res,200,"Device removed")});

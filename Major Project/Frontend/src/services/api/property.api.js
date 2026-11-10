@@ -1,6 +1,7 @@
 import { api } from "./axios";
 
 export const propertyApi = {
+  list: (params) => api.get("/rooms", { params }),
   create: (payload) => api.post("/rooms", payload),
   uploadMedia: (id, formData) =>
     api.post(`/rooms/${id}/media`, formData, { headers: { "Content-Type": "multipart/form-data" } }),

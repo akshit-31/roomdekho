@@ -77,11 +77,14 @@ r.get("/", async (req, res) => {
     );
 
     const items = dataRes.rows.map((row) => ({
-      _id: row.id,
-      id: row.id,
+      _id: String(row.id),
+      id: String(row.id),
+      userId: String(row.id),
       name: row.name,
       avatar: row.avatar,
-      isKycVerified: row.is_kyc_verified,
+      avatarUrl: row.avatar,
+      isKycVerified: Boolean(row.is_kyc_verified),
+      kyc: { status: row.is_kyc_verified ? "verified" : "not_submitted" },
       bio: row.bio || "Looking for a friendly roommate to share an apartment.",
       gender: row.gender || "Any",
       age: row.age || 23,
@@ -93,11 +96,24 @@ r.get("/", async (req, res) => {
       sleepSchedule: row.sleep_schedule || "Night Owl",
       foodPreference: row.food_preference || "Vegetarian",
       cleanliness: row.cleanliness || "High",
+      preferences: {
+        budgetMin: Number(row.budget_min || 5000),
+        budgetMax: Number(row.budget_max || 15000),
+        preferredLocations: row.preferred_locations || ["Delhi", "Noida", "Gurgaon"],
+        food: row.food_preference || "Vegetarian",
+        foodPreference: row.food_preference || "Vegetarian",
+        sleepSchedule: row.sleep_schedule || "Night Owl",
+        cleanliness: row.cleanliness || "High",
+        smoking: Boolean(row.smoking),
+        pets: Boolean(row.pets)
+      },
       user: {
-        _id: row.id,
+        _id: String(row.id),
+        id: String(row.id),
         name: row.name,
         avatar: row.avatar,
-        isKycVerified: row.is_kyc_verified,
+        avatarUrl: row.avatar,
+        isKycVerified: Boolean(row.is_kyc_verified),
       },
     }));
 
