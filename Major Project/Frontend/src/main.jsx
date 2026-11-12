@@ -8,6 +8,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { SocketProvider } from "./context/SocketContext";
 import ErrorBoundary from "./components/common/ErrorBoundary";
 import App from "./App";
+import "leaflet/dist/leaflet.css";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(

@@ -5,6 +5,7 @@ import TypingIndicator from "./TypingIndicator";
 import OnlineStatus from "./OnlineStatus";
 import EmptyState from "../common/EmptyState";
 import { chatApi } from "../../services/api/chat.api";
+import { uploadApi } from "../../services/api/upload.api";
 
 /**
  * Assembles the full chat pane: header, MessageList, optional typing
@@ -28,10 +29,17 @@ export default function ChatWindow({
   const other = conversation.otherUser || {};
 
   const handleSendImage = async (file) => {
-    const formData = new FormData();
-    formData.append("image", file);
-    // Backend endpoint to be added: POST /chat/:id/messages (multipart)
-    await chatApi.sendMessage(conversation._id, formData);
+    try {
+      const formData = new FormData();
+      formData.append("files", file);
+      const { data: uploadRes } = await uploadApi.uploadFiles(formData);
+      const url = uploadRes.data?.url || uploadRes.data?.urls?.[0];
+      if (url) {
+        await onSend("", url);
+      }
+    } catch (err) {
+      console.error("Chat image send failed:", err);
+    }
   };
 
   return (

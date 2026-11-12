@@ -11,7 +11,7 @@ export default function Register() {
       <div className="pointer-events-none absolute right-1/4 bottom-1/4 h-72 w-72 rounded-full bg-blue-500/20 blur-[100px]" />
 
       {/* Glassmorphism Floating Card */}
-      <div className="relative my-auto w-full max-w-sm sm:max-w-md flex flex-col overflow-hidden rounded-3xl border border-white/20 bg-slate-900/80 p-6 sm:p-8 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] backdrop-blur-2xl text-white z-10">
+      <div className="relative my-auto w-full max-w-md sm:max-w-lg flex flex-col overflow-hidden rounded-3xl border border-white/20 bg-slate-900/85 p-6 sm:p-8 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] backdrop-blur-2xl text-white z-10">
         {/* Brand Logo Header */}
         <div className="mb-6 flex flex-col items-center text-center">
           <Link to="/" className="mb-4 flex items-center justify-center gap-2">

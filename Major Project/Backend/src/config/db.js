@@ -34,10 +34,26 @@ export async function initDB() {
       is_phone_verified BOOLEAN NOT NULL DEFAULT false,
       is_kyc_verified BOOLEAN NOT NULL DEFAULT false,
       is_blocked BOOLEAN NOT NULL DEFAULT false,
+      is_profile_completed BOOLEAN NOT NULL DEFAULT false,
+      approval_status VARCHAR(20) NOT NULL DEFAULT 'approved',
+      property_city VARCHAR(80),
+      property_locality VARCHAR(120),
+      property_address TEXT,
+      id_proof_type VARCHAR(60),
+      id_proof_number VARCHAR(100),
       created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
       last_login_at TIMESTAMPTZ
     );
+
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS is_profile_completed BOOLEAN DEFAULT false;
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS approval_status VARCHAR(20) DEFAULT 'approved';
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS property_city VARCHAR(80);
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS property_locality VARCHAR(120);
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS property_address TEXT;
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS id_proof_type VARCHAR(60);
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS id_proof_number VARCHAR(100);
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS intent VARCHAR(40) DEFAULT 'both';
 
     CREATE TABLE IF NOT EXISTS profiles (
       id BIGSERIAL PRIMARY KEY,
@@ -55,8 +71,13 @@ export async function initDB() {
       cleanliness VARCHAR(40),
       smoking BOOLEAN,
       pets BOOLEAN,
+      dob VARCHAR(40),
+      looking_for VARCHAR(40) DEFAULT 'both',
       updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
     );
+
+    ALTER TABLE profiles ADD COLUMN IF NOT EXISTS dob VARCHAR(40);
+    ALTER TABLE profiles ADD COLUMN IF NOT EXISTS looking_for VARCHAR(40) DEFAULT 'both';
 
     CREATE TABLE IF NOT EXISTS rooms (
       id BIGSERIAL PRIMARY KEY,

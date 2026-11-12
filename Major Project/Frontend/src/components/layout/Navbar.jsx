@@ -129,48 +129,46 @@ export default function Navbar() {
 
       {/* Top Header Navbar */}
       <header className="sticky top-0 z-30 bg-white/95 border-b border-gray-100 backdrop-blur-md">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 sm:px-10 lg:px-12">
-          <div className="flex items-center gap-4">
-            {/* Universal Hamburger Icon Trigger - Rendered Only When Authenticated */}
-            {isAuthenticated && (
-              <button
-                type="button"
-                onClick={() => setDrawerOpen(true)}
-                className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm active:scale-95"
-                aria-label="Open Navigation Drawer"
-              >
-                <Menu size={20} />
-              </button>
-            )}
+        <div className="mx-auto flex h-16 sm:h-20 max-w-7xl items-center justify-between px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center gap-2 sm:gap-3.5">
+            {/* Universal Hamburger Icon Trigger - Rendered for drawer access */}
+            <button
+              type="button"
+              onClick={() => setDrawerOpen(true)}
+              className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm active:scale-95 shrink-0"
+              aria-label="Open Navigation Drawer"
+            >
+              <Menu size={18} />
+            </button>
 
             {/* Brand Logo */}
-            <Link to="/" className="flex items-center gap-2 text-decoration-none">
-              <img src={customLogo} alt="RoomDekho Logo" className="h-9 w-9 object-contain" />
-              <span className="text-xl font-extrabold tracking-tight text-slate-900">
+            <Link to="/" className="flex items-center gap-1.5 sm:gap-2 text-decoration-none">
+              <img src={customLogo} alt="RoomDekho Logo" className="h-7 w-7 sm:h-9 sm:w-9 object-contain shrink-0" />
+              <span className="text-base sm:text-xl font-extrabold tracking-tight text-slate-900">
                 RoomDekho
               </span>
             </Link>
           </div>
 
           {/* Right Actions */}
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             {isAuthenticated ? (
               <div className="relative">
                 <button
                   type="button"
                   onClick={() => setUserMenuOpen((prev) => !prev)}
-                  className="flex items-center gap-2 rounded-full border border-gray-200 p-1.5 pr-3 hover:bg-slate-50 transition-all"
+                  className="flex items-center gap-1.5 sm:gap-2 rounded-full border border-gray-200 p-1 sm:p-1.5 pr-2.5 sm:pr-3 hover:bg-slate-50 transition-all"
                 >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-500 text-white font-bold text-xs">
+                  <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-amber-500 text-white font-bold text-xs shrink-0">
                     {user?.name?.[0]?.toUpperCase() || "U"}
                   </div>
-                  <span className="text-xs font-semibold text-slate-700 max-w-[100px] truncate">
+                  <span className="text-xs font-semibold text-slate-700 max-w-[70px] sm:max-w-[110px] truncate">
                     {user?.name || "Account"}
                   </span>
                 </button>
 
                 {userMenuOpen && (
-                  <div className="absolute right-0 top-12 w-48 rounded-2xl border border-gray-100 bg-white p-2 shadow-xl z-50">
+                  <div className="absolute right-0 top-11 sm:top-12 w-48 rounded-2xl border border-gray-100 bg-white p-2 shadow-xl z-50">
                     <Link
                       to="/profile"
                       onClick={() => setUserMenuOpen(false)}
@@ -201,7 +199,7 @@ export default function Navbar() {
             ) : (
               <Link
                 to="/login"
-                className="text-sm font-semibold text-slate-700 hover:text-slate-900 transition-colors"
+                className="rounded-xl bg-amber-500 hover:bg-amber-600 px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-bold text-white shadow-sm transition-all active:scale-95"
               >
                 Login
               </Link>

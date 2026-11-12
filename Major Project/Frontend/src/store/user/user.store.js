@@ -14,14 +14,28 @@ export const updateProfile = createAsyncThunk("user/updateProfile", async (paylo
 const userSlice = createSlice({
   name: "user",
   initialState: { profile: null, status: "idle" },
-  reducers: {},
+  reducers: {
+    clearProfile: (state) => {
+      state.profile = null;
+      state.status = "idle";
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchMe.pending, (state) => { state.status = "loading"; })
       .addCase(fetchMe.fulfilled, (state, action) => { state.profile = action.payload; state.status = "succeeded"; })
       .addCase(fetchMe.rejected, (state) => { state.status = "failed"; })
-      .addCase(updateProfile.fulfilled, (state, action) => { state.profile = action.payload; });
+      .addCase(updateProfile.fulfilled, (state, action) => { state.profile = action.payload; })
+      .addCase("auth/logoutAsync/fulfilled", (state) => {
+        state.profile = null;
+        state.status = "idle";
+      })
+      .addCase("auth/logout", (state) => {
+        state.profile = null;
+        state.status = "idle";
+      });
   },
 });
 
+export const { clearProfile } = userSlice.actions;
 export default userSlice.reducer;

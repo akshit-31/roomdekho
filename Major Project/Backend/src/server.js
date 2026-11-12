@@ -7,7 +7,12 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
 import { Server } from "socket.io";
+import path from "path";
+import { fileURLToPath } from "url";
 import { connectDB, initDB } from "./config/db.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/users.js";
@@ -28,21 +33,76 @@ import analyticsRoutes from "./routes/analytics.js";
 import documentRoutes from "./routes/documents.js";
 import paymentRoutes from "./routes/payments.js";
 import roommateRoutes from "./routes/roommates.js";
+import uploadRoutes from "./routes/upload.js";
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  process.env.CLIENT_URL,
+].filter(Boolean);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (
+      !origin ||
+      allowedOrigins.includes(origin) ||
+      origin.startsWith("http://localhost:") ||
+      origin.startsWith("http://127.0.0.1:") ||
+      origin.includes("vercel.app") ||
+      origin.includes("onrender.com")
+    ) {
+      callback(null, true);
+    } else {
+      callback(null, true);
+    }
+  },
+  credentials: true,
+};
 
 const app=express();
 const server=http.createServer(app);
-const io=new Server(server,{cors:{origin:process.env.CLIENT_URL||"http://localhost:5173",credentials:true}});
+const io=new Server(server,{cors:corsOptions});
 app.set("io",io);
 
 io.on("connection",(socket)=>{
+  const authUserId = socket.handshake.auth?.userId;
+  if (authUserId) {
+    socket.join(`user:${authUserId}`);
+  }
+
   socket.on("joinConversation",(id)=>socket.join(`conversation:${id}`));
+  socket.on("chat:join",(id)=>socket.join(`conversation:${id}`));
+
+  socket.on("chat:typing",({conversationId,userId,isTyping})=>{
+    socket.to(`conversation:${conversationId}`).emit("chat:typing",{userId,isTyping});
+  });
+
+  socket.on("chat:message",async(payload)=>{
+    try {
+      const convId = payload.conversationId;
+      const text = payload.message?.text || payload.text || payload.body;
+      const senderId = authUserId || payload.senderId || payload.userId;
+      if (convId && text) {
+        const { rows } = await query(
+          "INSERT INTO messages(conversation_id, sender_id, body) VALUES($1, $2, $3) RETURNING *",
+          [convId, senderId || 1, text]
+        );
+        const msg = { ...rows[0], _id: String(rows[0].id), text: rows[0].body };
+        io.to(`conversation:${convId}`).emit("chat:message", msg);
+        io.to(`conversation:${convId}`).emit("message:new", msg);
+      }
+    } catch (err) {
+      console.error("Socket chat error:", err);
+    }
+  });
 });
 
 app.use(helmet());
-app.use(cors({origin:process.env.CLIENT_URL||"http://localhost:5173",credentials:true}));
-app.use(express.json({limit:"2mb"}));
-app.use(express.urlencoded({extended:true}));
+app.use(cors(corsOptions));
+app.use(express.json({limit:"20mb"}));
+app.use(express.urlencoded({extended:true,limit:"20mb"}));
 app.use(cookieParser());
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use(morgan("dev"));
 app.use("/api",rateLimit({windowMs:15*60*1000,max:300}));
 
@@ -71,6 +131,7 @@ function mount(prefix){
   app.use(`${prefix}/documents`,documentRoutes);
   app.use(`${prefix}/payments`,paymentRoutes);
   app.use(`${prefix}/roommates`,roommateRoutes);
+  app.use(`${prefix}/upload`,uploadRoutes);
 }
 mount("/api/v1");
 mount("/api");
@@ -88,3 +149,16 @@ async function start(){
   server.listen(port,()=>console.log(`API running on http://localhost:${port}`));
 }
 start().catch(err=>{console.error("Server start failed:",err);process.exit(1)});
+
+const shutdown = () => {
+  if (server && server.listening) {
+    server.close(() => {
+      process.exit(0);
+    });
+  } else {
+    process.exit(0);
+  }
+};
+process.on("SIGTERM", shutdown);
+process.on("SIGINT", shutdown);
+process.once("SIGUSR2", shutdown);

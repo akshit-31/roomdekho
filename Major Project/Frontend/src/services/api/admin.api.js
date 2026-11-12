@@ -7,6 +7,7 @@ export const adminApi = {
   moderateListing: (id, action) => api.patch(`/admin/listings/${id}/moderate`, { action }),
   kycQueue: () => api.get("/admin/kyc"),
   reviewKyc: (userId, payload) => api.patch(`/admin/kyc/${userId}`, payload),
+  updateKyc: (userId, verified) => api.patch(`/admin/kyc/${userId}`, { verified: Boolean(verified), status: verified ? "approved" : "rejected" }),
   reports: () => api.get("/admin/reports"),
   analytics: () => api.get("/admin/analytics"),
   fraudAlerts: (params) => api.get("/admin/fraud-alerts", { params }),
