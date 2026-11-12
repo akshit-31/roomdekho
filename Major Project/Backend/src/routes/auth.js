@@ -6,7 +6,14 @@ import { signAccess, signRefresh } from "../utils/auth.js";
 import { auth } from "../middleware/auth.js";
 import { ok } from "../utils/response.js";
 const router=Router();
-const setRefreshCookie=(res,token)=>res.cookie("refreshToken",token,{httpOnly:true,sameSite:"lax",secure:process.env.NODE_ENV==="production",maxAge:7*24*60*60*1000});
+const setRefreshCookie = (res, token) =>
+  res.cookie("refreshToken", token, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    path: "/",
+  });
 
 router.post("/register", async (req,res)=>{
   const {
@@ -411,7 +418,24 @@ router.post("/refresh",async(req,res)=>{
   } catch { return res.status(401).json({success:false,message:"Invalid refresh token"}); }
 });
 
-router.post("/logout",(req,res)=>ok(res,200,"Logged out"));
+const clearRefreshCookie = (res) => {
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+  });
+};
+
+router.post("/logout", (req, res) => {
+  clearRefreshCookie(res);
+  return ok(res, 200, "Logged out successfully");
+});
+
+router.get("/logout", (req, res) => {
+  clearRefreshCookie(res);
+  return ok(res, 200, "Logged out successfully");
+});
 router.post("/kyc",auth,async(req,res)=>{
   await query("UPDATE users SET is_kyc_verified=true,updated_at=now() WHERE id=$1",[req.user.id]);
   ok(res,200,"KYC submitted",{verified:true});

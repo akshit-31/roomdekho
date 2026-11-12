@@ -62,7 +62,17 @@ const authSlice = createSlice({
       })
       .addCase(register.rejected, (state, action) => { state.status = "failed"; state.error = action.payload; })
       .addCase(login.rejected, (state, action) => { state.status = "failed"; state.error = action.payload; })
-      .addCase(logoutAsync.fulfilled, (state) => { state.user = null; state.accessToken = null; })
+      .addCase(logoutAsync.fulfilled, (state) => {
+        state.user = null;
+        state.accessToken = null;
+        state.status = "idle";
+        state.error = null;
+      })
+      .addCase(logoutAsync.rejected, (state) => {
+        state.user = null;
+        state.accessToken = null;
+        state.status = "idle";
+      })
       .addCase(checkSession.fulfilled, (state, action) => {
         if (action.payload?.accessToken) {
           state.accessToken = action.payload.accessToken;
@@ -70,7 +80,16 @@ const authSlice = createSlice({
             state.user = action.payload.user;
           }
           state.status = "succeeded";
+        } else {
+          state.user = null;
+          state.accessToken = null;
+          state.status = "idle";
         }
+      })
+      .addCase(checkSession.rejected, (state) => {
+        state.user = null;
+        state.accessToken = null;
+        state.status = "idle";
       });
   },
 });

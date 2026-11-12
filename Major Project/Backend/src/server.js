@@ -38,18 +38,25 @@ import uploadRoutes from "./routes/upload.js";
 const allowedOrigins = [
   "http://localhost:5173",
   "http://127.0.0.1:5173",
-  process.env.CLIENT_URL
+  process.env.CLIENT_URL,
 ].filter(Boolean);
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin) || origin.startsWith("http://localhost:") || origin.startsWith("http://127.0.0.1:")) {
+    if (
+      !origin ||
+      allowedOrigins.includes(origin) ||
+      origin.startsWith("http://localhost:") ||
+      origin.startsWith("http://127.0.0.1:") ||
+      origin.includes("vercel.app") ||
+      origin.includes("onrender.com")
+    ) {
       callback(null, true);
     } else {
       callback(null, true);
     }
   },
-  credentials: true
+  credentials: true,
 };
 
 const app=express();
