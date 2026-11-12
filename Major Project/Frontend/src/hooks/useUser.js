@@ -4,11 +4,14 @@ import { fetchMe, updateProfile } from "../store/user/user.store";
 
 export function useUser() {
   const dispatch = useDispatch();
+  const { accessToken } = useSelector((s) => s.auth);
   const { profile, status } = useSelector((s) => s.user);
 
   useEffect(() => {
-    if (!profile) dispatch(fetchMe());
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    if (accessToken && !profile && status !== "loading") {
+      dispatch(fetchMe());
+    }
+  }, [accessToken, profile, status, dispatch]);
 
   return { profile, status, update: (payload) => dispatch(updateProfile(payload)) };
 }

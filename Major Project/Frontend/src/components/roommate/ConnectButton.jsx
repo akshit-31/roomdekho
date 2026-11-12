@@ -17,7 +17,7 @@ export default function ConnectButton({ matchId, userId, status = "suggested", o
   const navigate = useNavigate();
 
   const handleClick = async () => {
-    if (current === "connected") {
+    if (current === "connected" || !matchId) {
       navigate(`/chat?userId=${userId}`);
       return;
     }

@@ -16,8 +16,8 @@ export default function EditProfile() {
   };
 
   return (
-    <PageContainer title="Edit profile" subtitle="Update how you appear to owners and roommates">
-      <div className="max-w-lg">
+    <PageContainer title="Edit Profile & Credentials" subtitle="Update your personal details, location and contact credentials">
+      <div className="max-w-xl">
         <ProfileForm initialValues={profile} onSubmit={handleSubmit} />
       </div>
     </PageContainer>

@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
-import { Plus, X } from "lucide-react";
+import { Plus, X, MapPin } from "lucide-react";
 import Input from "../common/Input";
 import Select from "../common/Select";
 import Textarea from "../common/Textarea";
 import Button from "../common/Button";
+import ImageUpload from "../common/ImageUpload";
 import {
   PROPERTY_TYPES, SHARING_TYPES, FURNISHING_TYPES, GENDER_PREFERENCES, AMENITIES,
 } from "../../utils/constants";
@@ -20,8 +22,9 @@ const DEFAULTS = {
   houseRules: [""],
   occupancy: { totalBeds: 1, availableBeds: 1, genderPreference: "any" },
   moveInDate: "",
-  address: { line1: "", locality: "", city: "", state: "", pincode: "" },
-  location: { coordinates: [0, 0] },
+  address: { line1: "", locality: "", city: "Delhi", state: "", pincode: "" },
+  location: { coordinates: [77.2090, 28.6139] },
+  images: [],
 };
 
 /**
@@ -29,21 +32,37 @@ const DEFAULTS = {
  * by POST/PUT /rooms (server/src/modules/rooms/room.validator.js).
  */
 export default function PropertyForm({ initialValues, onSubmit, submitLabel = "Save listing" }) {
+  const initialImages =
+    initialValues?.images || (initialValues?.media || []).map((m) => m.url || m) || [];
+  const [uploadedImages, setUploadedImages] = useState(initialImages);
+
   const {
     register,
     control,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({ defaultValues: { ...DEFAULTS, ...initialValues } });
 
   const { fields, append, remove } = useFieldArray({ control, name: "houseRules" });
 
+  const handleFormSubmit = (data) => {
+    onSubmit({
+      ...data,
+      images: uploadedImages,
+      media: uploadedImages.map((url) => ({ url })),
+      houseRules: data.houseRules.filter(Boolean),
+    });
+  };
+
   return (
     <form
-      onSubmit={handleSubmit((data) => onSubmit({ ...data, houseRules: data.houseRules.filter(Boolean) }))}
+      onSubmit={handleSubmit(handleFormSubmit)}
       className="space-y-6"
       noValidate
     >
+      {/* 1. Basic details */}
       <section className="space-y-4 rounded-2xl border border-gray-100 bg-white p-5">
         <h2 className="text-sm font-semibold text-gray-900">Basic details</h2>
         <Input label="Title" placeholder="Sunny 2BHK near Metro Station" error={errors.title?.message}
@@ -56,6 +75,20 @@ export default function PropertyForm({ initialValues, onSubmit, submitLabel = "S
           <Select label="Sharing type" options={SHARING_TYPES} error={errors.sharingType?.message}
             {...register("sharingType", { required: true })} />
         </div>
+      </section>
+
+      {/* 2. Photo Upload Section */}
+      <section className="space-y-4 rounded-2xl border border-gray-100 bg-white p-5">
+        <ImageUpload
+          images={uploadedImages}
+          onChange={(newUrls) => {
+            setUploadedImages(newUrls);
+            setValue("images", newUrls);
+          }}
+          maxImages={8}
+          label="Property & Room Photos"
+          description="Upload high quality photos of bedroom, bathroom and building (PNG, JPG, WEBP)"
+        />
       </section>
 
       <section className="space-y-4 rounded-2xl border border-gray-100 bg-white p-5">
@@ -103,13 +136,13 @@ export default function PropertyForm({ initialValues, onSubmit, submitLabel = "S
           <Input label="Pincode" {...register("address.pincode")} />
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <Input label="Latitude" type="number" step="any" error={errors.location?.coordinates?.[1]?.message}
-            {...register("location.coordinates.1", { required: "Latitude is required", valueAsNumber: true })} />
-          <Input label="Longitude" type="number" step="any" error={errors.location?.coordinates?.[0]?.message}
-            {...register("location.coordinates.0", { required: "Longitude is required", valueAsNumber: true })} />
+          <Input label="Latitude (Optional)" type="number" step="any"
+            {...register("location.coordinates.1", { valueAsNumber: true })} />
+          <Input label="Longitude (Optional)" type="number" step="any"
+            {...register("location.coordinates.0", { valueAsNumber: true })} />
         </div>
-        <p className="text-xs text-gray-400">
-          Tip: paste coordinates from Google Maps, or wire this up to the LocationSearch component for autocomplete.
+        <p className="text-[11px] text-slate-500">
+          💡 Map coordinates are automatically placed based on city/locality if left blank.
         </p>
       </section>
 

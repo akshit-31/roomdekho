@@ -4,8 +4,47 @@ import {auth,owner} from "../middleware/auth.js";
 import {ok} from "../utils/response.js";
 const r=Router();
 
+const CITY_COORDS = {
+  delhi: { lat: 28.6139, lng: 77.2090 },
+  noida: { lat: 28.5355, lng: 77.3910 },
+  gurgaon: { lat: 28.4595, lng: 77.0266 },
+  gurugram: { lat: 28.4595, lng: 77.0266 },
+  bengaluru: { lat: 12.9716, lng: 77.5946 },
+  bangalore: { lat: 12.9716, lng: 77.5946 },
+  mumbai: { lat: 19.0760, lng: 72.8777 },
+  pune: { lat: 18.5204, lng: 73.8567 },
+  hyderabad: { lat: 17.3850, lng: 78.4867 },
+  jaipur: { lat: 26.9124, lng: 75.7873 },
+  chandigarh: { lat: 30.7333, lng: 76.7794 },
+  kolkata: { lat: 22.5726, lng: 88.3639 },
+  chennai: { lat: 13.0827, lng: 80.2707 },
+  ahmedabad: { lat: 23.0225, lng: 72.5714 }
+};
+
+export function getRoomCoords(city, id) {
+  const normCity = String(city || "delhi").toLowerCase().trim();
+  const base = CITY_COORDS[normCity] || CITY_COORDS.delhi;
+  const seed = Number(id) || 1;
+  const latOffset = (((seed * 9301 + 49297) % 233280) / 233280 - 0.5) * 0.08;
+  const lngOffset = (((seed * 49297 + 9301) % 233280) / 233280 - 0.5) * 0.08;
+  return {
+    lat: Number((base.lat + latOffset).toFixed(6)),
+    lng: Number((base.lng + lngOffset).toFixed(6))
+  };
+}
+
 export function roomRow(x){
   const imgList = Array.isArray(x.images) ? x.images : [];
+  const coords = getRoomCoords(x.city, x.id);
+  const locationObj = {
+    type: "Point",
+    coordinates: [coords.lng, coords.lat],
+    lat: coords.lat,
+    lng: coords.lng,
+    latitude: coords.lat,
+    longitude: coords.lng,
+    address: `${x.locality ? x.locality + ', ' : ''}${x.city}`
+  };
   return {
     ...x,
     _id: String(x.id),
@@ -20,6 +59,7 @@ export function roomRow(x){
       line1: x.address || "",
       addressLine: x.address || ""
     },
+    location: locationObj,
     media: imgList.length > 0 ? imgList.map(img => ({ url: img })) : [],
     images: imgList,
     amenities: Array.isArray(x.amenities) ? x.amenities : [],
@@ -38,8 +78,10 @@ export function roomRow(x){
     owner: {
       _id: String(x.owner_id),
       id: String(x.owner_id),
+      userId: String(x.owner_id),
       name: x.owner_name,
       avatar: x.owner_avatar,
+      avatarUrl: x.owner_avatar,
       isKycVerified: Boolean(x.owner_kyc)
     }
   };

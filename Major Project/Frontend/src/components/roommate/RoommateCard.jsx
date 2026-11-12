@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, MessageCircle } from "lucide-react";
 import defaultAvatar from "/images/default-avatar.jpg";
 import CompatibilityScore from "./CompatibilityScore";
 import ConnectButton from "./ConnectButton";
@@ -49,12 +49,21 @@ export default function RoommateCard({ roommate, match }) {
         )}
       </div>
 
-      <div className="mt-4">
-        <ConnectButton
-          matchId={match?._id}
-          userId={roommate._id || roommate.userId}
-          status={match?.status}
-        />
+      <div className="mt-4 flex items-center gap-2">
+        <div className="flex-1">
+          <ConnectButton
+            matchId={match?._id}
+            userId={roommate._id || roommate.userId}
+            status={match?.status}
+          />
+        </div>
+        <Link
+          to={`/chat?userId=${roommate._id || roommate.userId}`}
+          className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:border-amber-500 hover:text-amber-600 transition-all shadow-sm active:scale-95 shrink-0"
+          title="Direct Chat"
+        >
+          <MessageCircle size={16} />
+        </Link>
       </div>
     </div>
   );

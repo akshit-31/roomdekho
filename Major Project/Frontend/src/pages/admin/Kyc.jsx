@@ -22,8 +22,10 @@ export default function Kyc() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-xl font-semibold text-gray-900">KYC verification queue</h1>
-        <p className="text-sm text-gray-500">{submissions.length} pending review</p>
+        <h1 className="text-xl font-bold text-gray-900">Room Owner Approvals & KYC</h1>
+        <p className="text-sm text-gray-500">
+          Verify registered room owners, inspect property location details, and approve accounts before they can log in.
+        </p>
       </div>
 
       {loading ? <Loader /> : <KycVerification submissions={submissions} onChanged={load} />}

@@ -17,9 +17,9 @@ const OWNER_LINKS = [
 
 const ADMIN_LINKS = [
   { to: "/admin", label: "Overview", icon: LayoutDashboard, end: true },
+  { to: "/admin/kyc", label: "Owner Approvals", icon: ShieldCheck },
   { to: "/admin/users", label: "Users", icon: Users },
   { to: "/admin/listings", label: "Listings", icon: Home },
-  { to: "/admin/kyc", label: "KYC Queue", icon: ShieldCheck },
   { to: "/admin/reports", label: "Reports", icon: Flag },
   { to: "/admin/fraud", label: "Fraud Detection", icon: AlertTriangle },
   { to: "/admin/complaints", label: "Complaints", icon: MessageSquareWarning },

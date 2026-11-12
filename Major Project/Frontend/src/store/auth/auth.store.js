@@ -24,6 +24,15 @@ export const logoutAsync = createAsyncThunk("auth/logoutAsync", async () => {
   await authApi.logout();
 });
 
+export const checkSession = createAsyncThunk("auth/checkSession", async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await authApi.refresh();
+    return data.data;
+  } catch (err) {
+    return rejectWithValue(null);
+  }
+});
+
 const authSlice = createSlice({
   name: "auth",
   initialState: { user: null, accessToken: null, status: "idle", error: null },
@@ -44,8 +53,25 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.accessToken = action.payload.accessToken;
       })
+      .addCase(register.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        if (action.payload?.accessToken) {
+          state.user = action.payload.user;
+          state.accessToken = action.payload.accessToken;
+        }
+      })
+      .addCase(register.rejected, (state, action) => { state.status = "failed"; state.error = action.payload; })
       .addCase(login.rejected, (state, action) => { state.status = "failed"; state.error = action.payload; })
-      .addCase(logoutAsync.fulfilled, (state) => { state.user = null; state.accessToken = null; });
+      .addCase(logoutAsync.fulfilled, (state) => { state.user = null; state.accessToken = null; })
+      .addCase(checkSession.fulfilled, (state, action) => {
+        if (action.payload?.accessToken) {
+          state.accessToken = action.payload.accessToken;
+          if (action.payload.user) {
+            state.user = action.payload.user;
+          }
+          state.status = "succeeded";
+        }
+      });
   },
 });
 

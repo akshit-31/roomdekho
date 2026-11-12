@@ -32,7 +32,14 @@ export default function Chat() {
   const targetUserId = searchParams.get("userId") || searchParams.get("ownerId");
   const resolvedConversation = useMemo(() => {
     if (conversationId || !targetUserId) return null;
-    return conversations.find((c) => c.otherUser?._id === targetUserId) || null;
+    return (
+      conversations.find(
+        (c) =>
+          String(c.otherUser?._id) === String(targetUserId) ||
+          String(c.otherUser?.id) === String(targetUserId) ||
+          String(c.other_user_id) === String(targetUserId)
+      ) || null
+    );
   }, [conversations, conversationId, targetUserId]);
 
   useEffect(() => {

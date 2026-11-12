@@ -1,22 +1,24 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import clsx from "clsx";
 import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 import AppRoutes from "./routes/AppRoutes";
+import CompleteProfileModal from "./components/profile/CompleteProfileModal";
 import { fetchMe } from "./store/user/user.store";
+import { checkSession } from "./store/auth/auth.store";
 import { useAuth } from "./hooks/useAuth";
 
-/**
- * Root shell: Navbar + routed content + Footer. Dashboard routes
- * (/owner/*, /admin/*) swap this chrome for
- * components/layout/DashboardLayout via their own route element.
- */
 export default function App() {
   const dispatch = useDispatch();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const { profile: userProfile } = useSelector((s) => s.user);
   const location = useLocation();
+
+  useEffect(() => {
+    dispatch(checkSession());
+  }, [dispatch]);
 
   useEffect(() => {
     if (isAuthenticated) dispatch(fetchMe());
@@ -31,13 +33,20 @@ export default function App() {
     location.pathname.startsWith("/admin") ||
     location.pathname.startsWith("/vendor");
 
+  // Show profile completion modal if user is authenticated and profile is not completed
+  const showCompleteProfile =
+    Boolean(isAuthenticated && userProfile && userProfile.isProfileCompleted === false && userProfile.role !== "admin");
+
   return (
-    <div className="flex min-h-screen flex-col app-shell bg-[#F4F7FE] text-slate-900">
+    <div className="flex min-h-screen flex-col app-shell bg-[#F4F7FE] text-slate-900 w-full max-w-full overflow-x-hidden">
       {!isDashboardRoute && <Navbar />}
-      <main className="flex-1">
+      <main className="flex-1 w-full max-w-full overflow-x-hidden">
         <AppRoutes />
       </main>
       {!isDashboardRoute && <Footer />}
+
+      {/* Mandatory Onboarding Profile & Location Setup Modal */}
+      <CompleteProfileModal isOpen={showCompleteProfile} user={userProfile} />
     </div>
   );
 }
