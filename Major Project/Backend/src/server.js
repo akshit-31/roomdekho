@@ -142,13 +142,22 @@ app.use((err,_req,res,_next)=>{
   res.status(err.status||500).json({success:false,message:err.message||"Something went wrong"});
 });
 
-const port=Number(process.env.PORT||5000);
-async function start(){
-  await connectDB();
-  await initDB();
-  server.listen(port,()=>console.log(`API running on http://localhost:${port}`));
+const port = Number(process.env.PORT || 5000);
+
+server.listen(port, "0.0.0.0", () => {
+  console.log(`API running on http://0.0.0.0:${port} (PORT=${port})`);
+});
+
+async function start() {
+  try {
+    await connectDB();
+    await initDB();
+    console.log("Database initialized successfully");
+  } catch (err) {
+    console.error("Database connection / init error:", err);
+  }
 }
-start().catch(err=>{console.error("Server start failed:",err);process.exit(1)});
+start();
 
 const shutdown = () => {
   if (server && server.listening) {
