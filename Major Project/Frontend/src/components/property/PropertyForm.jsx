@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { Plus, X, MapPin } from "lucide-react";
 import Input from "../common/Input";
@@ -33,7 +33,9 @@ const DEFAULTS = {
  */
 export default function PropertyForm({ initialValues, onSubmit, submitLabel = "Save listing" }) {
   const initialImages =
-    initialValues?.images || (initialValues?.media || []).map((m) => m.url || m) || [];
+    (Array.isArray(initialValues?.images) && initialValues.images.length > 0)
+      ? initialValues.images
+      : (initialValues?.media || []).map((m) => m?.url || m).filter(Boolean);
   const [uploadedImages, setUploadedImages] = useState(initialImages);
 
   const {
@@ -41,9 +43,20 @@ export default function PropertyForm({ initialValues, onSubmit, submitLabel = "S
     control,
     handleSubmit,
     setValue,
+    reset,
     watch,
     formState: { errors, isSubmitting },
   } = useForm({ defaultValues: { ...DEFAULTS, ...initialValues } });
+
+  useEffect(() => {
+    if (initialValues) {
+      reset({ ...DEFAULTS, ...initialValues });
+      const imgs = (Array.isArray(initialValues.images) && initialValues.images.length > 0)
+        ? initialValues.images
+        : (initialValues.media || []).map((m) => m?.url || m).filter(Boolean);
+      setUploadedImages(imgs);
+    }
+  }, [initialValues, reset]);
 
   const { fields, append, remove } = useFieldArray({ control, name: "houseRules" });
 

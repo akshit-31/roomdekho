@@ -132,11 +132,11 @@ export default function Navbar() {
       <header className="sticky top-0 z-30 bg-white/95 border-b border-gray-100 backdrop-blur-md">
         <div className="mx-auto flex h-16 sm:h-20 max-w-7xl items-center justify-between px-3 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 sm:gap-3.5">
-            {/* Universal Hamburger Icon Trigger - Rendered for drawer access */}
+            {/* Hamburger button visible only on mobile/tablet (lg:hidden) so it does not clutter the desktop dashboard */}
             <button
               type="button"
               onClick={() => setDrawerOpen(true)}
-              className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm active:scale-95 shrink-0"
+              className="lg:hidden flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm active:scale-95 shrink-0"
               aria-label="Open Navigation Drawer"
             >
               <Menu size={18} />

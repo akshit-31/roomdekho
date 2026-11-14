@@ -1,7 +1,38 @@
 import {Router} from "express";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
 import {query} from "../config/db.js";
 import {auth,owner} from "../middleware/auth.js";
 import {ok} from "../utils/response.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const uploadDir = path.join(__dirname, "../../uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (_req, _file, cb) => cb(null, uploadDir),
+  filename: (_req, file, cb) => {
+    const ext = path.extname(file.originalname || "").toLowerCase() || ".jpg";
+    const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    cb(null, `room-${unique}${ext}`);
+  },
+});
+const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    if (file.mimetype.startsWith("image/") || file.mimetype.startsWith("video/")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only image and video files are allowed"));
+    }
+  },
+});
+
 const r=Router();
 
 const CITY_COORDS = {
@@ -117,7 +148,44 @@ r.put("/:id",auth,owner,async(req,res)=>{const b=req.body; const {rows}=await qu
 r.delete("/:id",auth,owner,async(req,res)=>{await query("DELETE FROM rooms WHERE id=$1 AND owner_id=$2",[req.params.id,req.user.id]);ok(res,200,"Room deleted")});
 r.patch("/:id/publish",auth,owner,async(req,res)=>{const {rows}=await query("UPDATE rooms SET status='published',updated_at=now() WHERE id=$1 AND owner_id=$2 RETURNING *",[req.params.id,req.user.id]);ok(res,200,"Room published",rows[0]||null)});
 r.patch("/:id/rented",auth,owner,async(req,res)=>{const {rows}=await query("UPDATE rooms SET status='rented',updated_at=now() WHERE id=$1 AND owner_id=$2 RETURNING *",[req.params.id,req.user.id]);ok(res,200,"Room marked rented",rows[0]||null)});
-r.post("/:id/media",auth,owner,async(req,res)=>{const url=req.body?.url; if(!url)return res.status(400).json({success:false,message:"Image URL is required"});const {rows}=await query("UPDATE rooms SET images=array_append(images,$1),updated_at=now() WHERE id=$2 AND owner_id=$3 RETURNING *",[url,req.params.id,req.user.id]);ok(res,200,"Image added",rows[0])});
+r.post("/:id/media", auth, owner, upload.any(), async (req, res) => {
+  try {
+    let urls = [];
+    const files = req.files || [];
+    if (files.length > 0) {
+      const host = req.get("host");
+      const protocol = req.protocol;
+      const base = `${protocol}://${host}`;
+      urls = files.map((f) => `${base}/uploads/${f.filename}`);
+    } else if (req.body?.url) {
+      urls = [req.body.url];
+    } else if (Array.isArray(req.body?.urls)) {
+      urls = req.body.urls;
+    }
+
+    if (urls.length === 0) {
+      return res.status(400).json({ success: false, message: "No photos or image URLs provided" });
+    }
+
+    const { rows } = await query(
+      `UPDATE rooms 
+       SET images = COALESCE(images, '{}'::text[]) || $1::text[], 
+           updated_at = now() 
+       WHERE id = $2 AND owner_id = $3 
+       RETURNING *`,
+      [urls, req.params.id, req.user.id]
+    );
+
+    if (!rows[0]) {
+      return res.status(404).json({ success: false, message: "Room not found or unauthorized" });
+    }
+
+    ok(res, 200, `${urls.length} media item(s) added successfully`, rows[0]);
+  } catch (err) {
+    console.error("Room media upload error:", err);
+    res.status(500).json({ success: false, message: err.message || "Failed to upload media" });
+  }
+});
 r.post("/:id/favorite",auth,async(req,res)=>{await query("INSERT INTO favorites(user_id,room_id) VALUES($1,$2) ON CONFLICT DO NOTHING",[req.user.id,req.params.id]);ok(res,200,"Added to favorites")});
 r.delete("/:id/favorite",auth,async(req,res)=>{await query("DELETE FROM favorites WHERE user_id=$1 AND room_id=$2",[req.user.id,req.params.id]);ok(res,200,"Removed from favorites")});
 export default r;
