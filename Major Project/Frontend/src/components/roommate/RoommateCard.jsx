@@ -59,10 +59,11 @@ export default function RoommateCard({ roommate, match }) {
         </div>
         <Link
           to={`/chat?userId=${roommate._id || roommate.userId}`}
-          className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 hover:border-amber-500 hover:text-amber-600 transition-all shadow-sm active:scale-95 shrink-0"
-          title="Direct Chat"
+          className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white px-3.5 py-2 text-xs font-bold transition-all shadow-sm active:scale-95 shrink-0"
+          title="Direct Chat with Roommate"
         >
-          <MessageCircle size={16} />
+          <MessageCircle size={15} />
+          <span>Chat</span>
         </Link>
       </div>
     </div>

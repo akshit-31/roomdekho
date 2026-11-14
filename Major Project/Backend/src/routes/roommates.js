@@ -10,7 +10,12 @@ r.get("/", async (req, res) => {
     const { city, budget, maxBudget, foodHabit, gender, page = 1, limit = 20 } = req.query;
     const offset = (Number(page) - 1) * Number(limit);
 
-    const conditions = ["u.role IN ('seeker', 'roommate')"];
+    // Show only users who are looking for 'both' (room & roommate) or 'find_roommate' / 'roommate'
+    // Exclude users looking exclusively for only a room ('find_room' or 'room')
+    const conditions = [
+      "u.role IN ('seeker', 'roommate')",
+      "COALESCE(p.looking_for, u.intent, 'both') IN ('both', 'find_roommate', 'roommate')"
+    ];
     const params = [];
     let paramIdx = 1;
 
