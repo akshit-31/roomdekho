@@ -36,10 +36,19 @@ const upload = multer({
 const r=Router();
 
 const CITY_COORDS = {
+  bareilly: { lat: 28.3670, lng: 79.4304 },
   delhi: { lat: 28.6139, lng: 77.2090 },
   noida: { lat: 28.5355, lng: 77.3910 },
+  "greater noida": { lat: 28.4744, lng: 77.5040 },
   gurgaon: { lat: 28.4595, lng: 77.0266 },
   gurugram: { lat: 28.4595, lng: 77.0266 },
+  ghaziabad: { lat: 28.6692, lng: 77.4538 },
+  faridabad: { lat: 28.4089, lng: 77.3178 },
+  lucknow: { lat: 26.8467, lng: 80.9462 },
+  kanpur: { lat: 26.4499, lng: 80.3319 },
+  agra: { lat: 27.1767, lng: 78.0081 },
+  varanasi: { lat: 25.3176, lng: 82.9739 },
+  dehradun: { lat: 30.3165, lng: 78.0322 },
   bengaluru: { lat: 12.9716, lng: 77.5946 },
   bangalore: { lat: 12.9716, lng: 77.5946 },
   mumbai: { lat: 19.0760, lng: 72.8777 },
@@ -123,9 +132,18 @@ export function roomRow(x){
   };
 }
 r.get("/",async(req,res)=>{
- const {city,minRent,maxRent,propertyType,roomType,furnishing,sort="newest",lat,lng,limit=12,page=1}=req.query;
+ const {q,city,minRent,maxRent,propertyType,roomType,furnishing,sort="newest",sortBy,lat,lng,limit=12,page=1}=req.query;
  const where=["r.status='published'"], params=[]; let i=1;
- if(city){where.push(`LOWER(r.city)=LOWER($${i++})`);params.push(city)}
+
+ if(q && q.trim()){
+   where.push(`(LOWER(r.title) LIKE LOWER($${i}) OR LOWER(r.city) LIKE LOWER($${i}) OR LOWER(COALESCE(r.locality,'')) LIKE LOWER($${i}) OR LOWER(COALESCE(r.address,'')) LIKE LOWER($${i}))`);
+   params.push(`%${q.trim()}%`);
+   i++;
+ }
+ if(city && city.trim() && city.trim().toLowerCase() !== "all" && city.trim().toLowerCase() !== "all cities"){
+   where.push(`LOWER(r.city) LIKE LOWER($${i++})`);
+   params.push(`%${city.trim()}%`);
+ }
  if(minRent){where.push(`r.rent >= $${i++}`);params.push(Number(minRent))}
  if(maxRent){where.push(`r.rent <= $${i++}`);params.push(Number(maxRent))}
  if(propertyType){where.push(`r.property_type=$${i++}`);params.push(propertyType)}
@@ -154,18 +172,19 @@ r.get("/",async(req,res)=>{
    params.push(userLat, userLng);
  }
 
+ const activeSort = sortBy || sort;
  let order = "r.created_at DESC";
- if (sort === "price") {
+ if (activeSort === "price") {
    order = "r.rent ASC";
- } else if (sort === "price_desc") {
+ } else if (activeSort === "price_desc") {
    order = "r.rent DESC";
- } else if (sort === "distance" || hasGps) {
-   order = "distance ASC, r.created_at DESC";
+ } else if (activeSort === "distance" || hasGps) {
+   order = hasGps ? "distance ASC, r.created_at DESC" : "r.created_at DESC";
  }
 
  const lim=Math.min(Number(limit)||12,50), off=(Math.max(Number(page)||1,1)-1)*lim;
- const q=`SELECT r.*,u.name owner_name,u.avatar owner_avatar,u.is_kyc_verified owner_kyc ${distanceSelect} FROM rooms r JOIN users u ON u.id=r.owner_id WHERE ${where.join(" AND ")} ORDER BY ${order} LIMIT $${i++} OFFSET $${i++}`;
- const {rows}=await query(q,[...params,lim,off]);
+ const qText=`SELECT r.*,u.name owner_name,u.avatar owner_avatar,u.is_kyc_verified owner_kyc ${distanceSelect} FROM rooms r JOIN users u ON u.id=r.owner_id WHERE ${where.join(" AND ")} ORDER BY ${order} LIMIT $${i++} OFFSET $${i++}`;
+ const {rows}=await query(qText,[...params,lim,off]);
  const c=await query(`SELECT COUNT(*) FROM rooms r WHERE ${where.join(" AND ")}`,filterParams);
  ok(res,200,"Rooms fetched",{items:rows.map(roomRow),pagination:{page:Number(page)||1,limit:lim,total:Number(c.rows[0].count),pages:Math.ceil(Number(c.rows[0].count)/lim)}});
 });

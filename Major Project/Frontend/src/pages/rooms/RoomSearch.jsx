@@ -20,6 +20,8 @@ export default function RoomSearch() {
   const [view, setView] = useState("posts"); // posts | list | map
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [gpsActive, setGpsActive] = useState(false);
+  const [refreshingGps, setRefreshingGps] = useState(false);
+  const [locationName, setLocationName] = useState("");
 
   const { items = [], total = 0, page = 1, limit = 20 } = results || {};
   const { totalPages } = usePagination(total, limit);
@@ -32,9 +34,20 @@ export default function RoomSearch() {
       cached = JSON.parse(localStorage.getItem("user_gps") || "null");
     } catch {}
 
-    if (cached?.lat && cached?.lng) {
+    const applyLocation = (coords) => {
       setGpsActive(true);
-      const combined = { lat: cached.lat, lng: cached.lng, sort: "distance", ...initial };
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}`)
+        .then((r) => r.json())
+        .then((geo) => {
+          const c = geo.address?.city || geo.address?.state_district || geo.address?.town || geo.address?.suburb || "";
+          if (c) setLocationName(c);
+        })
+        .catch(() => {});
+    };
+
+    if (cached?.lat && cached?.lng) {
+      applyLocation(cached);
+      const combined = { lat: cached.lat, lng: cached.lng, sort: "distance", sortBy: "distance", ...initial };
       setFilters(combined);
       search(combined);
     } else if (navigator.geolocation) {
@@ -42,8 +55,8 @@ export default function RoomSearch() {
         (pos) => {
           const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
           localStorage.setItem("user_gps", JSON.stringify(coords));
-          setGpsActive(true);
-          const combined = { lat: coords.lat, lng: coords.lng, sort: "distance", ...initial };
+          applyLocation(coords);
+          const combined = { lat: coords.lat, lng: coords.lng, sort: "distance", sortBy: "distance", ...initial };
           setFilters(combined);
           search(combined);
         },
@@ -64,23 +77,47 @@ export default function RoomSearch() {
       alert("Geolocation is not supported by your browser");
       return;
     }
+    setRefreshingGps(true);
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
+      async (pos) => {
         const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         localStorage.setItem("user_gps", JSON.stringify(coords));
         setGpsActive(true);
-        runSearch({ lat: coords.lat, lng: coords.lng, sort: "distance" });
+
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}`);
+          const geo = await res.json();
+          const c = geo.address?.city || geo.address?.state_district || geo.address?.town || geo.address?.suburb || "";
+          if (c) setLocationName(c);
+        } catch {}
+
+        setRefreshingGps(false);
+        runSearch({ lat: coords.lat, lng: coords.lng, sort: "distance", sortBy: "distance" });
       },
-      () => alert("Location permission was denied. Please allow location in browser settings."),
+      (err) => {
+        setRefreshingGps(false);
+        alert("Location permission was denied. Please allow location in your browser settings.");
+      },
       { timeout: 8000, enableHighAccuracy: true }
     );
   };
 
   const runSearch = (patch = {}) => {
     const next = { ...filters, ...patch, page: 1 };
+    Object.keys(next).forEach((k) => {
+      if (next[k] === "" || next[k] === undefined || next[k] === null) {
+        delete next[k];
+      }
+    });
     setFilters(next);
     setParams(next);
     search(next);
+  };
+
+  const handleResetFilters = () => {
+    resetFilters();
+    setParams({});
+    search({ sort: "distance", sortBy: "distance" });
   };
 
   const handlePageChange = (newPage) => {
@@ -170,8 +207,8 @@ export default function RoomSearch() {
           <SearchFilters
             filters={filters}
             onChange={setFilters}
-            onReset={resetFilters}
-            onApply={() => runSearch()}
+            onReset={handleResetFilters}
+            onApply={(f) => runSearch(f || filters)}
           />
         </div>
 
@@ -181,20 +218,25 @@ export default function RoomSearch() {
             {gpsActive ? (
               <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-emerald-50 border border-emerald-200 px-4 py-2.5 text-xs text-emerald-800 shadow-xs">
                 <div className="flex items-center gap-2">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-white text-[11px]">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-white text-[11px] font-bold">
                     ✓
                   </span>
                   <div>
-                    <span className="font-bold text-emerald-950">GPS Nearby Search Active: </span>
-                    <span className="text-emerald-800">Rooms closest to you are displayed first, followed by farther distances.</span>
+                    <span className="font-bold text-emerald-950">
+                      GPS Nearby Search Active {locationName ? `(${locationName})` : ""}:{" "}
+                    </span>
+                    <span className="text-emerald-800">
+                      Rooms closest to you are displayed first (shortest distance to farthest).
+                    </span>
                   </div>
                 </div>
                 <button
                   type="button"
+                  disabled={refreshingGps}
                   onClick={triggerGps}
-                  className="rounded-lg bg-emerald-100 hover:bg-emerald-200 px-2.5 py-1 text-[11px] font-bold text-emerald-900 transition-colors"
+                  className="rounded-lg bg-emerald-100 hover:bg-emerald-200 px-3 py-1 text-[11px] font-bold text-emerald-900 transition-colors cursor-pointer disabled:opacity-60"
                 >
-                  ↻ Refresh Location
+                  {refreshingGps ? "↻ Detecting GPS..." : "↻ Refresh Location"}
                 </button>
               </div>
             ) : (
@@ -202,10 +244,11 @@ export default function RoomSearch() {
                 <span>Want to see rooms closest to your live location?</span>
                 <button
                   type="button"
+                  disabled={refreshingGps}
                   onClick={triggerGps}
-                  className="rounded-lg bg-amber-500 hover:bg-amber-600 px-3 py-1 text-xs font-bold text-white shadow-xs transition-colors"
+                  className="rounded-lg bg-amber-500 hover:bg-amber-600 px-3 py-1 text-xs font-bold text-white shadow-xs transition-colors cursor-pointer"
                 >
-                  📍 Sort by Nearest to Me
+                  {refreshingGps ? "↻ Detecting GPS..." : "📍 Sort by Nearest to Me"}
                 </button>
               </div>
             )}
@@ -215,8 +258,8 @@ export default function RoomSearch() {
                 🔥 Showing {items.length} of {total} live room posts
               </p>
               <SortDropdown
-                value={filters.sortBy || "relevance"}
-                onChange={(sortBy) => runSearch({ sortBy })}
+                value={filters.sortBy || (gpsActive ? "distance" : "relevance")}
+                onChange={(sortBy) => runSearch({ sortBy, sort: sortBy })}
               />
             </div>
 
@@ -276,9 +319,9 @@ export default function RoomSearch() {
         <SearchFilters
           filters={filters}
           onChange={setFilters}
-          onReset={resetFilters}
-          onApply={() => {
-            runSearch();
+          onReset={handleResetFilters}
+          onApply={(f) => {
+            runSearch(f || filters);
             setFiltersOpen(false);
           }}
         />
