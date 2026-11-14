@@ -1,20 +1,27 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { Map, List, SlidersHorizontal } from "lucide-react";
+import { Link, useSearchParams } from "react-router-dom";
+import { Map, List, SlidersHorizontal, Sparkles, MessageCircle, Building2 } from "lucide-react";
 import PageContainer from "../../components/layout/PageContainer";
 import SearchBar from "../../components/search/SearchBar";
 import SearchFilters from "../../components/search/SearchFilters";
 import SearchResults from "../../components/search/SearchResults";
 import SearchMap from "../../components/search/SearchMap";
+import SortDropdown from "../../components/search/SortDropdown";
+import Pagination from "../../components/common/Pagination";
+import RoomPostCard from "../../components/property/RoomPostCard";
 import Modal from "../../components/common/Modal";
 import Button from "../../components/common/Button";
 import { useSearch } from "../../hooks/useSearch";
+import { usePagination } from "../../hooks/usePagination";
 
 export default function RoomSearch() {
   const [params, setParams] = useSearchParams();
   const { filters, results, status, search, setFilters, resetFilters } = useSearch();
-  const [view, setView] = useState("list"); // list | map
+  const [view, setView] = useState("posts"); // posts | list | map
   const [filtersOpen, setFiltersOpen] = useState(false);
+
+  const { items = [], total = 0, page = 1, limit = 20 } = results || {};
+  const { totalPages } = usePagination(total, limit);
 
   // Seed filters from the URL once on mount (e.g. /rooms?q=...&city=...)
   useEffect(() => {
@@ -34,43 +41,144 @@ export default function RoomSearch() {
     search(next);
   };
 
-  const handlePageChange = (page) => {
-    const next = { ...filters, page };
+  const handlePageChange = (newPage) => {
+    const next = { ...filters, page: newPage };
     setFilters(next);
     search(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <PageContainer title="Find a room" subtitle="Search verified rooms, PGs, flats and hostels near you">
-      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <SearchBar initialQuery={filters.q} onSearch={(q) => runSearch({ q })} />
-        <div className="flex gap-2">
-          <Button variant="secondary" icon={SlidersHorizontal} onClick={() => setFiltersOpen(true)} className="lg:hidden">
+    <PageContainer
+      title="Verified Rooms & Community Feed"
+      subtitle="Explore real room posts, direct host contacts, and instant messaging"
+    >
+      {/* Top Search & View Action Bar */}
+      <div className="mb-6 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+        <div className="flex-1 max-w-xl">
+          <SearchBar initialQuery={filters.q} onSearch={(q) => runSearch({ q })} />
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {/* Quick Chat Link */}
+          <Link
+            to="/chat"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-3 py-2 text-xs font-bold text-white shadow-sm hover:from-amber-600 hover:to-orange-600 transition-all active:scale-95 shrink-0"
+          >
+            <MessageCircle size={15} />
+            <span>Direct Chats</span>
+          </Link>
+
+          {/* Mobile Filter Button */}
+          <Button
+            variant="secondary"
+            icon={SlidersHorizontal}
+            onClick={() => setFiltersOpen(true)}
+            className="lg:hidden text-xs py-2"
+          >
             Filters
           </Button>
-          <div className="flex overflow-hidden rounded-xl border border-gray-200">
+
+          {/* 3-Way View Switcher */}
+          <div className="flex overflow-hidden rounded-xl border border-gray-200 bg-slate-50 p-0.5">
             <button
-              onClick={() => setView("list")}
-              className={`flex items-center gap-1.5 px-3 py-2 text-sm ${view === "list" ? "bg-brand-500 text-white" : "text-gray-600"}`}
+              type="button"
+              onClick={() => setView("posts")}
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+                view === "posts"
+                  ? "bg-amber-500 text-white shadow-sm"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
+              }`}
             >
-              <List size={15} /> List
+              <Sparkles size={14} />
+              <span>Posts Feed</span>
             </button>
             <button
-              onClick={() => setView("map")}
-              className={`flex items-center gap-1.5 px-3 py-2 text-sm ${view === "map" ? "bg-brand-500 text-white" : "text-gray-600"}`}
+              type="button"
+              onClick={() => setView("list")}
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+                view === "list"
+                  ? "bg-amber-500 text-white shadow-sm"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
+              }`}
             >
-              <Map size={15} /> Map
+              <List size={14} />
+              <span>Grid</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setView("map")}
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+                view === "map"
+                  ? "bg-amber-500 text-white shadow-sm"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
+              }`}
+            >
+              <Map size={14} />
+              <span>Map</span>
             </button>
           </div>
         </div>
       </div>
 
+      {/* Main Layout Grid */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr]">
+        {/* Desktop Sidebar Filters */}
         <div className="hidden lg:block">
-          <SearchFilters filters={filters} onChange={setFilters} onReset={resetFilters} onApply={() => runSearch()} />
+          <SearchFilters
+            filters={filters}
+            onChange={setFilters}
+            onReset={resetFilters}
+            onApply={() => runSearch()}
+          />
         </div>
 
-        {view === "list" ? (
+        {/* Content Area Based on Active View */}
+        {view === "posts" ? (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between border-b border-gray-200/80 pb-3">
+              <p className="text-xs sm:text-sm font-bold text-slate-800">
+                🔥 Showing {items.length} of {total} live room posts
+              </p>
+              <SortDropdown
+                value={filters.sortBy || "relevance"}
+                onChange={(sortBy) => runSearch({ sortBy })}
+              />
+            </div>
+
+            {status === "loading" ? (
+              <div className="py-16 text-center">
+                <div className="inline-block h-9 w-9 animate-spin rounded-full border-4 border-amber-500 border-t-transparent" />
+                <p className="mt-3 text-xs font-bold text-slate-600">Loading verified social room posts...</p>
+              </div>
+            ) : items.length === 0 ? (
+              <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-12 text-center">
+                <Building2 size={36} className="mx-auto text-slate-400 mb-2" />
+                <h3 className="text-sm font-bold text-slate-800">No room posts match your criteria</h3>
+                <p className="mt-1 text-xs text-slate-500">Try modifying your search or reset filters to see all available listings.</p>
+                <Button
+                  variant="secondary"
+                  className="mt-4 text-xs font-bold"
+                  onClick={resetFilters}
+                >
+                  Reset all filters
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-6 max-w-2xl mx-auto">
+                {items.map((room) => (
+                  <RoomPostCard key={room._id || room.id} room={room} />
+                ))}
+              </div>
+            )}
+
+            {totalPages > 1 && (
+              <div className="mt-8 flex justify-center pb-8">
+                <Pagination page={page} totalPages={totalPages} onChange={handlePageChange} />
+              </div>
+            )}
+          </div>
+        ) : view === "list" ? (
           <SearchResults
             results={results}
             status={status}
@@ -81,7 +189,7 @@ export default function RoomSearch() {
         ) : (
           <div className="h-[70vh] overflow-hidden rounded-2xl border border-gray-100">
             <SearchMap
-              rooms={results.items}
+              rooms={items}
               center={filters.lat ? { lat: Number(filters.lat), lng: Number(filters.lng) } : undefined}
               radiusKm={Number(filters.radiusKm) || 0}
             />
@@ -89,12 +197,16 @@ export default function RoomSearch() {
         )}
       </div>
 
+      {/* Mobile Filters Modal */}
       <Modal open={filtersOpen} onClose={() => setFiltersOpen(false)} title="Filters" size="sm">
         <SearchFilters
           filters={filters}
           onChange={setFilters}
           onReset={resetFilters}
-          onApply={() => { runSearch(); setFiltersOpen(false); }}
+          onApply={() => {
+            runSearch();
+            setFiltersOpen(false);
+          }}
         />
       </Modal>
     </PageContainer>

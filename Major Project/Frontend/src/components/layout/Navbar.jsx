@@ -152,7 +152,20 @@ export default function Navbar() {
           </div>
 
           {/* Right Actions */}
-          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3.5 shrink-0">
+            {/* Direct Chat Quick Action Button */}
+            <Link
+              to="/chat"
+              className="relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-amber-50 hover:text-amber-600 hover:border-amber-300 transition-all shadow-sm active:scale-95"
+              title="Direct Messages & Host Chats"
+              aria-label="Direct Messages"
+            >
+              <MessageCircle size={18} />
+              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-[9px] font-black text-white shadow ring-2 ring-white">
+                💬
+              </span>
+            </Link>
+
             {isAuthenticated ? (
               <div className="relative">
                 <button
@@ -176,6 +189,13 @@ export default function Navbar() {
                       className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50"
                     >
                       <User size={15} /> My Profile
+                    </Link>
+                    <Link
+                      to="/chat"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50"
+                    >
+                      <MessageCircle size={15} className="text-amber-500" /> Direct Chats
                     </Link>
                     {(user?.role === "owner" || user?.role === "admin") && (
                       <Link

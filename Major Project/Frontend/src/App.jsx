@@ -6,6 +6,7 @@ import Navbar from "./components/layout/Navbar";
 import Footer from "./components/layout/Footer";
 import AppRoutes from "./routes/AppRoutes";
 import CompleteProfileModal from "./components/profile/CompleteProfileModal";
+import FloatingChatButton from "./components/chat/FloatingChatButton";
 import { fetchMe } from "./store/user/user.store";
 import { checkSession } from "./store/auth/auth.store";
 import { useAuth } from "./hooks/useAuth";
@@ -47,6 +48,9 @@ export default function App() {
 
       {/* Mandatory Onboarding Profile & Location Setup Modal */}
       <CompleteProfileModal isOpen={showCompleteProfile} user={userProfile} />
+
+      {/* Floating 1-Click Chat & DMs Action Button */}
+      <FloatingChatButton />
     </div>
   );
 }

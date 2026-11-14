@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Search, MapPin, Building2, ShieldCheck, Zap, HeartHandshake, ArrowRight } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { ChevronLeft, ChevronRight, Search, MapPin, Building2, ShieldCheck, Zap, HeartHandshake, ArrowRight, MessageCircle, Sparkles } from "lucide-react";
 import AuthModal from "../../components/auth/AuthModal";
 import { useAuth } from "../../hooks/useAuth";
 import VendorDashboard from "../vendor/VendorDashboard";
 import { searchApi } from "../../services/api/search.api";
+import RoomPostCard from "../../components/property/RoomPostCard";
 
 import img1 from "../../image.png";
 import img2 from "../../image copy.png";
@@ -46,13 +47,20 @@ export default function Home() {
   const [selectedCity, setSelectedCity] = useState("Delhi");
   const [selectedType, setSelectedType] = useState("");
   const [featuredRooms, setFeaturedRooms] = useState([]);
+  const [feedCity, setFeedCity] = useState("All");
+  const [loadingFeed, setLoadingFeed] = useState(false);
 
-  // Fetch real PostgreSQL rooms preview for home page
+  // Fetch real PostgreSQL rooms preview for home page feed
   useEffect(() => {
-    searchApi.searchRooms({ limit: 6 })
+    setLoadingFeed(true);
+    const params = { limit: 8 };
+    if (feedCity !== "All") params.city = feedCity;
+
+    searchApi.searchRooms(params)
       .then(({ data }) => setFeaturedRooms(data.data?.items || []))
-      .catch(() => {});
-  }, []);
+      .catch(() => {})
+      .finally(() => setLoadingFeed(false));
+  }, [feedCity]);
 
   // Redirect Owner and Admin roles inside useEffect to avoid rendering side-effects
   useEffect(() => {
@@ -197,7 +205,89 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. Why Choose RoomDekho Features Grid */}
+      {/* 4. Live Room Feed (Social Post Style Feed) */}
+      <section className="mx-auto w-full max-w-5xl px-2 sm:px-4 py-2 sm:py-4 space-y-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200/80 pb-4">
+          <div>
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-700 mb-2">
+              <Sparkles size={13} className="text-amber-500" />
+              <span>Live Community Feed</span>
+            </div>
+            <h2 className="text-xl sm:text-3xl font-black tracking-tight text-slate-900">
+              Live Room Posts & Host Listings
+            </h2>
+            <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1">
+              Scroll through verified room posts. Like, share, and send instant direct messages straight to the owner's DM inbox!
+            </p>
+          </div>
+
+          {/* Quick Chat Link */}
+          <Link
+            to="/chat"
+            className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2.5 text-xs font-bold text-white shadow-md hover:from-amber-600 hover:to-orange-600 transition-all active:scale-95 shrink-0 self-start md:self-auto"
+          >
+            <MessageCircle size={16} />
+            <span>Open Direct Chats</span>
+          </Link>
+        </div>
+
+        {/* City Filter Chips */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+          {["All", "Delhi", "Noida", "Gurgaon", "Bengaluru", "Jaipur", "Mumbai"].map((city) => (
+            <button
+              key={city}
+              type="button"
+              onClick={() => setFeedCity(city)}
+              className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
+                feedCity === city
+                  ? "bg-slate-900 text-white shadow-sm"
+                  : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+              }`}
+            >
+              {city === "All" ? "🌍 All Cities" : `📍 ${city}`}
+            </button>
+          ))}
+        </div>
+
+        {/* Post Feed Container */}
+        {loadingFeed ? (
+          <div className="py-12 text-center">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent" />
+            <p className="mt-3 text-xs font-semibold text-slate-500">Loading verified room posts...</p>
+          </div>
+        ) : featuredRooms.length === 0 ? (
+          <div className="rounded-3xl border border-dashed border-slate-200 bg-white p-10 text-center">
+            <Building2 size={32} className="mx-auto text-slate-400 mb-2" />
+            <h3 className="text-sm font-bold text-slate-800">No rooms listed in {feedCity} yet</h3>
+            <p className="text-xs text-slate-500 mt-1">Be the first to list a room or explore other cities!</p>
+            <button
+              onClick={() => setFeedCity("All")}
+              className="mt-4 rounded-xl bg-amber-500 px-4 py-2 text-xs font-bold text-white hover:bg-amber-600"
+            >
+              Show All Cities
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {featuredRooms.map((room) => (
+              <RoomPostCard key={room._id || room.id} room={room} />
+            ))}
+          </div>
+        )}
+
+        {/* Explore All Button */}
+        <div className="pt-4 text-center">
+          <Link
+            to="/rooms"
+            className="inline-flex items-center gap-2 rounded-2xl border-2 border-slate-900 bg-white px-6 py-3 text-xs sm:text-sm font-black text-slate-900 hover:bg-slate-900 hover:text-white transition-all shadow-sm active:scale-95"
+          >
+            <span>Explore All Rooms & Map View</span>
+            <ArrowRight size={16} />
+          </Link>
+        </div>
+      </section>
+
+      {/* 5. Why Choose RoomDekho Features Grid */}
       <section className="mx-auto w-full max-w-7xl px-2 sm:px-4 py-2 sm:py-4">
         <div className="rounded-3xl bg-amber-500/10 border border-amber-500/20 p-5 sm:p-12">
           <div className="text-center mb-6 sm:mb-10">
