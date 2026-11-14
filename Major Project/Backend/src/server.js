@@ -72,6 +72,7 @@ io.on("connection",(socket)=>{
 
   socket.on("joinConversation",(id)=>socket.join(`conversation:${id}`));
   socket.on("chat:join",(id)=>socket.join(`conversation:${id}`));
+  socket.on("chat:leave",(id)=>socket.leave(`conversation:${id}`));
 
   socket.on("chat:typing",({conversationId,userId,isTyping})=>{
     socket.to(`conversation:${conversationId}`).emit("chat:typing",{userId,isTyping});

@@ -1,7 +1,19 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { fetchConversations, fetchConversation, appendMessage, setTyping } from "../store/chat/chat.store";
-import { joinConversation, onNewMessage, onTyping, sendMessageRealtime } from "../socket/chat.socket";
+import {
+  fetchConversations,
+  fetchConversation,
+  appendMessage,
+  clearActiveConversation,
+  setTyping
+} from "../store/chat/chat.store";
+import {
+  joinConversation,
+  leaveConversation,
+  onNewMessage,
+  onTyping,
+  sendMessageRealtime
+} from "../socket/chat.socket";
 import { chatApi } from "../services/api/chat.api";
 
 export function useChat(conversationId) {
@@ -10,19 +22,36 @@ export function useChat(conversationId) {
 
   useEffect(() => {
     dispatch(fetchConversations());
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
   useEffect(() => {
-    if (!conversationId) return;
+    if (!conversationId) {
+      dispatch(clearActiveConversation());
+      return;
+    }
+
+    // Immediately clear previous conversation messages so old chat messages don't show
+    dispatch(clearActiveConversation());
     dispatch(fetchConversation(conversationId));
     joinConversation(conversationId);
-    const offMsg = onNewMessage((msg) => dispatch(appendMessage(msg)));
-    const offTyping = onTyping(({ userId, isTyping }) => dispatch(setTyping(isTyping ? userId : null)));
+
+    const offMsg = onNewMessage((msg) => {
+      const msgConvId = String(msg.conversation_id || msg.conversationId || "");
+      if (!msgConvId || msgConvId === String(conversationId)) {
+        dispatch(appendMessage(msg));
+      }
+    });
+
+    const offTyping = onTyping(({ userId, isTyping }) => {
+      dispatch(setTyping(isTyping ? userId : null));
+    });
+
     return () => {
+      leaveConversation(conversationId);
       offMsg();
       offTyping();
     };
-  }, [conversationId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [conversationId, dispatch]);
 
   const send = async (text, imageUrl) => {
     if (!conversationId) return;
