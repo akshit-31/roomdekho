@@ -11,6 +11,7 @@ import Visits from "../pages/owner/Visits";
 import Bookings from "../pages/owner/Bookings";
 import Earnings from "../pages/owner/Earnings";
 import OwnerReviews from "../pages/owner/Reviews";
+import HelpBox from "../pages/help/HelpBox";
 
 /**
  * RoleRoute gates access; DashboardLayout supplies the Navbar+Sidebar
@@ -30,6 +31,7 @@ export default function OwnerRoutes() {
         <Route path="/owner/bookings" element={<Bookings />} />
         <Route path="/owner/earnings" element={<Earnings />} />
         <Route path="/owner/reviews" element={<OwnerReviews />} />
+        <Route path="/owner/help" element={<HelpBox />} />
       </Route>
     </Route>
   );

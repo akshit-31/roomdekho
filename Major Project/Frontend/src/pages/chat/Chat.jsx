@@ -30,6 +30,8 @@ export default function Chat() {
   // conversation from scratch needs a backend "create conversation"
   // endpoint (server/src/modules/chat) that isn't wired up yet.
   const targetUserId = searchParams.get("userId") || searchParams.get("ownerId");
+  const isSupportAdmin = searchParams.get("support") === "admin";
+
   const resolvedConversation = useMemo(() => {
     if (conversationId || !targetUserId) return null;
     return (
@@ -43,26 +45,39 @@ export default function Chat() {
   }, [conversations, conversationId, targetUserId]);
 
   useEffect(() => {
+    if (isSupportAdmin && !conversationId) {
+      chatApi
+        .createAdminConversation()
+        .then(({ data }) => {
+          const adminConvId = data.data?._id || data.data?.id;
+          if (adminConvId) navigate(`/chat/${adminConvId}`, { replace: true });
+        })
+        .catch(() => {});
+      return;
+    }
+
     if (targetUserId && !conversationId) {
       if (resolvedConversation) {
         navigate(`/chat/${resolvedConversation._id}`, { replace: true });
       } else {
-        chatApi.createConversation(targetUserId).then(({ data }) => {
-          const newId = data.data?.id || data.data?._id;
-          if (newId) navigate(`/chat/${newId}`, { replace: true });
-        }).catch(() => {});
+        chatApi
+          .createConversation(targetUserId)
+          .then(({ data }) => {
+            const newId = data.data?.id || data.data?._id;
+            if (newId) navigate(`/chat/${newId}`, { replace: true });
+          })
+          .catch(() => {});
       }
     } else if (!conversationId && conversations.length === 0) {
-      // Auto-connect both Super Admin (ID 1) and Room Owner (ID 3) into the active conversation list
-      Promise.all([
-        chatApi.createConversation(1), // Super Admin
-        chatApi.createConversation(3), // Room Owner
-      ]).then((results) => {
-        const firstId = results[0]?.data?.data?.id || results[0]?.data?.data?._id;
-        if (firstId) navigate(`/chat/${firstId}`, { replace: true });
-      }).catch(() => {});
+      chatApi
+        .createAdminConversation()
+        .then(({ data }) => {
+          const firstId = data?.data?._id || data?.data?.id;
+          if (firstId) navigate(`/chat/${firstId}`, { replace: true });
+        })
+        .catch(() => {});
     }
-  }, [resolvedConversation, targetUserId, conversationId, conversations.length]);
+  }, [resolvedConversation, targetUserId, conversationId, conversations.length, isSupportAdmin]);
 
   const selectConversation = (id) => {
     navigate(`/chat/${id}`);

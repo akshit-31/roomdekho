@@ -8,9 +8,10 @@ import Sidebar from "./Sidebar";
  */
 export default function DashboardLayout() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
       <Navbar />
-      <div className="mx-auto flex max-w-7xl">
+      <div className="mx-auto flex w-full max-w-7xl flex-1 items-start">
+        <Sidebar />
         <main className="min-w-0 flex-1 px-4 py-6 sm:px-6 lg:px-8">
           <Outlet />
         </main>

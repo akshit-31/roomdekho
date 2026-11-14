@@ -16,6 +16,7 @@ import Chat from "../pages/chat/Chat";
 import MyVisits from "../pages/booking/MyVisits";
 import Favorites from "../pages/favorites/Favorites";
 import Profile from "../pages/profile/Profile";
+import HelpBox from "../pages/help/HelpBox";
 
 export default function PublicRoutes() {
   return (
@@ -38,6 +39,7 @@ export default function PublicRoutes() {
       <Route path="/visits" element={<MyVisits />} />
       <Route path="/favorites" element={<Favorites />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/help-box" element={<HelpBox />} />
     </>
   );
 }

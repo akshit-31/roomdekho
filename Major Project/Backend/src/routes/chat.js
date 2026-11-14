@@ -42,6 +42,53 @@ r.get("/", async (req, res) => {
   ok(res, 200, "Conversations fetched", items);
 });
 
+// POST /chat/admin - Connect directly with Super Admin for Help Box
+r.post("/admin", async (req, res) => {
+  try {
+    const adminRes = await query(
+      "SELECT id, name, email, role, avatar FROM users WHERE role='admin' ORDER BY id ASC LIMIT 1"
+    );
+    const adminUser = adminRes.rows[0];
+    if (!adminUser) {
+      return res.status(404).json({ success: false, message: "Admin support is currently unavailable." });
+    }
+
+    if (Number(adminUser.id) === Number(req.user.id)) {
+      return res.status(400).json({ success: false, message: "You are the Super Admin." });
+    }
+
+    let a = Math.min(Number(req.user.id), Number(adminUser.id));
+    let b = Math.max(Number(req.user.id), Number(adminUser.id));
+
+    const { rows } = await query(
+      `INSERT INTO conversations(user_one, user_two) 
+       VALUES($1, $2) 
+       ON CONFLICT(user_one, user_two) DO UPDATE SET updated_at=now() 
+       RETURNING *`,
+      [a, b]
+    );
+
+    const conv = {
+      ...rows[0],
+      _id: String(rows[0].id),
+      id: String(rows[0].id),
+      otherUser: {
+        _id: String(adminUser.id),
+        id: String(adminUser.id),
+        name: adminUser.name,
+        email: adminUser.email,
+        role: adminUser.role,
+        avatarUrl: adminUser.avatar,
+      },
+    };
+
+    ok(res, 201, "Admin Support conversation ready", conv);
+  } catch (err) {
+    console.error("Admin chat connect error:", err);
+    res.status(500).json({ success: false, message: "Failed to connect to Admin support" });
+  }
+});
+
 // POST /chat - Start or get existing conversation with a user
 r.post("/", async (req, res) => {
   let { userId } = req.body;

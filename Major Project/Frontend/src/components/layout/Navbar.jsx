@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Menu, X, LogOut, User, LayoutDashboard, ShieldCheck, DoorOpen, Users, Sparkles, Heart, CalendarDays, MessageCircle, Home, Phone, PlusCircle, MessageSquareWarning } from "lucide-react";
+import { Menu, X, LogOut, User, LayoutDashboard, ShieldCheck, DoorOpen, Users, Sparkles, Heart, CalendarDays, MessageCircle, Home, PlusCircle, HelpCircle } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import customLogo from "../../image copy 3.png";
 
@@ -10,16 +10,17 @@ const GENERAL_NAV_LINKS = [
   { to: "/roommates", label: "Find a Roommate", icon: Users },
   { to: "/favorites", label: "Favorites", icon: Heart },
   { to: "/chat", label: "Messages", icon: MessageCircle },
-  { to: "/contact", label: "Complaint", icon: MessageSquareWarning },
+  { to: "/help-box", label: "Help Box", icon: HelpCircle },
   { to: "/profile", label: "Profile", icon: User },
 ];
 
 const OWNER_NAV_LINKS = [
+  { to: "/owner", label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: "/owner/listings", label: "Room Details", icon: DoorOpen },
   { to: "/owner/listings/new", label: "Add Room", icon: PlusCircle },
+  { to: "/chat", label: "Seeker Chats", icon: MessageCircle },
+  { to: "/owner/help", label: "Help Box", icon: HelpCircle },
   { to: "/profile", label: "Profile", icon: User },
-  { to: "/contact", label: "Contact", icon: Phone },
-  { to: "/admin/complaints", label: "Complaint", icon: MessageSquareWarning },
 ];
 
 const ADMIN_NAV_LINKS = [
