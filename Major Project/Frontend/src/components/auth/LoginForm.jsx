@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Eye, EyeOff, ShieldAlert, Building2, UserCheck, DoorOpen, Users, Sparkles } from "lucide-react";
+import { Eye, EyeOff, ShieldAlert, Building2, UserCheck } from "lucide-react";
 import Input from "../common/Input";
 import Button from "../common/Button";
 import ErrorMessage from "../common/ErrorMessage";
@@ -19,7 +19,6 @@ export default function LoginForm({ onSuccess, isModal = false }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedRole, setSelectedRole] = useState("seeker"); // "seeker" (User) | "owner"
-  const [userIntent, setUserIntent] = useState("both"); // "find_room" | "find_roommate" | "both"
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [serverError, setServerError] = useState(null);
   const [roleMismatchTarget, setRoleMismatchTarget] = useState(null); // "owner" | "seeker"
@@ -88,15 +87,8 @@ export default function LoginForm({ onSuccess, isModal = false }) {
         } else if (userRole === "owner") {
           navigate("/owner", { replace: true });
         } else {
-          // User navigation based on their selected intent
-          if (userIntent === "find_room") {
-            navigate("/rooms", { replace: true });
-          } else if (userIntent === "find_roommate") {
-            navigate("/roommates", { replace: true });
-          } else {
-            const redirectTo = location.state?.from?.pathname || "/profile";
-            navigate(redirectTo, { replace: true });
-          }
+          const redirectTo = location.state?.from?.pathname || "/profile";
+          navigate(redirectTo, { replace: true });
         }
       }
     } catch (err) {
@@ -141,53 +133,6 @@ export default function LoginForm({ onSuccess, isModal = false }) {
         <div className="mb-4 flex items-center justify-center gap-2 rounded-2xl border border-red-500/30 bg-red-500/10 p-2.5 text-xs font-bold text-red-400">
           <ShieldAlert size={16} />
           <span>Admin Portal Login Mode</span>
-        </div>
-      )}
-
-      {/* User Intent Selector for "User" Role */}
-      {!isAdminMode && selectedRole === "seeker" && (
-        <div className="mb-4 rounded-2xl border border-white/10 bg-slate-800/80 p-2.5">
-          <p className="text-[11px] font-bold text-slate-300 mb-1.5 px-1">I am looking for:</p>
-          <div className="grid grid-cols-3 gap-1 sm:gap-1.5">
-            <button
-              type="button"
-              onClick={() => setUserIntent("find_room")}
-              className={`flex flex-col sm:flex-row items-center justify-center text-center gap-0.5 sm:gap-1.5 rounded-xl py-1.5 sm:py-2 px-1 text-[10px] sm:text-[11px] font-bold transition-all ${
-                userIntent === "find_room"
-                  ? "bg-amber-500 text-white ring-2 ring-amber-300/40 shadow-sm"
-                  : "bg-black/30 text-slate-300 hover:bg-white/10"
-              }`}
-            >
-              <DoorOpen size={13} className="shrink-0" />
-              <span className="leading-tight truncate sm:overflow-visible">Room</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setUserIntent("find_roommate")}
-              className={`flex flex-col sm:flex-row items-center justify-center text-center gap-0.5 sm:gap-1.5 rounded-xl py-1.5 sm:py-2 px-1 text-[10px] sm:text-[11px] font-bold transition-all ${
-                userIntent === "find_roommate"
-                  ? "bg-amber-500 text-white ring-2 ring-amber-300/40 shadow-sm"
-                  : "bg-black/30 text-slate-300 hover:bg-white/10"
-              }`}
-            >
-              <Users size={13} className="shrink-0" />
-              <span className="leading-tight truncate sm:overflow-visible">Roommate</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setUserIntent("both")}
-              className={`flex flex-col sm:flex-row items-center justify-center text-center gap-0.5 sm:gap-1.5 rounded-xl py-1.5 sm:py-2 px-1 text-[10px] sm:text-[11px] font-bold transition-all ${
-                userIntent === "both"
-                  ? "bg-amber-500 text-white ring-2 ring-amber-300/40 shadow-sm"
-                  : "bg-black/30 text-slate-300 hover:bg-white/10"
-              }`}
-            >
-              <Sparkles size={13} className="shrink-0" />
-              <span className="leading-tight truncate sm:overflow-visible">Both</span>
-            </button>
-          </div>
         </div>
       )}
 
