@@ -79,6 +79,17 @@ export default function LoginForm({ onSuccess, isModal = false }) {
         return;
       }
 
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+            localStorage.setItem("user_gps", JSON.stringify(coords));
+          },
+          () => {},
+          { timeout: 8000, enableHighAccuracy: true }
+        );
+      }
+
       if (onSuccess) {
         onSuccess();
       } else {

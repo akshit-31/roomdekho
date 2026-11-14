@@ -36,11 +36,18 @@ export default function PropertyCard({ room }) {
           <h3 className="line-clamp-1 text-sm font-semibold text-gray-900">{room.title}</h3>
         </div>
 
-        <p className="mt-1 flex items-center gap-1 text-xs text-gray-500">
-          <MapPin size={13} />
-          {room.address?.locality ? `${room.address.locality}, ` : ""}
-          {room.address?.city}
-        </p>
+        <div className="mt-1 flex items-center justify-between text-xs text-gray-500">
+          <p className="flex items-center gap-1 truncate">
+            <MapPin size={13} className="text-amber-500 shrink-0" />
+            {room.address?.locality ? `${room.address.locality}, ` : ""}
+            {room.address?.city}
+          </p>
+          {room.distance !== undefined && room.distance !== null && (
+            <span className="inline-flex shrink-0 items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-200">
+              📍 {room.distance} km
+            </span>
+          )}
+        </div>
 
         <div className="mt-3 flex items-center justify-between">
           <p className="text-base font-semibold text-gray-900">

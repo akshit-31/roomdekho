@@ -151,11 +151,16 @@ export default function RoomPostCard({ room }) {
                 </span>
               )}
             </div>
-            <p className="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5">
+            <p className="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5 flex-wrap">
               <MapPin size={11} className="text-amber-500 shrink-0" />
               <span className="truncate">
                 {room.locality || room.address?.locality ? `${room.locality || room.address?.locality}, ` : ""}{room.city || room.address?.city || "Delhi NCR"}
               </span>
+              {room.distance !== undefined && room.distance !== null && (
+                <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-200">
+                  📍 {room.distance} km away
+                </span>
+              )}
               <span className="text-slate-300">·</span>
               <span>{timeAgo(room.createdAt || room.created_at)}</span>
             </p>

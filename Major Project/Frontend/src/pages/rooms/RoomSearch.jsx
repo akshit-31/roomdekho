@@ -19,20 +19,62 @@ export default function RoomSearch() {
   const { filters, results, status, search, setFilters, resetFilters } = useSearch();
   const [view, setView] = useState("posts"); // posts | list | map
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [gpsActive, setGpsActive] = useState(false);
 
   const { items = [], total = 0, page = 1, limit = 20 } = results || {};
   const { totalPages } = usePagination(total, limit);
 
-  // Seed filters from the URL once on mount (e.g. /rooms?q=...&city=...)
+  // Seed filters from the URL once on mount, and auto-detect GPS for nearest rooms first
   useEffect(() => {
     const initial = Object.fromEntries(params.entries());
-    if (Object.keys(initial).length) {
+    let cached = null;
+    try {
+      cached = JSON.parse(localStorage.getItem("user_gps") || "null");
+    } catch {}
+
+    if (cached?.lat && cached?.lng) {
+      setGpsActive(true);
+      const combined = { lat: cached.lat, lng: cached.lng, sort: "distance", ...initial };
+      setFilters(combined);
+      search(combined);
+    } else if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          localStorage.setItem("user_gps", JSON.stringify(coords));
+          setGpsActive(true);
+          const combined = { lat: coords.lat, lng: coords.lng, sort: "distance", ...initial };
+          setFilters(combined);
+          search(combined);
+        },
+        () => {
+          setFilters(initial);
+          search(initial);
+        },
+        { timeout: 7000, enableHighAccuracy: true }
+      );
+    } else {
       setFilters(initial);
       search(initial);
-    } else {
-      search({});
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const triggerGps = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        localStorage.setItem("user_gps", JSON.stringify(coords));
+        setGpsActive(true);
+        runSearch({ lat: coords.lat, lng: coords.lng, sort: "distance" });
+      },
+      () => alert("Location permission was denied. Please allow location in browser settings."),
+      { timeout: 8000, enableHighAccuracy: true }
+    );
+  };
 
   const runSearch = (patch = {}) => {
     const next = { ...filters, ...patch, page: 1 };
@@ -135,7 +177,39 @@ export default function RoomSearch() {
 
         {/* Content Area Based on Active View */}
         {view === "posts" ? (
-          <div className="space-y-6">
+          <div className="space-y-4">
+            {gpsActive ? (
+              <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-emerald-50 border border-emerald-200 px-4 py-2.5 text-xs text-emerald-800 shadow-xs">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-white text-[11px]">
+                    ✓
+                  </span>
+                  <div>
+                    <span className="font-bold text-emerald-950">GPS Nearby Search Active: </span>
+                    <span className="text-emerald-800">Rooms closest to you are displayed first, followed by farther distances.</span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={triggerGps}
+                  className="rounded-lg bg-emerald-100 hover:bg-emerald-200 px-2.5 py-1 text-[11px] font-bold text-emerald-900 transition-colors"
+                >
+                  ↻ Refresh Location
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-amber-50 border border-amber-200 px-4 py-2 text-xs text-amber-800">
+                <span>Want to see rooms closest to your live location?</span>
+                <button
+                  type="button"
+                  onClick={triggerGps}
+                  className="rounded-lg bg-amber-500 hover:bg-amber-600 px-3 py-1 text-xs font-bold text-white shadow-xs transition-colors"
+                >
+                  📍 Sort by Nearest to Me
+                </button>
+              </div>
+            )}
+
             <div className="flex items-center justify-between border-b border-gray-200/80 pb-3">
               <p className="text-xs sm:text-sm font-bold text-slate-800">
                 🔥 Showing {items.length} of {total} live room posts

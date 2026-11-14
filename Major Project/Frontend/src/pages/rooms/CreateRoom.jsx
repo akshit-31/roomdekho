@@ -23,6 +23,12 @@ export default function CreateRoom() {
         availableFrom: formData.moveInDate || new Date().toISOString(),
         amenities: formData.amenities || [],
         images: formData.images || [],
+        latitude: (formData.latitude !== undefined && formData.latitude !== null && !isNaN(Number(formData.latitude)))
+          ? Number(formData.latitude)
+          : (formData.location?.coordinates?.[1] ? Number(formData.location.coordinates[1]) : undefined),
+        longitude: (formData.longitude !== undefined && formData.longitude !== null && !isNaN(Number(formData.longitude)))
+          ? Number(formData.longitude)
+          : (formData.location?.coordinates?.[0] ? Number(formData.location.coordinates[0]) : undefined),
       };
 
       const { data: res } = await propertyApi.create(payload);

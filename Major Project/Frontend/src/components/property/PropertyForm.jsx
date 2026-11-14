@@ -37,6 +37,8 @@ export default function PropertyForm({ initialValues, onSubmit, submitLabel = "S
       ? initialValues.images
       : (initialValues?.media || []).map((m) => m?.url || m).filter(Boolean);
   const [uploadedImages, setUploadedImages] = useState(initialImages);
+  const [gpsLoading, setGpsLoading] = useState(false);
+  const [gpsStatus, setGpsStatus] = useState(null);
 
   const {
     register,
@@ -47,6 +49,56 @@ export default function PropertyForm({ initialValues, onSubmit, submitLabel = "S
     watch,
     formState: { errors, isSubmitting },
   } = useForm({ defaultValues: { ...DEFAULTS, ...initialValues } });
+
+  const detectLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser");
+      return;
+    }
+    setGpsLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const lat = Number(pos.coords.latitude.toFixed(6));
+        const lng = Number(pos.coords.longitude.toFixed(6));
+        setValue("location.coordinates.1", lat);
+        setValue("location.coordinates.0", lng);
+        setValue("latitude", lat);
+        setValue("longitude", lng);
+        setGpsStatus(`${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+        setGpsLoading(false);
+
+        // Store in user_gps
+        localStorage.setItem("user_gps", JSON.stringify({ lat, lng }));
+
+        // Reverse geocode to fill city & locality
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+          const geo = await res.json();
+          const city = geo.address?.city || geo.address?.state_district || geo.address?.town || geo.address?.suburb;
+          const locality = geo.address?.neighbourhood || geo.address?.suburb || geo.address?.residential;
+          const pincode = geo.address?.postcode;
+          if (city) setValue("address.city", city);
+          if (locality) setValue("address.locality", locality);
+          if (pincode) setValue("address.pincode", pincode);
+        } catch {
+          // ignore geocode error
+        }
+      },
+      (err) => {
+        console.warn("GPS detection error:", err);
+        setGpsLoading(false);
+      },
+      { timeout: 10000, enableHighAccuracy: true }
+    );
+  };
+
+  useEffect(() => {
+    if (initialValues?.location?.coordinates?.[1] && initialValues?.location?.coordinates?.[0]) {
+      setGpsStatus(`${Number(initialValues.location.coordinates[1]).toFixed(4)}, ${Number(initialValues.location.coordinates[0]).toFixed(4)}`);
+    } else if (navigator.geolocation) {
+      detectLocation();
+    }
+  }, []);
 
   useEffect(() => {
     if (initialValues) {
@@ -137,25 +189,50 @@ export default function PropertyForm({ initialValues, onSubmit, submitLabel = "S
       </section>
 
       <section className="space-y-4 rounded-2xl border border-gray-100 bg-white p-5">
-        <h2 className="text-sm font-semibold text-gray-900">Location</h2>
-        <Input label="Address line" {...register("address.line1")} />
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 pb-3">
+          <div>
+            <h2 className="text-sm font-semibold text-gray-900">Location & GPS Coordinates</h2>
+            <p className="text-xs text-gray-500">Accurate GPS ensures nearby room seekers find your property first!</p>
+          </div>
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            icon={MapPin}
+            loading={gpsLoading}
+            onClick={detectLocation}
+            className="!text-amber-700 !border-amber-300 hover:!bg-amber-50 text-xs font-bold"
+          >
+            {gpsLoading ? "Detecting GPS..." : "📍 Use My GPS Location"}
+          </Button>
+        </div>
+
+        {gpsStatus && (
+          <div className="flex flex-wrap items-center gap-2 rounded-xl bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-800 border border-emerald-200">
+            <span>✓ Exact GPS Detected:</span>
+            <span className="font-mono bg-white px-2 py-0.5 rounded border border-emerald-300">{gpsStatus}</span>
+            <span className="text-emerald-700 font-normal ml-auto">Seekers nearest to this location will see this room first</span>
+          </div>
+        )}
+
+        <Input label="Address line" placeholder="Flat No., House/Building Name, Street" {...register("address.line1")} />
         <div className="grid grid-cols-2 gap-4">
-          <Input label="Locality" {...register("address.locality")} />
-          <Input label="City" error={errors.address?.city?.message}
+          <Input label="Locality / Sector" placeholder="e.g. Sector 62 or Karol Bagh" {...register("address.locality")} />
+          <Input label="City" placeholder="e.g. Noida or Delhi" error={errors.address?.city?.message}
             {...register("address.city", { required: "City is required" })} />
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <Input label="State" {...register("address.state")} />
-          <Input label="Pincode" {...register("address.pincode")} />
+          <Input label="State" placeholder="e.g. Uttar Pradesh or Delhi" {...register("address.state")} />
+          <Input label="Pincode" placeholder="e.g. 201301" {...register("address.pincode")} />
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <Input label="Latitude (Optional)" type="number" step="any"
+          <Input label="Latitude (GPS)" type="number" step="any"
             {...register("location.coordinates.1", { valueAsNumber: true })} />
-          <Input label="Longitude (Optional)" type="number" step="any"
+          <Input label="Longitude (GPS)" type="number" step="any"
             {...register("location.coordinates.0", { valueAsNumber: true })} />
         </div>
         <p className="text-[11px] text-slate-500">
-          💡 Map coordinates are automatically placed based on city/locality if left blank.
+          💡 Click "Use My GPS Location" above to automatically lock your property coordinates on the map.
         </p>
       </section>
 

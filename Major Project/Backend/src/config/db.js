@@ -83,8 +83,7 @@ export async function initDB() {
     ALTER TABLE profiles ADD COLUMN IF NOT EXISTS dob VARCHAR(40);
     ALTER TABLE profiles ADD COLUMN IF NOT EXISTS looking_for VARCHAR(40) DEFAULT 'both';
 
-    ALTER TABLE rooms ADD COLUMN IF NOT EXISTS status VARCHAR(30) NOT NULL DEFAULT 'pending';
-    ALTER TABLE rooms ALTER COLUMN status SET DEFAULT 'pending';
+    CREATE TABLE IF NOT EXISTS rooms (
       id BIGSERIAL PRIMARY KEY,
       owner_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       title VARCHAR(160) NOT NULL,
@@ -101,12 +100,21 @@ export async function initDB() {
       available_from DATE,
       amenities TEXT[] DEFAULT '{}',
       images TEXT[] DEFAULT '{}',
-      status VARCHAR(30) NOT NULL DEFAULT 'published',
+      status VARCHAR(30) NOT NULL DEFAULT 'pending',
       views INT NOT NULL DEFAULT 0,
       is_verified BOOLEAN NOT NULL DEFAULT false,
+      latitude NUMERIC(10, 6),
+      longitude NUMERIC(10, 6),
       created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
     );
+
+    ALTER TABLE rooms ADD COLUMN IF NOT EXISTS status VARCHAR(30) NOT NULL DEFAULT 'pending';
+    ALTER TABLE rooms ALTER COLUMN status SET DEFAULT 'pending';
+    ALTER TABLE rooms ADD COLUMN IF NOT EXISTS latitude NUMERIC(10, 6);
+    ALTER TABLE rooms ADD COLUMN IF NOT EXISTS longitude NUMERIC(10, 6);
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS latitude NUMERIC(10, 6);
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS longitude NUMERIC(10, 6);
 
     CREATE TABLE IF NOT EXISTS favorites (
       user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,

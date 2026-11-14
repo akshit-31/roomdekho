@@ -36,21 +36,23 @@ export default function OwnerDashboard() {
     async function load() {
       setLoading(true);
       try {
-        const [{ data: dashRes }, { data: enqRes }, roomsRes] = await Promise.allSettled([
+        const [dashRes, enqRes, roomsRes] = await Promise.allSettled([
           ownerApi.dashboard(),
           ownerApi.enquiries(),
           propertyApi.mine({ limit: 4 })
         ]);
 
         if (dashRes?.status === "fulfilled") {
-          setStats(dashRes.value?.data || {});
+          const d = dashRes.value?.data?.data || dashRes.value?.data || {};
+          setStats(d);
         }
         if (enqRes?.status === "fulfilled") {
-          setEnquiries((enqRes.value?.data || []).slice(0, 5));
+          const enqData = enqRes.value?.data?.data || enqRes.value?.data || [];
+          setEnquiries(Array.isArray(enqData) ? enqData.slice(0, 5) : []);
         }
         if (roomsRes?.status === "fulfilled") {
           const items = roomsRes.value?.data?.data?.items || roomsRes.value?.data?.items || [];
-          setMyRooms(items.slice(0, 4));
+          setMyRooms(Array.isArray(items) ? items.slice(0, 4) : []);
         }
       } catch (err) {
         console.error("Dashboard data load error:", err);
@@ -59,6 +61,18 @@ export default function OwnerDashboard() {
       }
     }
     load();
+
+    // Auto-read GPS position for owner
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          localStorage.setItem("user_gps", JSON.stringify(coords));
+        },
+        () => {},
+        { timeout: 8000, enableHighAccuracy: true }
+      );
+    }
   }, []);
 
   if (loading) return <Loader label="Loading your Host Dashboard..." />;

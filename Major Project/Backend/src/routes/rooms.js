@@ -66,7 +66,9 @@ export function getRoomCoords(city, id) {
 
 export function roomRow(x){
   const imgList = Array.isArray(x.images) ? x.images : [];
-  const coords = getRoomCoords(x.city, x.id);
+  const coords = (x.latitude && x.longitude)
+    ? { lat: Number(x.latitude), lng: Number(x.longitude) }
+    : getRoomCoords(x.city, x.id);
   const locationObj = {
     type: "Point",
     coordinates: [coords.lng, coords.lat],
@@ -91,6 +93,9 @@ export function roomRow(x){
       addressLine: x.address || ""
     },
     location: locationObj,
+    latitude: coords.lat,
+    longitude: coords.lng,
+    distance: (x.distance !== undefined && x.distance !== null) ? Number(Number(x.distance).toFixed(1)) : undefined,
     media: imgList.length > 0 ? imgList.map(img => ({ url: img })) : [],
     images: imgList,
     amenities: Array.isArray(x.amenities) ? x.amenities : [],
@@ -118,7 +123,7 @@ export function roomRow(x){
   };
 }
 r.get("/",async(req,res)=>{
- const {city,minRent,maxRent,propertyType,roomType,furnishing,sort="newest",limit=12,page=1}=req.query;
+ const {city,minRent,maxRent,propertyType,roomType,furnishing,sort="newest",lat,lng,limit=12,page=1}=req.query;
  const where=["r.status='published'"], params=[]; let i=1;
  if(city){where.push(`LOWER(r.city)=LOWER($${i++})`);params.push(city)}
  if(minRent){where.push(`r.rent >= $${i++}`);params.push(Number(minRent))}
@@ -126,10 +131,42 @@ r.get("/",async(req,res)=>{
  if(propertyType){where.push(`r.property_type=$${i++}`);params.push(propertyType)}
  if(roomType){where.push(`r.room_type=$${i++}`);params.push(roomType)}
  if(furnishing){where.push(`r.furnishing=$${i++}`);params.push(furnishing)}
- const order=sort==="price"? "r.rent ASC":sort==="price_desc"?"r.rent DESC":"r.created_at DESC";
+
+ const filterParams = [...params];
+
+ const hasGps = (lat !== undefined && lng !== undefined && !isNaN(Number(lat)) && !isNaN(Number(lng)));
+ const userLat = hasGps ? Number(lat) : null;
+ const userLng = hasGps ? Number(lng) : null;
+
+ let distanceSelect = "";
+ if (hasGps) {
+   distanceSelect = `,
+     ROUND(CAST(
+       6371 * acos(
+         LEAST(1.0, GREATEST(-1.0,
+           cos(radians($${i++})) * cos(radians(COALESCE(r.latitude, 28.6139))) *
+           cos(radians(COALESCE(r.longitude, 77.2090)) - radians($${i++})) +
+           sin(radians($${i-2})) * sin(radians(COALESCE(r.latitude, 28.6139)))
+         ))
+       ) AS numeric
+     ), 1) AS distance
+   `;
+   params.push(userLat, userLng);
+ }
+
+ let order = "r.created_at DESC";
+ if (sort === "price") {
+   order = "r.rent ASC";
+ } else if (sort === "price_desc") {
+   order = "r.rent DESC";
+ } else if (sort === "distance" || hasGps) {
+   order = "distance ASC, r.created_at DESC";
+ }
+
  const lim=Math.min(Number(limit)||12,50), off=(Math.max(Number(page)||1,1)-1)*lim;
- const q=`SELECT r.*,u.name owner_name,u.avatar owner_avatar,u.is_kyc_verified owner_kyc FROM rooms r JOIN users u ON u.id=r.owner_id WHERE ${where.join(" AND ")} ORDER BY ${order} LIMIT $${i++} OFFSET $${i++}`;
- const {rows}=await query(q,[...params,lim,off]); const c=await query(`SELECT COUNT(*) FROM rooms r WHERE ${where.join(" AND ")}`,params);
+ const q=`SELECT r.*,u.name owner_name,u.avatar owner_avatar,u.is_kyc_verified owner_kyc ${distanceSelect} FROM rooms r JOIN users u ON u.id=r.owner_id WHERE ${where.join(" AND ")} ORDER BY ${order} LIMIT $${i++} OFFSET $${i++}`;
+ const {rows}=await query(q,[...params,lim,off]);
+ const c=await query(`SELECT COUNT(*) FROM rooms r WHERE ${where.join(" AND ")}`,filterParams);
  ok(res,200,"Rooms fetched",{items:rows.map(roomRow),pagination:{page:Number(page)||1,limit:lim,total:Number(c.rows[0].count),pages:Math.ceil(Number(c.rows[0].count)/lim)}});
 });
 r.get("/mine",auth,owner,async(req,res)=>{const {rows}=await query("SELECT * FROM rooms WHERE owner_id=$1 ORDER BY created_at DESC",[req.user.id]);ok(res,200,"My rooms",{items:rows.map(roomRow),total:rows.length})});
@@ -141,15 +178,39 @@ r.get("/:id",async(req,res)=>{
 r.post("/",auth,owner,async(req,res)=>{
  const b=req.body; if(!b.title||!b.city||b.rent===undefined)return res.status(400).json({success:false,message:"Title, city and rent are required"});
  const validDate = (b.availableFrom && !isNaN(Date.parse(b.availableFrom))) ? b.availableFrom : null;
+ const lat = (b.latitude !== undefined && b.latitude !== null && !isNaN(Number(b.latitude)))
+   ? Number(b.latitude)
+   : (b.location?.coordinates?.[1] ? Number(b.location.coordinates[1]) : (b.location?.lat ? Number(b.location.lat) : null));
+ const lng = (b.longitude !== undefined && b.longitude !== null && !isNaN(Number(b.longitude)))
+   ? Number(b.longitude)
+   : (b.location?.coordinates?.[0] ? Number(b.location.coordinates[0]) : (b.location?.lng ? Number(b.location.lng) : null));
+
+ const finalCoords = (lat && lng) ? { lat, lng } : getRoomCoords(b.city, req.user.id);
+
  const {rows}=await query(
-   `INSERT INTO rooms(owner_id,title,description,city,locality,address,rent,deposit,property_type,room_type,furnishing,gender_preference,available_from,amenities,images,status,is_verified)
-    VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,'pending',false)
+   `INSERT INTO rooms(owner_id,title,description,city,locality,address,rent,deposit,property_type,room_type,furnishing,gender_preference,available_from,amenities,images,status,is_verified,latitude,longitude)
+    VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,'pending',false,$16,$17)
     RETURNING *`,
-   [req.user.id,b.title,b.description,b.city,b.locality,b.address,b.rent,b.deposit||0,b.propertyType||"apartment",b.roomType||"private",b.furnishing||"furnished",b.genderPreference||"any",validDate,b.amenities||[],b.images||[]]
+   [req.user.id,b.title,b.description,b.city,b.locality,b.address,b.rent,b.deposit||0,b.propertyType||"apartment",b.roomType||"private",b.furnishing||"furnished",b.genderPreference||"any",validDate,b.amenities||[],b.images||[],finalCoords.lat,finalCoords.lng]
  );
  ok(res,201,"Room created (pending admin approval)",roomRow(rows[0]));
 });
-r.put("/:id",auth,owner,async(req,res)=>{const b=req.body; const {rows}=await query(`UPDATE rooms SET title=COALESCE($1,title),description=COALESCE($2,description),city=COALESCE($3,city),locality=COALESCE($4,locality),address=COALESCE($5,address),rent=COALESCE($6,rent),deposit=COALESCE($7,deposit),property_type=COALESCE($8,property_type),room_type=COALESCE($9,room_type),furnishing=COALESCE($10,furnishing),amenities=COALESCE($11,amenities),images=COALESCE($12,images),updated_at=now() WHERE id=$13 AND owner_id=$14 RETURNING *`,[b.title,b.description,b.city,b.locality,b.address,b.rent,b.deposit,b.propertyType,b.roomType,b.furnishing,b.amenities,b.images,req.params.id,req.user.id]);if(!rows[0])return res.status(404).json({success:false,message:"Room not found"});ok(res,200,"Room updated",rows[0])});
+r.put("/:id",auth,owner,async(req,res)=>{
+  const b=req.body;
+  const lat = (b.latitude !== undefined && b.latitude !== null && !isNaN(Number(b.latitude))) ? Number(b.latitude) : null;
+  const lng = (b.longitude !== undefined && b.longitude !== null && !isNaN(Number(b.longitude))) ? Number(b.longitude) : null;
+  const {rows}=await query(
+    `UPDATE rooms SET
+      title=COALESCE($1,title),description=COALESCE($2,description),city=COALESCE($3,city),locality=COALESCE($4,locality),
+      address=COALESCE($5,address),rent=COALESCE($6,rent),deposit=COALESCE($7,deposit),property_type=COALESCE($8,property_type),
+      room_type=COALESCE($9,room_type),furnishing=COALESCE($10,furnishing),amenities=COALESCE($11,amenities),images=COALESCE($12,images),
+      latitude=COALESCE($13,latitude),longitude=COALESCE($14,longitude),updated_at=now()
+     WHERE id=$15 AND owner_id=$16 RETURNING *`,
+    [b.title,b.description,b.city,b.locality,b.address,b.rent,b.deposit,b.propertyType,b.roomType,b.furnishing,b.amenities,b.images,lat,lng,req.params.id,req.user.id]
+  );
+  if(!rows[0])return res.status(404).json({success:false,message:"Room not found"});
+  ok(res,200,"Room updated",roomRow(rows[0]));
+});
 r.delete("/:id",auth,owner,async(req,res)=>{await query("DELETE FROM rooms WHERE id=$1 AND owner_id=$2",[req.params.id,req.user.id]);ok(res,200,"Room deleted")});
 r.patch("/:id/publish",auth,owner,async(req,res)=>{const {rows}=await query("UPDATE rooms SET status='pending',is_verified=false,updated_at=now() WHERE id=$1 AND owner_id=$2 RETURNING *",[req.params.id,req.user.id]);ok(res,200,"Room submitted for admin approval",rows[0]||null)});
 r.patch("/:id/rented",auth,owner,async(req,res)=>{const {rows}=await query("UPDATE rooms SET status='rented',updated_at=now() WHERE id=$1 AND owner_id=$2 RETURNING *",[req.params.id,req.user.id]);ok(res,200,"Room marked rented",rows[0]||null)});

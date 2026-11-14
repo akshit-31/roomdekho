@@ -50,6 +50,8 @@ r.get("/me",auth,async(req,res)=>{
     id: String(userRow.id),
     phone: userRow.phone || "",
     avatarUrl: userRow.avatar,
+    latitude: userRow.latitude ? Number(userRow.latitude) : null,
+    longitude: userRow.longitude ? Number(userRow.longitude) : null,
     isProfileCompleted: isComplete,
     is_profile_completed: isComplete,
     intent: userRow.intent || profileData.looking_for || "both",
@@ -113,6 +115,24 @@ r.post("/me/avatar", auth, upload.single("avatar"), async (req, res) => {
   } catch (err) {
     console.error("Avatar upload error:", err);
     res.status(500).json({ success: false, message: err.message || "Failed to upload avatar" });
+  }
+});
+
+r.patch("/me/location", auth, async (req, res) => {
+  try {
+    const lat = Number(req.body.latitude);
+    const lng = Number(req.body.longitude);
+    if (isNaN(lat) || isNaN(lng)) {
+      return res.status(400).json({ success: false, message: "Valid latitude and longitude are required" });
+    }
+    const { rows } = await query(
+      "UPDATE users SET latitude=$1, longitude=$2, updated_at=now() WHERE id=$3 RETURNING id, name, email, latitude, longitude",
+      [lat, lng, req.user.id]
+    );
+    ok(res, 200, "GPS location saved successfully", rows[0]);
+  } catch (err) {
+    console.error("Location update error:", err);
+    res.status(500).json({ success: false, message: "Failed to update GPS location" });
   }
 });
 
