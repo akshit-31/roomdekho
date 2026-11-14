@@ -12,6 +12,7 @@ const ROLE_TABS = [
   { id: "owner", label: "Room Owners" },
   { id: "roommate", label: "Roommates" },
   { id: "seeker", label: "Room Finders" },
+  { id: "both", label: "Both" },
   { id: "admin", label: "Admins" },
 ];
 

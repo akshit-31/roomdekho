@@ -10,10 +10,11 @@ import { chatApi } from "../../services/api/chat.api";
 import { formatDate } from "../../utils/formatDate";
 
 const ROLE_STYLES = {
-  seeker: "bg-gray-100 text-gray-600",
-  roommate: "bg-blue-100 text-blue-600",
-  owner: "bg-purple-100 text-purple-600",
-  admin: "bg-amber-100 text-amber-700",
+  seeker: "bg-gray-100 text-gray-700",
+  roommate: "bg-blue-100 text-blue-700",
+  owner: "bg-purple-100 text-purple-700",
+  admin: "bg-amber-100 text-amber-800",
+  both: "bg-emerald-100 text-emerald-800",
 };
 
 export default function UserTable({ users = [], onChanged }) {
@@ -76,7 +77,16 @@ export default function UserTable({ users = [], onChanged }) {
                 </div>
               </td>
               <td className="px-4 py-3">
-                <span className={`rounded-full px-2 py-0.5 text-xs font-medium capitalize ${ROLE_STYLES[u.role]}`}>{u.role}</span>
+                <div className="flex flex-col items-start gap-1">
+                  <span className={`rounded-full px-2 py-0.5 text-xs font-medium capitalize ${ROLE_STYLES[u.role] || "bg-gray-100 text-gray-700"}`}>
+                    {u.role}
+                  </span>
+                  {u.role !== "admin" && u.role !== "owner" && (u.intent === "both" || u.lookingFor === "both") && (
+                    <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 border border-emerald-200">
+                      Both (Room & Flatmate)
+                    </span>
+                  )}
+                </div>
               </td>
               <td className="px-4 py-3 text-xs capitalize text-gray-600">
                 <div className="flex items-center gap-1.5">

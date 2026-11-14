@@ -83,7 +83,8 @@ export async function initDB() {
     ALTER TABLE profiles ADD COLUMN IF NOT EXISTS dob VARCHAR(40);
     ALTER TABLE profiles ADD COLUMN IF NOT EXISTS looking_for VARCHAR(40) DEFAULT 'both';
 
-    CREATE TABLE IF NOT EXISTS rooms (
+    ALTER TABLE rooms ADD COLUMN IF NOT EXISTS status VARCHAR(30) NOT NULL DEFAULT 'pending';
+    ALTER TABLE rooms ALTER COLUMN status SET DEFAULT 'pending';
       id BIGSERIAL PRIMARY KEY,
       owner_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       title VARCHAR(160) NOT NULL,

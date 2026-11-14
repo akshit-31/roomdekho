@@ -1,15 +1,21 @@
 import clsx from "clsx";
 
 const STYLES = {
-  draft: "bg-gray-100 text-gray-600",
-  published: "bg-green-100 text-green-700",
-  rented: "bg-amber-100 text-amber-700",
-  expired: "bg-red-100 text-red-600",
+  pending: "bg-amber-100 text-amber-800 border border-amber-200",
+  published: "bg-green-100 text-green-700 border border-green-200",
+  approved: "bg-green-100 text-green-700 border border-green-200",
+  rejected: "bg-red-100 text-red-600 border border-red-200",
+  draft: "bg-gray-100 text-gray-600 border border-gray-200",
+  rented: "bg-blue-100 text-blue-700 border border-blue-200",
+  expired: "bg-gray-200 text-gray-600",
 };
 
 const LABELS = {
-  draft: "Draft",
+  pending: "Pending Approval",
   published: "Published",
+  approved: "Approved",
+  rejected: "Rejected",
+  draft: "Draft",
   rented: "Rented",
   expired: "Expired",
 };

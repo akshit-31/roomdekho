@@ -141,12 +141,17 @@ r.get("/:id",async(req,res)=>{
 r.post("/",auth,owner,async(req,res)=>{
  const b=req.body; if(!b.title||!b.city||b.rent===undefined)return res.status(400).json({success:false,message:"Title, city and rent are required"});
  const validDate = (b.availableFrom && !isNaN(Date.parse(b.availableFrom))) ? b.availableFrom : null;
- const {rows}=await query(`INSERT INTO rooms(owner_id,title,description,city,locality,address,rent,deposit,property_type,room_type,furnishing,gender_preference,available_from,amenities,images,is_verified) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16) RETURNING *`,[req.user.id,b.title,b.description,b.city,b.locality,b.address,b.rent,b.deposit||0,b.propertyType||"apartment",b.roomType||"private",b.furnishing||"furnished",b.genderPreference||"any",validDate,b.amenities||[],b.images||[],req.user.is_kyc_verified]);
- ok(res,201,"Room created",roomRow(rows[0]));
+ const {rows}=await query(
+   `INSERT INTO rooms(owner_id,title,description,city,locality,address,rent,deposit,property_type,room_type,furnishing,gender_preference,available_from,amenities,images,status,is_verified)
+    VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,'pending',false)
+    RETURNING *`,
+   [req.user.id,b.title,b.description,b.city,b.locality,b.address,b.rent,b.deposit||0,b.propertyType||"apartment",b.roomType||"private",b.furnishing||"furnished",b.genderPreference||"any",validDate,b.amenities||[],b.images||[]]
+ );
+ ok(res,201,"Room created (pending admin approval)",roomRow(rows[0]));
 });
 r.put("/:id",auth,owner,async(req,res)=>{const b=req.body; const {rows}=await query(`UPDATE rooms SET title=COALESCE($1,title),description=COALESCE($2,description),city=COALESCE($3,city),locality=COALESCE($4,locality),address=COALESCE($5,address),rent=COALESCE($6,rent),deposit=COALESCE($7,deposit),property_type=COALESCE($8,property_type),room_type=COALESCE($9,room_type),furnishing=COALESCE($10,furnishing),amenities=COALESCE($11,amenities),images=COALESCE($12,images),updated_at=now() WHERE id=$13 AND owner_id=$14 RETURNING *`,[b.title,b.description,b.city,b.locality,b.address,b.rent,b.deposit,b.propertyType,b.roomType,b.furnishing,b.amenities,b.images,req.params.id,req.user.id]);if(!rows[0])return res.status(404).json({success:false,message:"Room not found"});ok(res,200,"Room updated",rows[0])});
 r.delete("/:id",auth,owner,async(req,res)=>{await query("DELETE FROM rooms WHERE id=$1 AND owner_id=$2",[req.params.id,req.user.id]);ok(res,200,"Room deleted")});
-r.patch("/:id/publish",auth,owner,async(req,res)=>{const {rows}=await query("UPDATE rooms SET status='published',updated_at=now() WHERE id=$1 AND owner_id=$2 RETURNING *",[req.params.id,req.user.id]);ok(res,200,"Room published",rows[0]||null)});
+r.patch("/:id/publish",auth,owner,async(req,res)=>{const {rows}=await query("UPDATE rooms SET status='pending',is_verified=false,updated_at=now() WHERE id=$1 AND owner_id=$2 RETURNING *",[req.params.id,req.user.id]);ok(res,200,"Room submitted for admin approval",rows[0]||null)});
 r.patch("/:id/rented",auth,owner,async(req,res)=>{const {rows}=await query("UPDATE rooms SET status='rented',updated_at=now() WHERE id=$1 AND owner_id=$2 RETURNING *",[req.params.id,req.user.id]);ok(res,200,"Room marked rented",rows[0]||null)});
 r.post("/:id/media", auth, owner, upload.any(), async (req, res) => {
   try {
