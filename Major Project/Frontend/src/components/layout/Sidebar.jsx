@@ -3,7 +3,7 @@ import clsx from "clsx";
 import {
   LayoutDashboard, Home, PlusCircle, User, MessageCircle, HelpCircle,
   Users, ShieldCheck, Flag, AlertTriangle,
-  CreditCard, BarChart3, Settings, Star,
+  CreditCard, BarChart3, Settings, Star, MessageSquareWarning,
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 
