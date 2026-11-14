@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { Menu, X, LogOut, User, LayoutDashboard, ShieldCheck, DoorOpen, Users, Sparkles, Heart, CalendarDays, MessageCircle, Home, PlusCircle, HelpCircle } from "lucide-react";
+import { Menu, X, LogOut, User, LayoutDashboard, ShieldCheck, DoorOpen, Users, Sparkles, Heart, CalendarDays, MessageCircle, Home, PlusCircle, HelpCircle, MessageSquareWarning } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import customLogo from "../../image copy 3.png";
 
