@@ -200,6 +200,9 @@ export async function initDB() {
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     );
 
+    ALTER TABLE conversations ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT now();
+    ALTER TABLE messages ADD COLUMN IF NOT EXISTS image_url TEXT;
+
     CREATE INDEX IF NOT EXISTS idx_rooms_city ON rooms(city);
     CREATE INDEX IF NOT EXISTS idx_rooms_rent ON rooms(rent);
     CREATE INDEX IF NOT EXISTS idx_messages_conversation ON messages(conversation_id, created_at);
