@@ -1,7 +1,38 @@
 import {Router} from "express";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { fileURLToPath } from "url";
 import {query} from "../config/db.js";
 import {auth} from "../middleware/auth.js";
 import {ok} from "../utils/response.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const uploadDir = path.join(__dirname, "../../uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (_req, _file, cb) => cb(null, uploadDir),
+  filename: (_req, file, cb) => {
+    const ext = path.extname(file.originalname || "").toLowerCase() || ".jpg";
+    const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    cb(null, `avatar-${unique}${ext}`);
+  },
+});
+const upload = multer({
+  storage,
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    if (file.mimetype.startsWith("image/")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only image files are allowed for avatar"));
+    }
+  },
+});
+
 const r=Router();
 r.get("/me",auth,async(req,res)=>{
   const uRes = await query(
@@ -61,9 +92,33 @@ r.get("/me",auth,async(req,res)=>{
   };
   ok(res,200,"Profile fetched", user);
 });
+r.post("/me/avatar", auth, upload.single("avatar"), async (req, res) => {
+  try {
+    let url = "";
+    if (req.file) {
+      const host = req.get("host");
+      const protocol = req.protocol;
+      const base = `${protocol}://${host}`;
+      url = `${base}/uploads/${req.file.filename}`;
+    } else if (req.body?.avatar || req.body?.avatarUrl) {
+      url = req.body.avatar || req.body.avatarUrl;
+    }
+
+    if (!url) {
+      return res.status(400).json({ success: false, message: "Avatar image is required" });
+    }
+
+    await query("UPDATE users SET avatar = $1, updated_at = now() WHERE id = $2", [url, req.user.id]);
+    ok(res, 200, "Avatar updated successfully", { avatar: url, avatarUrl: url });
+  } catch (err) {
+    console.error("Avatar upload error:", err);
+    res.status(500).json({ success: false, message: err.message || "Failed to upload avatar" });
+  }
+});
+
 r.put("/me",auth,async(req,res)=>{
   const {
-    name,phone,avatar,bio,gender,age,occupation,dob,
+    name,phone,avatar,avatarUrl,bio,gender,age,occupation,dob,
     city,locality,preferredLocations,personalityTags,
     budgetMin,budgetMax,sleepSchedule,foodPreference,cleanliness,smoking,pets,
     propertyCity,propertyLocality,propertyAddress,
@@ -71,6 +126,7 @@ r.put("/me",auth,async(req,res)=>{
     preferences
   }=req.body;
 
+  const finalAvatar = avatar || avatarUrl;
   const finalPhone = phone;
   const finalPropCity = propertyCity || (city && req.user.role === "owner" ? city : undefined);
   const finalPropLoc = propertyLocality || (locality && req.user.role === "owner" ? locality : undefined);
@@ -89,7 +145,7 @@ r.put("/me",auth,async(req,res)=>{
        is_profile_completed=true,
        updated_at=now()
      WHERE id=$8`,
-    [name, finalPhone, avatar, finalPropCity, finalPropLoc, finalPropAddr, finalIntent, req.user.id]
+    [name, finalPhone, finalAvatar, finalPropCity, finalPropLoc, finalPropAddr, finalIntent, req.user.id]
   );
 
   const parsedAge = age ? parseInt(age, 10) : null;
