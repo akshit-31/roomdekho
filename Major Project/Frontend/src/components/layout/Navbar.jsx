@@ -4,10 +4,10 @@ import { Menu, X, LogOut, User, LayoutDashboard, ShieldCheck, DoorOpen, Users, S
 import { useAuth } from "../../hooks/useAuth";
 import customLogo from "../../image copy 3.png";
 
-const GENERAL_NAV_LINKS = [
+const SEEKER_NAV_LINKS = [
   { to: "/", label: "Home", icon: Home, end: true },
   { to: "/rooms", label: "Find a Room", icon: DoorOpen },
-  { to: "/roommates", label: "Find a Roommate", icon: Users },
+  { to: "/roommates", label: "Find Roommate", icon: Users },
   { to: "/favorites", label: "Favorites", icon: Heart },
   { to: "/chat", label: "Messages", icon: MessageCircle },
   { to: "/help-box", label: "Help Box", icon: HelpCircle },
@@ -46,12 +46,15 @@ export default function Navbar() {
     }
   };
 
+  // Seeker and Roommate are the exact same user type
+  const isSeekerOrRoommate = user?.role === "seeker" || user?.role === "roommate" || !user?.role;
+
   const navLinks =
     user?.role === "admin"
       ? ADMIN_NAV_LINKS
       : user?.role === "owner"
       ? OWNER_NAV_LINKS
-      : GENERAL_NAV_LINKS;
+      : SEEKER_NAV_LINKS;
 
   return (
     <>
