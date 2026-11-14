@@ -178,7 +178,9 @@ r.get("/",async(req,res)=>{
    order = "r.rent ASC";
  } else if (activeSort === "price_desc") {
    order = "r.rent DESC";
- } else if (activeSort === "distance" || hasGps) {
+ } else if (hasGps && (activeSort === "distance" || activeSort === "relevance" || !sortBy || activeSort === "newest")) {
+   order = "distance ASC, r.created_at DESC";
+ } else if (activeSort === "distance") {
    order = hasGps ? "distance ASC, r.created_at DESC" : "r.created_at DESC";
  }
 
@@ -186,7 +188,8 @@ r.get("/",async(req,res)=>{
  const qText=`SELECT r.*,u.name owner_name,u.avatar owner_avatar,u.is_kyc_verified owner_kyc ${distanceSelect} FROM rooms r JOIN users u ON u.id=r.owner_id WHERE ${where.join(" AND ")} ORDER BY ${order} LIMIT $${i++} OFFSET $${i++}`;
  const {rows}=await query(qText,[...params,lim,off]);
  const c=await query(`SELECT COUNT(*) FROM rooms r WHERE ${where.join(" AND ")}`,filterParams);
- ok(res,200,"Rooms fetched",{items:rows.map(roomRow),pagination:{page:Number(page)||1,limit:lim,total:Number(c.rows[0].count),pages:Math.ceil(Number(c.rows[0].count)/lim)}});
+ const totalCount = Number(c.rows[0].count);
+ ok(res,200,"Rooms fetched",{items:rows.map(roomRow),total:totalCount,pagination:{page:Number(page)||1,limit:lim,total:totalCount,pages:Math.ceil(totalCount/lim)}});
 });
 r.get("/mine",auth,owner,async(req,res)=>{const {rows}=await query("SELECT * FROM rooms WHERE owner_id=$1 ORDER BY created_at DESC",[req.user.id]);ok(res,200,"My rooms",{items:rows.map(roomRow),total:rows.length})});
 r.get("/:id",async(req,res)=>{

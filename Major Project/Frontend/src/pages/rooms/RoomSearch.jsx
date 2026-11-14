@@ -23,7 +23,10 @@ export default function RoomSearch() {
   const [refreshingGps, setRefreshingGps] = useState(false);
   const [locationName, setLocationName] = useState("");
 
-  const { items = [], total = 0, page = 1, limit = 20 } = results || {};
+  const items = results?.items || [];
+  const total = results?.pagination?.total ?? results?.total ?? items.length;
+  const page = results?.pagination?.page ?? results?.page ?? 1;
+  const limit = results?.pagination?.limit ?? results?.limit ?? 20;
   const { totalPages } = usePagination(total, limit);
 
   // Seed filters from the URL once on mount, and auto-detect GPS for nearest rooms first

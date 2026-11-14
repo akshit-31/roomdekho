@@ -14,6 +14,10 @@ export default function RoommateCard({ roommate, match }) {
           <img
             src={roommate.avatarUrl || defaultAvatar}
             alt={roommate.name}
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = defaultAvatar;
+            }}
             className="h-14 w-14 rounded-full object-cover"
           />
           <div>
@@ -42,9 +46,9 @@ export default function RoommateCard({ roommate, match }) {
         {prefs.sleepSchedule && (
           <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs text-gray-600">{prefs.sleepSchedule.replace("_", " ")}</span>
         )}
-        {(prefs.budgetMin || prefs.budgetMax) && (
+        {Boolean(prefs.budgetMin || prefs.budgetMax) && (
           <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs text-gray-600">
-            ₹{prefs.budgetMin || 0}–{prefs.budgetMax || "?"}
+            ₹{prefs.budgetMin || 0}–{prefs.budgetMax || "Flexible"}
           </span>
         )}
       </div>

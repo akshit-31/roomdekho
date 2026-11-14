@@ -16,7 +16,15 @@ export default function PropertyGallery({ media = [] }) {
         {current.type === "video" ? (
           <video src={current.url} controls className="h-full w-full object-cover" />
         ) : (
-          <img src={current.url} alt="" className="h-full w-full object-cover" />
+          <img
+            src={current.url}
+            alt=""
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = placeholder;
+            }}
+            className="h-full w-full object-cover"
+          />
         )}
 
         {items.length > 1 && (
@@ -54,7 +62,15 @@ export default function PropertyGallery({ media = [] }) {
                   <PlayCircle className="text-white" size={20} />
                 </div>
               ) : (
-                <img src={item.url} alt="" className="h-full w-full object-cover" />
+                <img
+                  src={item.url}
+                  alt=""
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = placeholder;
+                  }}
+                  className="h-full w-full object-cover"
+                />
               )}
             </button>
           ))}

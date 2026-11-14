@@ -52,11 +52,13 @@ export default function RoomPostCard({ room }) {
   const ownerId = owner._id || owner.id || room.owner_id;
   const isOwnerVerified = owner.isKycVerified || owner.is_kyc_verified || room.isVerified || room.is_verified;
 
-  // Extract images
-  const mediaList = room.media?.map(m => m.url).filter(Boolean) || [];
-  const imageList = room.images?.filter(Boolean) || [];
-  const allImages = [...mediaList, ...imageList];
-  const images = allImages.length > 0 ? allImages : DEFAULT_ROOM_IMAGES;
+  // Extract images cleanly without duplicates
+  const rawList = [
+    ...(Array.isArray(room.images) ? room.images : []),
+    ...(Array.isArray(room.media) ? room.media.map(m => (typeof m === "string" ? m : m?.url)) : [])
+  ].filter(Boolean);
+  const uniqueImages = Array.from(new Set(rawList));
+  const images = uniqueImages.length > 0 ? uniqueImages : DEFAULT_ROOM_IMAGES;
 
   const nextImg = (e) => {
     e.stopPropagation();
@@ -184,6 +186,10 @@ export default function RoomPostCard({ room }) {
         <img
           src={images[currentImgIndex]}
           alt={room.title}
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = DEFAULT_ROOM_IMAGES[0];
+          }}
           className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-102"
         />
 
