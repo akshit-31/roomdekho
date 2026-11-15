@@ -108,10 +108,10 @@ export default function Home() {
         <div className="absolute inset-0 bg-slate-950/65 backdrop-blur-[0.5px]" />
       </div>
 
-      {/* 2. Floating Hero Section (Full Viewport, Spacious, Ultra-Bold with Interactive Arrow Hover Shine) */}
-      <section className="relative z-10 w-full min-h-[calc(100vh-4.5rem)] flex flex-col justify-center items-center text-center px-4 pt-8 pb-12">
+      {/* 2. Floating Hero Section (Compact & Sleek with Interactive Arrow Hover Shine) */}
+      <section className="relative z-10 w-full min-h-[38vh] sm:min-h-[46vh] flex flex-col justify-center items-center text-center px-4 pt-10 sm:pt-14 pb-4 sm:pb-6">
         {/* Live Tour Indicator Badge */}
-        <div className="absolute top-4 right-4 sm:top-6 sm:right-8 z-20 flex items-center gap-2 rounded-full bg-black/60 px-4 py-2 backdrop-blur-md border border-white/20 text-xs sm:text-sm font-bold text-white shadow-2xl">
+        <div className="absolute top-3 right-4 sm:top-5 sm:right-8 z-20 flex items-center gap-2 rounded-full bg-black/60 px-3.5 py-1.5 backdrop-blur-md border border-white/20 text-xs sm:text-sm font-bold text-white shadow-xl">
           <span className="relative flex h-2.5 w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
@@ -120,44 +120,34 @@ export default function Home() {
         </div>
 
         {/* Top Floating Badge with Hover Glow */}
-        <div className="group cursor-pointer inline-flex items-center gap-2.5 rounded-full border border-amber-400/60 bg-black/70 px-6 py-2 text-xs sm:text-sm md:text-base font-bold text-amber-300 backdrop-blur-md mb-6 sm:mb-8 shadow-2xl transition-all duration-300 hover:scale-105 hover:border-amber-300 hover:shadow-[0_0_25px_rgba(251,191,36,0.6)]">
-          <Sparkles size={18} className="text-amber-400 group-hover:rotate-12 transition-transform duration-300" />
+        <div className="group cursor-pointer inline-flex items-center gap-2 rounded-full border border-amber-400/60 bg-black/60 px-5 py-1.5 text-xs sm:text-sm font-bold text-amber-300 backdrop-blur-md mb-3 sm:mb-4 shadow-xl transition-all duration-300 hover:scale-105 hover:border-amber-300 hover:shadow-[0_0_20px_rgba(251,191,36,0.5)]">
+          <Sparkles size={15} className="text-amber-400 group-hover:rotate-12 transition-transform duration-300" />
           <span>India's #1 Verified Room & Roommate Finder</span>
         </div>
 
-        {/* Grand Hero Heading with Interactive Arrow Hover Light-Beam Shine */}
-        <div className="group relative cursor-pointer select-none inline-block max-w-6xl px-4 py-2 transition-transform duration-500 hover:scale-[1.03]">
+        {/* Hero Heading with Interactive Arrow Hover Light-Beam Shine */}
+        <div className="group relative cursor-pointer select-none inline-block max-w-5xl px-3 py-1 transition-transform duration-300 hover:scale-[1.02]">
           {/* Shimmer Light Streak Beam across text on hover */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full duration-1000 ease-in-out bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-12" />
           </div>
 
-          <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tight text-white leading-[1.08] drop-shadow-[0_8px_35px_rgba(0,0,0,0.95)] group-hover:drop-shadow-[0_0_50px_rgba(251,191,36,0.7)] transition-all duration-500">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-[1.12] drop-shadow-[0_6px_25px_rgba(0,0,0,0.95)] group-hover:drop-shadow-[0_0_40px_rgba(251,191,36,0.6)] transition-all duration-500">
             Find Your Perfect <br />
-            <span className="relative inline-block bg-gradient-to-r from-amber-400 via-amber-200 to-yellow-400 bg-clip-text text-transparent underline decoration-amber-500/80 underline-offset-8 sm:underline-offset-[16px] group-hover:from-yellow-300 group-hover:via-white group-hover:to-amber-400 transition-all duration-500">
+            <span className="relative inline-block bg-gradient-to-r from-amber-400 via-amber-200 to-yellow-400 bg-clip-text text-transparent underline decoration-amber-500/70 underline-offset-8 sm:underline-offset-10 group-hover:from-yellow-300 group-hover:via-white group-hover:to-amber-400 transition-all duration-500">
               Room & Roommate
             </span>
           </h1>
         </div>
 
-        {/* Sub-tagline with Increased Size & Hover Radiance */}
-        <p className="mt-6 sm:mt-8 max-w-4xl text-base sm:text-2xl md:text-3xl font-extrabold text-slate-100 leading-relaxed drop-shadow-[0_4px_20px_rgba(0,0,0,0.95)] hover:text-amber-200 transition-colors duration-300">
+        {/* Sub-tagline */}
+        <p className="mt-3 sm:mt-4 max-w-2xl text-xs sm:text-lg lg:text-xl font-extrabold text-slate-100 leading-relaxed drop-shadow-[0_3px_15px_rgba(0,0,0,0.95)] hover:text-amber-200 transition-colors duration-300">
           No Brokers • 100% Verified Owners • Instant Direct Chat
         </p>
-
-        {/* Subtle Floating Scroll Down Prompt */}
-        <div className="mt-12 sm:mt-16 flex flex-col items-center gap-1.5 opacity-80 hover:opacity-100 transition-opacity animate-bounce cursor-pointer" onClick={() => window.scrollTo({ top: window.innerHeight * 0.85, behavior: 'smooth' })}>
-          <span className="text-[11px] sm:text-xs font-bold tracking-widest uppercase text-amber-300 drop-shadow">
-            Scroll to Explore Cities
-          </span>
-          <div className="w-5 h-8 rounded-full border-2 border-amber-400/70 flex justify-center pt-1.5 bg-black/40 backdrop-blur-sm">
-            <div className="w-1.5 h-2 bg-amber-400 rounded-full animate-pulse" />
-          </div>
-        </div>
       </section>
 
-      {/* 3. Floating Popular Cities Section (Moved Lower Down As Requested, High-Impact Cards Scrolling Over Video) */}
-      <section className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-8 py-10 sm:py-16">
+      {/* 3. Floating Popular Cities Section (Brought back up, perfectly placed below hero) */}
+      <section className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-8 py-4 sm:py-6">
         <div className="mb-4 sm:mb-6">
           <h2 className="text-xl sm:text-3xl font-black tracking-tight text-white drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)] flex items-center gap-2.5">
             <MapPin size={24} className="text-amber-400" />
