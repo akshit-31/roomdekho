@@ -1,8 +1,8 @@
 import clsx from "clsx";
 
 /**
- * Generic max-width content wrapper for non-dashboard pages, with an
- * optional title/subtitle/action header row.
+ * Responsive wide-content container for pages with dark luxury glassmorphism theme.
+ * Expands across laptop/desktop screens to eliminate empty side voids.
  */
 export default function PageContainer({
   title,
@@ -12,12 +12,20 @@ export default function PageContainer({
   children,
 }) {
   return (
-    <div className={clsx("mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8", className)}>
+    <div className={clsx("w-full max-w-[1700px] mx-auto px-4 sm:px-8 lg:px-12 py-6 sm:py-8 text-white", className)}>
       {(title || action) && (
-        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-6 sm:mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-white/10 pb-5">
           <div>
-            {title && <h1 className="text-xl font-semibold text-gray-900 sm:text-2xl">{title}</h1>}
-            {subtitle && <p className="mt-1 text-sm text-gray-500">{subtitle}</p>}
+            {title && (
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight drop-shadow-sm">
+                {title}
+              </h1>
+            )}
+            {subtitle && (
+              <p className="mt-1 text-xs sm:text-sm font-medium text-slate-400 leading-relaxed">
+                {subtitle}
+              </p>
+            )}
           </div>
           {action && <div className="shrink-0">{action}</div>}
         </div>

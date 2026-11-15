@@ -89,9 +89,9 @@ export default function ChatWindow({
   };
 
   return (
-    <div className="flex h-full min-w-0 flex-1 flex-col bg-white">
+    <div className="flex h-full min-w-0 flex-1 flex-col bg-slate-900/95 text-white">
       {/* Instagram-Style DM Header */}
-      <div className="flex items-center justify-between border-b border-slate-100 bg-white/95 px-4 py-3 backdrop-blur-md">
+      <div className="flex items-center justify-between border-b border-white/10 bg-slate-950/70 px-4 py-3 backdrop-blur-md">
         <div className="flex items-center gap-3 min-w-0">
           {/* Instagram Avatar with Gradient Ring */}
           <div className="relative shrink-0">
@@ -99,34 +99,34 @@ export default function ChatWindow({
               <img
                 src={other.avatarUrl || defaultAvatar}
                 alt={other.name}
-                className="h-10 w-10 rounded-full object-cover border-2 border-white"
+                className="h-10 w-10 rounded-full object-cover border-2 border-slate-900"
               />
             </div>
-            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-emerald-500 shadow-sm" />
+            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-slate-900 bg-emerald-500 shadow-sm" />
           </div>
 
           <div className="min-w-0">
             <div className="flex items-center gap-1.5">
-              <p className="truncate text-sm font-bold text-slate-900">{other.name || "User"}</p>
+              <p className="truncate text-sm font-bold text-white">{other.name || "User"}</p>
               {isOtherAdmin ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-[10px] font-bold text-red-600 border border-red-200">
+                <span className="inline-flex items-center gap-1 rounded-full bg-red-500/20 px-2 py-0.5 text-[10px] font-bold text-red-300 border border-red-500/30">
                   <ShieldCheck size={12} /> Admin Support
                 </span>
               ) : isOtherOwner ? (
-                <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700 border border-amber-200">
+                <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold text-amber-300 border border-amber-500/30">
                   <Building2 size={11} /> Room Owner
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-700 border border-blue-200">
+                <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/20 px-2 py-0.5 text-[10px] font-bold text-blue-300 border border-blue-500/30">
                   <DoorOpen size={11} /> Seeker
                 </span>
               )}
             </div>
 
             <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-emerald-600 font-medium">Active now</span>
-              {other.email && <span className="hidden sm:inline text-slate-300">· {other.email}</span>}
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-emerald-400 font-medium">Active now</span>
+              {other.email && <span className="hidden sm:inline text-slate-400">· {other.email}</span>}
             </div>
           </div>
         </div>
@@ -136,8 +136,8 @@ export default function ChatWindow({
           <button
             type="button"
             onClick={() => setShowInfo(!showInfo)}
-            className={`rounded-full p-2 transition-all hover:bg-slate-100 hover:text-slate-700 ${
-              showInfo ? "bg-amber-50 text-amber-600" : ""
+            className={`rounded-full p-2 transition-all hover:bg-white/10 hover:text-white ${
+              showInfo ? "bg-amber-500/20 text-amber-400 border border-amber-500/30" : ""
             }`}
             title="Chat info"
           >
@@ -148,12 +148,12 @@ export default function ChatWindow({
 
       {/* Slide-down Info Drawer (Instagram style) */}
       {showInfo && (
-        <div className="border-b border-slate-100 bg-slate-50/80 p-3.5 text-xs text-slate-600 animate-fade-in flex items-center justify-between">
+        <div className="border-b border-white/10 bg-slate-950/90 p-3.5 text-xs text-slate-300 animate-fade-in flex items-center justify-between">
           <div className="space-y-0.5">
-            <p className="font-bold text-slate-800">
+            <p className="font-bold text-white">
               {isOtherAdmin ? "Official Platform Help Desk" : other.name}
             </p>
-            <p className="text-[11px] text-slate-500">
+            <p className="text-[11px] text-slate-400">
               {isOtherAdmin
                 ? "Direct contact with RoomDekho operations & compliance team."
                 : `Registered ${other.role === "owner" ? "Property Host" : "Seeker"} on RoomDekho.`}
@@ -161,7 +161,7 @@ export default function ChatWindow({
           </div>
           <button
             onClick={() => setShowInfo(false)}
-            className="text-[11px] font-bold text-amber-600 hover:underline"
+            className="text-[11px] font-bold text-amber-400 hover:underline"
           >
             Close
           </button>
@@ -175,14 +175,14 @@ export default function ChatWindow({
 
       {/* Quick Suggestion Chips (Instagram Icebreakers) */}
       {chips && chips.length > 0 && (
-        <div className="border-t border-slate-50 bg-slate-50/40 px-3 py-1.5 overflow-x-auto flex items-center gap-1.5 no-scrollbar">
-          <Sparkles size={13} className="text-amber-500 shrink-0 ml-1" />
+        <div className="border-t border-white/10 bg-slate-950/60 px-3 py-1.5 overflow-x-auto flex items-center gap-1.5 no-scrollbar">
+          <Sparkles size={13} className="text-amber-400 shrink-0 ml-1" />
           {chips.map((chip, idx) => (
             <button
               key={idx}
               type="button"
               onClick={() => handleChipClick(chip)}
-              className="shrink-0 rounded-full border border-slate-200/90 bg-white px-3 py-1 text-[11px] font-medium text-slate-700 shadow-2xs hover:border-amber-400 hover:bg-amber-50 hover:text-amber-700 transition-all active:scale-95"
+              className="shrink-0 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-medium text-slate-200 hover:border-amber-400 hover:bg-amber-500/20 hover:text-white transition-all active:scale-95"
             >
               {chip}
             </button>

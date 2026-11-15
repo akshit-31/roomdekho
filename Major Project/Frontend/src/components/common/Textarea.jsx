@@ -9,7 +9,7 @@ const Textarea = forwardRef(function Textarea(
   return (
     <div className="w-full">
       {label && (
-        <label htmlFor={areaId} className="mb-1 block text-sm font-medium text-gray-700">
+        <label htmlFor={areaId} className="mb-1 block text-sm font-semibold text-slate-200">
           {label}
         </label>
       )}
@@ -18,18 +18,18 @@ const Textarea = forwardRef(function Textarea(
         ref={ref}
         rows={rows}
         className={clsx(
-          "w-full rounded-xl border px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400",
-          "focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 resize-y",
-          error ? "border-red-400" : "border-gray-300",
+          "w-full rounded-xl border px-3 py-2 text-sm text-white placeholder:text-slate-400 bg-slate-900/80 backdrop-blur-md transition-colors",
+          "focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-400 resize-y",
+          error ? "border-rose-500" : "border-white/15 hover:border-white/25",
           className
         )}
         aria-invalid={!!error}
         {...rest}
       />
       {error ? (
-        <p className="mt-1 text-xs text-red-600">{error}</p>
+        <p className="mt-1 text-xs text-rose-400">{error}</p>
       ) : hint ? (
-        <p className="mt-1 text-xs text-gray-500">{hint}</p>
+        <p className="mt-1 text-xs text-slate-400">{hint}</p>
       ) : null}
     </div>
   );

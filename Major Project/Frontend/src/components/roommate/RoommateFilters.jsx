@@ -13,10 +13,10 @@ export default function RoommateFilters({ filters, onChange, onReset }) {
   const set = (key, value) => onChange({ ...filters, [key]: value });
 
   return (
-    <div className="space-y-4 rounded-2xl border border-gray-100 bg-white p-5">
-      <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-gray-900">Filters</h2>
-        <button onClick={onReset} className="text-xs font-medium text-brand-600 hover:underline">
+    <div className="space-y-4 rounded-3xl border border-white/10 bg-slate-900/80 backdrop-blur-2xl p-5 sm:p-6 shadow-2xl text-white">
+      <div className="flex items-center justify-between border-b border-white/10 pb-3">
+        <h2 className="text-sm sm:text-base font-black text-white">Filters</h2>
+        <button onClick={onReset} className="text-xs font-bold text-amber-400 hover:text-amber-300 transition-colors">
           Reset
         </button>
       </div>

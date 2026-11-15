@@ -1,4 +1,4 @@
-import { MapPin, Building2, Search } from "lucide-react";
+import { MapPin, Building2 } from "lucide-react";
 import Button from "../common/Button";
 
 const POPULAR_CITIES = [
@@ -22,7 +22,7 @@ const PROPERTY_TYPES = [
 ];
 
 /**
- * Filter panel with City Location and Property Type options.
+ * Filter panel with dark luxury glassmorphic styling.
  */
 export default function SearchFilters({ filters = {}, onChange, onReset, onApply }) {
   const set = (patch) => {
@@ -34,24 +34,24 @@ export default function SearchFilters({ filters = {}, onChange, onReset, onApply
   };
 
   return (
-    <div className="space-y-5 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-      <div className="flex items-center justify-between">
-        <h2 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+    <div className="space-y-6 rounded-3xl border border-white/10 bg-slate-900/80 backdrop-blur-2xl p-5 sm:p-6 shadow-2xl text-white">
+      <div className="flex items-center justify-between border-b border-white/10 pb-3">
+        <h2 className="text-sm sm:text-base font-black text-white flex items-center gap-2">
           Filters
         </h2>
         <button
           type="button"
           onClick={onReset}
-          className="text-xs font-semibold text-amber-600 hover:underline cursor-pointer"
+          className="text-xs font-bold text-amber-400 hover:text-amber-300 transition-colors cursor-pointer"
         >
           Reset All
         </button>
       </div>
 
       {/* City Location Filter with Search Input & Quick Chips */}
-      <div className="space-y-2">
-        <label className="flex items-center gap-1.5 text-xs font-bold text-gray-700">
-          <MapPin size={15} className="text-amber-500" /> City Location
+      <div className="space-y-2.5">
+        <label className="flex items-center gap-1.5 text-xs font-bold text-slate-300">
+          <MapPin size={15} className="text-amber-400" /> City Location
         </label>
         <div className="relative">
           <input
@@ -65,7 +65,7 @@ export default function SearchFilters({ filters = {}, onChange, onReset, onApply
                 onApply?.({ ...filters, city: e.target.value });
               }
             }}
-            className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-xs font-semibold text-gray-800 placeholder-gray-400 focus:bg-white focus:border-amber-500 focus:outline-none transition-all"
+            className="w-full rounded-2xl border border-white/15 bg-slate-950/70 px-4 py-2.5 text-xs font-semibold text-white placeholder-slate-400 focus:border-amber-400 focus:bg-slate-950 focus:outline-none transition-all"
           />
         </div>
 
@@ -82,10 +82,10 @@ export default function SearchFilters({ filters = {}, onChange, onReset, onApply
                   set({ city: newCity });
                   onApply?.({ ...filters, city: newCity });
                 }}
-                className={`rounded-lg px-2.5 py-1 text-[11px] font-bold transition-all cursor-pointer ${
+                className={`rounded-xl px-2.5 py-1 text-[11px] font-bold transition-all cursor-pointer ${
                   isSelected
-                    ? "bg-amber-500 text-white shadow-xs"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md border border-amber-300/40"
+                    : "bg-white/10 text-slate-300 border border-white/10 hover:bg-white/15 hover:text-white"
                 }`}
               >
                 {c}
@@ -96,9 +96,9 @@ export default function SearchFilters({ filters = {}, onChange, onReset, onApply
       </div>
 
       {/* Property Type Filter */}
-      <div className="space-y-2">
-        <label className="flex items-center gap-1.5 text-xs font-bold text-gray-700">
-          <Building2 size={15} className="text-amber-500" /> Property Type
+      <div className="space-y-2.5">
+        <label className="flex items-center gap-1.5 text-xs font-bold text-slate-300">
+          <Building2 size={15} className="text-amber-400" /> Property Type
         </label>
         <select
           value={filters.propertyType || ""}
@@ -106,10 +106,10 @@ export default function SearchFilters({ filters = {}, onChange, onReset, onApply
             set({ propertyType: e.target.value });
             onApply?.({ ...filters, propertyType: e.target.value });
           }}
-          className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-xs font-semibold text-gray-800 focus:bg-white focus:border-amber-500 focus:outline-none transition-all cursor-pointer"
+          className="w-full rounded-2xl border border-white/15 bg-slate-950/80 px-4 py-2.5 text-xs font-semibold text-white focus:border-amber-400 focus:outline-none transition-all cursor-pointer"
         >
           {PROPERTY_TYPES.map((t) => (
-            <option key={t.value} value={t.value}>
+            <option key={t.value} value={t.value} className="bg-slate-900 text-white">
               {t.label}
             </option>
           ))}
@@ -117,8 +117,8 @@ export default function SearchFilters({ filters = {}, onChange, onReset, onApply
       </div>
 
       <Button
-        className="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs py-2.5"
         onClick={handleApply}
+        className="w-full !bg-gradient-to-r !from-amber-500 !to-orange-500 hover:!from-amber-600 hover:!to-orange-600 !text-white font-black text-xs py-3 rounded-2xl shadow-lg shadow-amber-500/25 transition-all hover:scale-102 active:scale-95 border border-amber-300/30"
       >
         Apply Filters
       </Button>

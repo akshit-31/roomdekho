@@ -34,7 +34,7 @@ export default function MessageInput({ conversationId, currentUserId, onSend, on
   };
 
   return (
-    <div className="border-t border-slate-100 bg-white p-3">
+    <div className="border-t border-white/10 bg-slate-950/80 p-3 text-white">
       {/* Quick emoji reaction strip */}
       <div className="mb-2 flex items-center gap-1.5 px-2">
         <span className="text-[10px] font-semibold text-slate-400">Quick:</span>
@@ -52,7 +52,7 @@ export default function MessageInput({ conversationId, currentUserId, onSend, on
 
       <form onSubmit={submit} className="flex items-center gap-2">
         <label
-          className="cursor-pointer rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-amber-500 transition-colors"
+          className="cursor-pointer rounded-full p-2 text-slate-400 hover:bg-white/10 hover:text-amber-400 transition-colors"
           title="Send photo"
         >
           <ImagePlus size={20} />
@@ -64,14 +64,14 @@ export default function MessageInput({ conversationId, currentUserId, onSend, on
             value={text}
             onChange={handleChange}
             placeholder="Message..."
-            className="w-full rounded-full border border-slate-200/80 bg-slate-50/60 px-4 py-2.5 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:border-amber-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all"
+            className="w-full rounded-full border border-white/15 bg-slate-900/90 px-4 py-2.5 text-xs sm:text-sm text-white placeholder:text-slate-400 focus:border-amber-400 focus:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all"
           />
         </div>
 
         <button
           type="submit"
           disabled={!text.trim()}
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-amber-500 to-orange-500 text-white shadow-md hover:from-amber-600 hover:to-orange-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-95"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-amber-500 to-orange-500 text-white shadow-md hover:from-amber-600 hover:to-orange-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95 border border-amber-400/30"
           aria-label="Send message"
         >
           <Send size={16} />

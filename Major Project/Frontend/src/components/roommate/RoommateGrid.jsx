@@ -17,7 +17,7 @@ export default function RoommateGrid({ roommates = [], matchesById = {}, loading
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
       {roommates.map((r) => (
         <RoommateCard key={r._id} roommate={r} match={matchesById[r._id]} />
       ))}

@@ -57,19 +57,19 @@ export default function RoomDetails() {
   const average = reviews.length ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : 0;
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-4 flex items-start justify-between gap-3">
+    <div className="mx-auto max-w-[1700px] w-full px-4 sm:px-8 lg:px-12 py-6 sm:py-8 text-white">
+      <div className="mb-6 flex items-start justify-between gap-3 border-b border-white/10 pb-4">
         <div>
-          <div className="mb-1 flex items-center gap-2">
+          <div className="mb-2 flex items-center gap-2">
             <PropertyStatus status={room.status} />
           </div>
-          <h1 className="text-xl font-semibold text-gray-900 sm:text-2xl">{room.title}</h1>
-          <p className="text-sm text-gray-500">{room.address?.locality}, {room.address?.city}</p>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white">{room.title}</h1>
+          <p className="mt-1 text-sm sm:text-base font-medium text-slate-300">{room.address?.locality}, {room.address?.city}</p>
         </div>
-        <FavoriteButton roomId={room._id} className="static shadow-sm" />
+        <FavoriteButton roomId={room._id} className="static shadow-md" />
       </div>
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_340px]">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_400px]">
         <div className="space-y-6">
           <PropertyGallery media={room.media} />
           <PropertyInfo room={room} />
@@ -77,8 +77,8 @@ export default function RoomDetails() {
           <PropertyRules rules={room.houseRules} />
           <PropertyMap location={room.location} title={room.title} />
 
-          <div>
-            <h2 className="mb-3 text-sm font-semibold text-gray-900">Reviews</h2>
+          <div className="rounded-3xl border border-white/10 bg-slate-900/80 backdrop-blur-xl p-5 sm:p-6 shadow-xl text-white">
+            <h2 className="mb-3 text-base sm:text-lg font-extrabold text-white">Reviews & Ratings</h2>
             <RatingSummary average={average} count={reviews.length} />
             <div className="mt-4 space-y-3">
               {reviews.map((r) => <ReviewCard key={r._id} review={r} />)}
@@ -95,7 +95,7 @@ export default function RoomDetails() {
           <PropertyOwner owner={room.owner} roomId={room._id} />
 
           <Link to={`/visits?scheduleRoomId=${room._id}`}>
-            <Button variant="secondary" icon={CalendarClock} className="w-full">
+            <Button variant="secondary" icon={CalendarClock} className="w-full !border-white/20 !bg-slate-900/80 !text-white hover:!bg-white/10 rounded-2xl py-3 font-bold backdrop-blur-md">
               Schedule a visit
             </Button>
           </Link>
@@ -103,8 +103,8 @@ export default function RoomDetails() {
       </div>
 
       {similar.length > 0 && (
-        <div className="mt-10">
-          <h2 className="mb-4 text-lg font-semibold text-gray-900">Similar rooms nearby</h2>
+        <div className="mt-12 border-t border-white/10 pt-8">
+          <h2 className="mb-6 text-xl sm:text-2xl font-black text-white">Similar rooms nearby</h2>
           <PropertyGrid rooms={similar} />
         </div>
       )}

@@ -128,16 +128,16 @@ export default function HelpBox() {
         )}
 
         {/* Instructions / Guidelines Section */}
-        <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-sm">
-          <div className="flex items-center gap-2.5 mb-5 pb-3 border-b border-slate-100">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+        <div className="rounded-3xl border border-white/10 bg-slate-900/80 backdrop-blur-xl p-6 sm:p-8 shadow-2xl text-white">
+          <div className="flex items-center gap-2.5 mb-5 pb-3 border-b border-white/10">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500/20 text-amber-400 border border-amber-400/30">
               <Info size={18} />
             </div>
             <div>
-              <h3 className="text-base font-extrabold text-slate-900">
+              <h3 className="text-base font-extrabold text-white">
                 Instructions & Guidelines
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-300">
                 Admin support se baat karne se pehle zaroori baatein
               </p>
             </div>
@@ -147,16 +147,16 @@ export default function HelpBox() {
             {INSTRUCTIONS.map((item, idx) => (
               <div
                 key={idx}
-                className="flex items-start gap-3.5 rounded-2xl bg-slate-50/80 border border-slate-100 p-4 transition-all hover:bg-amber-50/40 hover:border-amber-200/60"
+                className="flex items-start gap-3.5 rounded-2xl bg-slate-950/60 border border-white/10 p-4 transition-all hover:bg-white/[0.04] hover:border-amber-400/30"
               >
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white font-black text-xs shadow-sm">
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white font-black text-xs shadow-md">
                   {idx + 1}
                 </div>
                 <div>
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">
+                  <h4 className="text-xs sm:text-sm font-bold text-white">
                     {item.title}
                   </h4>
-                  <p className="mt-1 text-xs text-slate-600 leading-relaxed font-normal">
+                  <p className="mt-1 text-xs text-slate-300 leading-relaxed font-normal">
                     {item.desc}
                   </p>
                 </div>
@@ -164,14 +164,14 @@ export default function HelpBox() {
             ))}
           </div>
 
-          <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between flex-wrap gap-3">
-            <div className="flex items-center gap-2 text-xs text-slate-500">
-              <ShieldCheck size={16} className="text-emerald-500" />
+          <div className="mt-6 pt-5 border-t border-white/10 flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center gap-2 text-xs text-slate-400">
+              <ShieldCheck size={16} className="text-emerald-400" />
               <span>RoomDekho Trust & Safety Verified</span>
             </div>
             <button
               onClick={handleStartAdminChat}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 hover:text-amber-700 transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-400 hover:text-amber-300 transition-colors"
             >
               Start Chat with Admin <ArrowRight size={14} />
             </button>

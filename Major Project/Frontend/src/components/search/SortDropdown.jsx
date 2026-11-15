@@ -6,20 +6,20 @@ const OPTIONS = [
 ];
 
 /**
- * Maps to sortBy in server/src/modules/search/search.service.js
- * (relevance uses MongoDB text score; distance relies on $near's
- * natural ascending-distance order and requires lat/lng to be set).
+ * Maps to sortBy in search queries with dark glassmorphic styling.
  */
 export default function SortDropdown({ value = "relevance", onChange }) {
   return (
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="rounded-xl border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500"
+      className="rounded-2xl border border-white/15 bg-slate-900/80 backdrop-blur-xl px-3.5 py-2.5 text-xs sm:text-sm font-bold text-white shadow-lg focus:border-amber-400 focus:outline-none transition-all cursor-pointer"
       aria-label="Sort results"
     >
       {OPTIONS.map((opt) => (
-        <option key={opt.value} value={opt.value}>{opt.label}</option>
+        <option key={opt.value} value={opt.value} className="bg-slate-900 text-white font-medium">
+          {opt.label}
+        </option>
       ))}
     </select>
   );

@@ -92,26 +92,26 @@ export default function Chat() {
   const showNoConversationYet = targetUserId && !conversationId && !resolvedConversation && conversations.length >= 0;
 
   return (
-    <div className="mx-auto flex h-[calc(100vh-4rem)] max-w-6xl overflow-hidden rounded-2xl border border-gray-100 sm:my-6 sm:h-[80vh]">
+    <div className="mx-auto flex h-[calc(100vh-4.5rem)] max-w-[1700px] w-full overflow-hidden rounded-3xl border border-white/10 bg-slate-900/80 backdrop-blur-xl sm:my-6 sm:h-[84vh] shadow-2xl text-white">
       {/* Sidebar */}
-      <div className={`w-full shrink-0 overflow-y-auto border-r border-gray-100 bg-white p-3 sm:block sm:w-80 ${mobileShowList ? "block" : "hidden"}`}>
-        <h1 className="mb-3 px-1 text-base font-semibold text-gray-900">Messages</h1>
+      <div className={`w-full shrink-0 overflow-y-auto border-r border-white/10 bg-slate-950/60 p-3 sm:block sm:w-80 md:w-96 ${mobileShowList ? "block" : "hidden"}`}>
+        <h1 className="mb-3 px-1 text-base font-black text-white">Messages</h1>
         <ConversationList conversations={conversations} activeId={conversationId} onSelect={selectConversation} />
       </div>
 
       {/* Chat pane */}
-      <div className={`flex min-w-0 flex-1 flex-col bg-white ${mobileShowList ? "hidden" : "flex"} sm:flex`}>
+      <div className={`flex min-w-0 flex-1 flex-col bg-slate-900/90 ${mobileShowList ? "hidden" : "flex"} sm:flex`}>
         {conversationId && (
           <button
             onClick={() => setMobileShowList(true)}
-            className="flex items-center gap-1.5 border-b border-gray-100 px-4 py-2.5 text-sm text-gray-500 sm:hidden"
+            className="flex items-center gap-1.5 border-b border-white/10 px-4 py-2.5 text-sm text-slate-300 hover:text-white sm:hidden"
           >
             <ArrowLeft size={16} /> Back to messages
           </button>
         )}
 
         {showNoConversationYet ? (
-          <div className="flex flex-1 items-center justify-center p-6">
+          <div className="flex flex-1 items-center justify-center p-6 text-slate-300">
             <EmptyState
               title="Start the conversation"
               description="Send your first message from the room or profile page to begin chatting — new conversations aren't created from this screen yet."

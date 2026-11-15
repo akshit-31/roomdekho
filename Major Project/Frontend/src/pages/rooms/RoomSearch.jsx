@@ -166,14 +166,14 @@ export default function RoomSearch() {
           </Button>
 
           {/* 3-Way View Switcher */}
-          <div className="flex overflow-hidden rounded-xl border border-gray-200 bg-slate-50 p-0.5">
+          <div className="flex overflow-hidden rounded-2xl border border-white/15 bg-slate-900/80 backdrop-blur-xl p-1 shadow-xl">
             <button
               type="button"
               onClick={() => setView("posts")}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-black transition-all ${
                 view === "posts"
-                  ? "bg-amber-500 text-white shadow-sm"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
+                  ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md shadow-amber-500/25"
+                  : "text-slate-300 hover:text-white hover:bg-white/10"
               }`}
             >
               <Sparkles size={14} />
@@ -182,10 +182,10 @@ export default function RoomSearch() {
             <button
               type="button"
               onClick={() => setView("list")}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-black transition-all ${
                 view === "list"
-                  ? "bg-amber-500 text-white shadow-sm"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
+                  ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md shadow-amber-500/25"
+                  : "text-slate-300 hover:text-white hover:bg-white/10"
               }`}
             >
               <List size={14} />
@@ -194,10 +194,10 @@ export default function RoomSearch() {
             <button
               type="button"
               onClick={() => setView("map")}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all ${
+              className={`flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-xs font-black transition-all ${
                 view === "map"
-                  ? "bg-amber-500 text-white shadow-sm"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-white/60"
+                  ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md shadow-amber-500/25"
+                  : "text-slate-300 hover:text-white hover:bg-white/10"
               }`}
             >
               <Map size={14} />
@@ -208,7 +208,7 @@ export default function RoomSearch() {
       </div>
 
       {/* Main Layout Grid */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr] xl:grid-cols-[300px_1fr] w-full">
         {/* Desktop Sidebar Filters */}
         <div className="hidden lg:block">
           <SearchFilters
@@ -221,18 +221,18 @@ export default function RoomSearch() {
 
         {/* Content Area Based on Active View */}
         {view === "posts" ? (
-          <div className="space-y-4">
+          <div className="space-y-6 w-full min-w-0">
             {gpsActive ? (
-              <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-emerald-50 border border-emerald-200 px-4 py-2.5 text-xs text-emerald-800 shadow-xs">
-                <div className="flex items-center gap-2">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-white text-[11px] font-bold">
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-emerald-950/60 border border-emerald-500/30 px-4 py-3 text-xs text-emerald-200 shadow-xl backdrop-blur-xl">
+                <div className="flex items-center gap-2.5">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-slate-950 text-xs font-black shadow-sm">
                     ✓
                   </span>
                   <div>
-                    <span className="font-bold text-emerald-950">
+                    <span className="font-black text-white">
                       GPS Nearby Search Active {locationName ? `(${locationName})` : ""}:{" "}
                     </span>
-                    <span className="text-emerald-800">
+                    <span className="text-emerald-300">
                       Rooms closest to you are displayed first (shortest distance to farthest).
                     </span>
                   </div>
@@ -241,28 +241,28 @@ export default function RoomSearch() {
                   type="button"
                   disabled={refreshingGps}
                   onClick={triggerGps}
-                  className="rounded-lg bg-emerald-100 hover:bg-emerald-200 px-3 py-1 text-[11px] font-bold text-emerald-900 transition-colors cursor-pointer disabled:opacity-60"
+                  className="rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 px-3.5 py-1.5 text-[11px] font-black text-emerald-200 transition-all cursor-pointer disabled:opacity-60"
                 >
                   {refreshingGps ? "↻ Detecting GPS..." : "↻ Refresh Location"}
                 </button>
               </div>
             ) : (
-              <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-amber-50 border border-amber-200 px-4 py-2 text-xs text-amber-800">
-                <span>Want to see rooms closest to your live location?</span>
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-amber-950/40 border border-amber-500/30 px-4 py-3 text-xs text-amber-200 shadow-xl backdrop-blur-xl">
+                <span className="font-semibold">Want to see rooms closest to your live location?</span>
                 <button
                   type="button"
                   disabled={refreshingGps}
                   onClick={triggerGps}
-                  className="rounded-lg bg-amber-500 hover:bg-amber-600 px-3 py-1 text-xs font-bold text-white shadow-xs transition-colors cursor-pointer"
+                  className="rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 px-4 py-1.5 text-xs font-black text-white shadow-md transition-all cursor-pointer"
                 >
                   {refreshingGps ? "↻ Detecting GPS..." : "📍 Sort by Nearest to Me"}
                 </button>
               </div>
             )}
 
-            <div className="flex items-center justify-between border-b border-gray-200/80 pb-3">
-              <p className="text-xs sm:text-sm font-bold text-slate-800">
-                🔥 Showing {items.length} of {total} live room posts
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <p className="text-xs sm:text-sm font-black text-white flex items-center gap-2">
+                <span className="text-amber-400">🔥</span> Showing {items.length} of {total} live room posts
               </p>
               <SortDropdown
                 value={filters.sortBy || (gpsActive ? "distance" : "relevance")}
@@ -271,25 +271,24 @@ export default function RoomSearch() {
             </div>
 
             {status === "loading" ? (
-              <div className="py-16 text-center">
-                <div className="inline-block h-9 w-9 animate-spin rounded-full border-4 border-amber-500 border-t-transparent" />
-                <p className="mt-3 text-xs font-bold text-slate-600">Loading verified social room posts...</p>
+              <div className="py-20 text-center">
+                <div className="inline-block h-10 w-10 animate-spin rounded-full border-4 border-amber-500 border-t-transparent" />
+                <p className="mt-4 text-xs font-bold text-slate-400">Loading verified social room posts...</p>
               </div>
             ) : items.length === 0 ? (
-              <div className="rounded-3xl border border-dashed border-slate-300 bg-white p-12 text-center">
-                <Building2 size={36} className="mx-auto text-slate-400 mb-2" />
-                <h3 className="text-sm font-bold text-slate-800">No room posts match your criteria</h3>
-                <p className="mt-1 text-xs text-slate-500">Try modifying your search or reset filters to see all available listings.</p>
+              <div className="rounded-3xl border border-white/10 bg-slate-900/60 backdrop-blur-xl p-12 text-center text-white shadow-2xl">
+                <Building2 size={40} className="mx-auto text-slate-500 mb-3" />
+                <h3 className="text-base font-black text-white">No room posts match your criteria</h3>
+                <p className="mt-1.5 text-xs text-slate-400">Try modifying your search or reset filters to see all available listings.</p>
                 <Button
-                  variant="secondary"
-                  className="mt-4 text-xs font-bold"
+                  className="mt-5 !bg-amber-500 hover:!bg-amber-600 !text-white text-xs font-black px-6 py-2.5 rounded-2xl shadow-lg"
                   onClick={resetFilters}
                 >
                   Reset all filters
                 </Button>
               </div>
             ) : (
-              <div className="space-y-6 max-w-2xl mx-auto">
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 w-full">
                 {items.map((room) => (
                   <RoomPostCard key={room._id || room.id} room={room} />
                 ))}

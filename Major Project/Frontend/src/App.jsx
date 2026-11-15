@@ -44,7 +44,7 @@ export default function App() {
     );
 
   return (
-    <div className="flex min-h-screen flex-col app-shell bg-[#F4F7FE] text-slate-900 w-full max-w-full overflow-x-hidden">
+    <div className="flex min-h-screen flex-col app-shell bg-slate-950 text-white w-full max-w-full overflow-x-hidden selection:bg-amber-500 selection:text-white">
       {!isDashboardRoute && <Navbar />}
       <main className="flex-1 w-full max-w-full overflow-x-hidden">
         <AppRoutes />

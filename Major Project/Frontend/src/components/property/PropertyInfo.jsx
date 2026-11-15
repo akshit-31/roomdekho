@@ -4,9 +4,9 @@ import { formatDate } from "../../utils/formatDate";
 function Row({ label, value }) {
   if (value === undefined || value === null || value === "") return null;
   return (
-    <div className="flex items-center justify-between border-b border-gray-50 py-2.5 last:border-0">
-      <span className="text-sm text-gray-500">{label}</span>
-      <span className="text-sm font-medium text-gray-900">{value}</span>
+    <div className="flex items-center justify-between border-b border-white/10 py-2.5 last:border-0">
+      <span className="text-xs sm:text-sm text-slate-300">{label}</span>
+      <span className="text-xs sm:text-sm font-bold text-white">{value}</span>
     </div>
   );
 }
@@ -27,8 +27,8 @@ const LABELS = {
 
 export default function PropertyInfo({ room }) {
   return (
-    <div className="rounded-2xl border border-gray-100 bg-white p-5">
-      <h2 className="mb-2 text-sm font-semibold text-gray-900">Property details</h2>
+    <div className="rounded-3xl border border-white/10 bg-slate-900/80 backdrop-blur-xl p-5 sm:p-6 shadow-xl text-white">
+      <h2 className="mb-3 text-sm sm:text-base font-extrabold text-white">Property details</h2>
       <Row label="Type" value={LABELS[room.propertyType] || room.propertyType} />
       <Row label="Sharing" value={LABELS[room.sharingType] || room.sharingType} />
       <Row label="Monthly rent" value={formatCurrency(room.rent)} />

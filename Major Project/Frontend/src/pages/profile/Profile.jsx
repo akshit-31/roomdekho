@@ -95,115 +95,115 @@ export default function Profile() {
           <ProfileHeader profile={currentProfile} />
 
           {/* 1. Account Credentials & Contact Information Card */}
-          <div className="rounded-3xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm">
-            <div className="mb-4 flex items-center justify-between border-b border-slate-100 pb-3">
-              <h2 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-2">
-                <Mail size={16} className="text-amber-500" /> Account & Contact Credentials
+          <div className="rounded-3xl border border-white/10 bg-slate-900/80 backdrop-blur-xl p-5 sm:p-6 shadow-2xl text-white">
+            <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3">
+              <h2 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+                <Mail size={16} className="text-amber-400" /> Account & Contact Credentials
               </h2>
-              <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-bold text-emerald-700 border border-emerald-200">
+              <span className="rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-[10px] sm:text-[11px] font-bold text-emerald-300 border border-emerald-500/30">
                 Active Account
               </span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               {/* Email */}
-              <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5 sm:p-4">
+              <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-3.5 sm:p-4">
                 <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
-                  <Mail size={14} className="text-slate-500" /> Email Address
+                  <Mail size={14} className="text-amber-400" /> Email Address
                 </div>
-                <p className="mt-1 text-xs sm:text-sm font-bold text-slate-900 truncate">{currentProfile.email}</p>
-                <span className="mt-1 inline-flex items-center gap-1 text-[10px] font-bold text-emerald-600">
+                <p className="mt-1 text-xs sm:text-sm font-bold text-white truncate">{currentProfile.email}</p>
+                <span className="mt-1 inline-flex items-center gap-1 text-[10px] font-bold text-emerald-400">
                   <CheckCircle2 size={11} /> Verified
                 </span>
               </div>
 
               {/* Phone */}
-              <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5 sm:p-4">
+              <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-3.5 sm:p-4">
                 <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
-                  <Phone size={14} className="text-slate-500" /> Phone Number
+                  <Phone size={14} className="text-amber-400" /> Phone Number
                 </div>
-                <p className="mt-1 text-xs sm:text-sm font-bold text-slate-900">
+                <p className="mt-1 text-xs sm:text-sm font-bold text-white">
                   {currentProfile.phone || "Not added"}
                 </p>
-                <span className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-slate-500">
+                <span className="mt-1 inline-flex items-center gap-1 text-[10px] font-semibold text-slate-400">
                   {currentProfile.phone ? "Registered Mobile" : "Click Edit to add"}
                 </span>
               </div>
 
               {/* Account Role */}
-              <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5 sm:p-4">
+              <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-3.5 sm:p-4">
                 <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
-                  <User size={14} className="text-slate-500" /> Role / Account Type
+                  <User size={14} className="text-amber-400" /> Role / Account Type
                 </div>
-                <p className="mt-1 text-xs sm:text-sm font-bold text-amber-600">
+                <p className="mt-1 text-xs sm:text-sm font-bold text-amber-400">
                   {ROLE_LABELS[currentProfile.role] || currentProfile.role}
                 </p>
-                <span className="mt-1 text-[10px] font-semibold text-slate-500">
+                <span className="mt-1 text-[10px] font-semibold text-slate-400">
                   ID: #{currentProfile.id || currentProfile._id}
                 </span>
               </div>
 
               {/* Joined */}
-              <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5 sm:p-4">
+              <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-3.5 sm:p-4">
                 <div className="flex items-center gap-2 text-xs font-semibold text-slate-400">
-                  <Calendar size={14} className="text-slate-500" /> Member Since
+                  <Calendar size={14} className="text-amber-400" /> Member Since
                 </div>
-                <p className="mt-1 text-xs sm:text-sm font-bold text-slate-900">{formattedJoinedDate}</p>
-                <span className="mt-1 text-[10px] font-semibold text-slate-500">RoomDekho Platform</span>
+                <p className="mt-1 text-xs sm:text-sm font-bold text-white">{formattedJoinedDate}</p>
+                <span className="mt-1 text-[10px] font-semibold text-slate-400">RoomDekho Platform</span>
               </div>
             </div>
           </div>
 
           {/* 2. Personal & Professional Profile Card */}
-          <div className="rounded-3xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm">
-            <div className="mb-4 flex items-center justify-between border-b border-slate-100 pb-3">
-              <h2 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-2">
-                <Briefcase size={16} className="text-amber-500" /> Personal & Professional Credentials
+          <div className="rounded-3xl border border-white/10 bg-slate-900/80 backdrop-blur-xl p-5 sm:p-6 shadow-2xl text-white">
+            <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3">
+              <h2 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+                <Briefcase size={16} className="text-amber-400" /> Personal & Professional Credentials
               </h2>
-              <Link to="/profile/edit" className="text-xs font-bold text-amber-600 hover:text-amber-700">
+              <Link to="/profile/edit" className="text-xs font-bold text-amber-400 hover:text-amber-300">
                 Edit
               </Link>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               {/* Gender */}
-              <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5 sm:p-4">
+              <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-3.5 sm:p-4">
                 <span className="text-xs font-semibold text-slate-400">Gender</span>
-                <p className="mt-1 text-xs sm:text-sm font-bold text-slate-900 capitalize">
+                <p className="mt-1 text-xs sm:text-sm font-bold text-white capitalize">
                   {currentProfile.gender || "Not specified"}
                 </p>
               </div>
 
               {/* Age / DOB */}
-              <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5 sm:p-4">
+              <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-3.5 sm:p-4">
                 <span className="text-xs font-semibold text-slate-400">Age</span>
-                <p className="mt-1 text-xs sm:text-sm font-bold text-slate-900">
+                <p className="mt-1 text-xs sm:text-sm font-bold text-white">
                   {currentProfile.age ? `${currentProfile.age} Years` : currentProfile.dob || "Not specified"}
                 </p>
               </div>
 
               {/* Profession / Occupation */}
-              <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5 sm:p-4">
+              <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-3.5 sm:p-4">
                 <span className="text-xs font-semibold text-slate-400">Profession / Occupation</span>
-                <p className="mt-1 text-xs sm:text-sm font-bold text-slate-900 truncate">
+                <p className="mt-1 text-xs sm:text-sm font-bold text-white truncate">
                   {currentProfile.occupation || (isOwner ? "Property Owner" : "Professional")}
                 </p>
               </div>
 
               {/* Registered City / Location */}
-              <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5 sm:p-4">
+              <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-3.5 sm:p-4">
                 <span className="text-xs font-semibold text-slate-400">Primary City / Location</span>
-                <p className="mt-1 text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1 truncate">
-                  <MapPin size={13} className="text-amber-500 shrink-0" />
+                <p className="mt-1 text-xs sm:text-sm font-bold text-white flex items-center gap-1 truncate">
+                  <MapPin size={13} className="text-amber-400 shrink-0" />
                   {currentProfile.city || currentProfile.propertyCity || preferredLocs[0] || "Delhi"}
                 </p>
               </div>
             </div>
 
             {currentProfile.bio && (
-              <div className="mt-4 rounded-2xl border border-slate-100 bg-slate-50/50 p-3.5 sm:p-4">
+              <div className="mt-4 rounded-2xl border border-white/10 bg-slate-950/60 p-3.5 sm:p-4">
                 <span className="text-xs font-semibold text-slate-400">About Me / Bio</span>
-                <p className="mt-1 text-xs text-slate-700 leading-relaxed italic">
+                <p className="mt-1 text-xs text-slate-300 leading-relaxed italic">
                   "{currentProfile.bio}"
                 </p>
               </div>
@@ -212,86 +212,86 @@ export default function Profile() {
 
           {/* 3. Living Preferences & Matching Details (Seeker / Roommate) */}
           {isSeeker && (
-            <div className="rounded-3xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm">
-              <div className="mb-4 flex items-center justify-between border-b border-slate-100 pb-3">
-                <h2 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-2">
-                  <IndianRupee size={16} className="text-amber-500" /> Living & Budget Matching Preferences
+            <div className="rounded-3xl border border-white/10 bg-slate-900/80 backdrop-blur-xl p-5 sm:p-6 shadow-2xl text-white">
+              <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3">
+                <h2 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+                  <IndianRupee size={16} className="text-amber-400" /> Living & Budget Matching Preferences
                 </h2>
-                <Link to="/profile/preferences" className="text-xs font-bold text-amber-600 hover:text-amber-700">
+                <Link to="/profile/preferences" className="text-xs font-bold text-amber-400 hover:text-amber-300">
                   Edit Preferences
                 </Link>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 {/* Looking For Intent */}
-                <div className="rounded-2xl border border-amber-200 bg-amber-500/10 p-3.5 sm:p-4">
-                  <span className="text-xs font-semibold text-amber-700 flex items-center gap-1">
+                <div className="rounded-2xl border border-amber-400/30 bg-amber-500/10 p-3.5 sm:p-4">
+                  <span className="text-xs font-semibold text-amber-300 flex items-center gap-1">
                     <Sparkles size={13} /> Looking For
                   </span>
-                  <p className="mt-1.5 text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                  <p className="mt-1.5 text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
                     {currentProfile.intent === "find_room" || currentProfile.lookingFor === "find_room" ? (
                       <>
-                        <DoorOpen size={16} className="text-amber-600 shrink-0" /> Finding a Room
+                        <DoorOpen size={16} className="text-amber-400 shrink-0" /> Finding a Room
                       </>
                     ) : currentProfile.intent === "find_roommate" || currentProfile.lookingFor === "find_roommate" ? (
                       <>
-                        <Users size={16} className="text-amber-600 shrink-0" /> Finding a Roommate
+                        <Users size={16} className="text-amber-400 shrink-0" /> Finding a Roommate
                       </>
                     ) : (
                       <>
-                        <Sparkles size={16} className="text-amber-600 shrink-0" /> Both (Room & Roommate)
+                        <Sparkles size={16} className="text-amber-400 shrink-0" /> Both (Room & Roommate)
                       </>
                     )}
                   </p>
                 </div>
 
                 {/* Budget Range */}
-                <div className="rounded-2xl border border-amber-100 bg-amber-50/40 p-3.5 sm:p-4">
-                  <span className="text-xs font-semibold text-amber-700 flex items-center gap-1">
+                <div className="rounded-2xl border border-amber-400/30 bg-amber-500/10 p-3.5 sm:p-4">
+                  <span className="text-xs font-semibold text-amber-300 flex items-center gap-1">
                     <IndianRupee size={13} /> Monthly Budget Range
                   </span>
-                  <p className="mt-1.5 text-sm sm:text-base font-extrabold text-slate-900">
+                  <p className="mt-1.5 text-sm sm:text-base font-extrabold text-white">
                     ₹{Number(budgetMin).toLocaleString()} – ₹{Number(budgetMax).toLocaleString()}
-                    <span className="text-xs font-normal text-slate-500"> / mo</span>
+                    <span className="text-xs font-normal text-slate-400"> / mo</span>
                   </p>
                 </div>
 
                 {/* Food Preference */}
-                <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5 sm:p-4">
+                <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-3.5 sm:p-4">
                   <span className="text-xs font-semibold text-slate-400 flex items-center gap-1">
-                    <Utensils size={13} className="text-amber-500" /> Dietary / Food Habit
+                    <Utensils size={13} className="text-amber-400" /> Dietary / Food Habit
                   </span>
-                  <p className="mt-1.5 text-xs sm:text-sm font-bold text-slate-900 capitalize">{food}</p>
+                  <p className="mt-1.5 text-xs sm:text-sm font-bold text-white capitalize">{food}</p>
                 </div>
 
                 {/* Sleep Routine */}
-                <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5 sm:p-4">
+                <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-3.5 sm:p-4">
                   <span className="text-xs font-semibold text-slate-400 flex items-center gap-1">
-                    <Moon size={13} className="text-amber-500" /> Sleep Routine
+                    <Moon size={13} className="text-amber-400" /> Sleep Routine
                   </span>
-                  <p className="mt-1.5 text-xs sm:text-sm font-bold text-slate-900 capitalize">{sleep}</p>
+                  <p className="mt-1.5 text-xs sm:text-sm font-bold text-white capitalize">{sleep}</p>
                 </div>
 
                 {/* Cleanliness */}
-                <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5 sm:p-4">
+                <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-3.5 sm:p-4">
                   <span className="text-xs font-semibold text-slate-400">Cleanliness Standard</span>
-                  <p className="mt-1 text-xs sm:text-sm font-bold text-slate-900 capitalize">
+                  <p className="mt-1 text-xs sm:text-sm font-bold text-white capitalize">
                     {cleanliness || "High"}
                   </p>
                 </div>
 
                 {/* Smoking */}
-                <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5 sm:p-4">
+                <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-3.5 sm:p-4">
                   <span className="text-xs font-semibold text-slate-400">Smoking Habit</span>
-                  <p className="mt-1 text-xs sm:text-sm font-bold text-slate-900">
+                  <p className="mt-1 text-xs sm:text-sm font-bold text-white">
                     {smoking ? "Yes (Smoker)" : "No (Non-Smoker)"}
                   </p>
                 </div>
 
                 {/* Pets */}
-                <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5 sm:p-4">
+                <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-3.5 sm:p-4">
                   <span className="text-xs font-semibold text-slate-400">Pet Friendly</span>
-                  <p className="mt-1 text-xs sm:text-sm font-bold text-slate-900">
+                  <p className="mt-1 text-xs sm:text-sm font-bold text-white">
                     {pets ? "Yes (Pet Friendly)" : "No Pets"}
                   </p>
                 </div>
@@ -299,13 +299,13 @@ export default function Profile() {
 
               {preferredLocs.length > 0 && (
                 <div className="mt-4 flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-semibold text-slate-500">Preferred Localities:</span>
+                  <span className="text-xs font-semibold text-slate-400">Preferred Localities:</span>
                   {preferredLocs.map((loc, idx) => (
                     <span
                       key={idx}
-                      className="inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 sm:px-3 py-1 text-xs font-semibold text-slate-700"
+                      className="inline-flex items-center gap-1 rounded-full bg-white/10 border border-white/15 px-3 py-1 text-xs font-semibold text-white"
                     >
-                      <MapPin size={11} className="text-amber-500" /> {loc}
+                      <MapPin size={11} className="text-amber-400" /> {loc}
                     </span>
                   ))}
                 </div>
@@ -315,16 +315,16 @@ export default function Profile() {
 
           {/* 4. Room Owner Property & Verification Credentials (Owner) */}
           {isOwner && (
-            <div className="rounded-3xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-sm">
-              <div className="mb-4 flex items-center justify-between border-b border-slate-100 pb-3">
-                <h2 className="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-2">
-                  <Building2 size={16} className="text-amber-500" /> Property & KYC Verification Credentials
+            <div className="rounded-3xl border border-white/10 bg-slate-900/80 backdrop-blur-xl p-5 sm:p-6 shadow-2xl text-white">
+              <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3">
+                <h2 className="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
+                  <Building2 size={16} className="text-amber-400" /> Property & KYC Verification Credentials
                 </h2>
                 <span
                   className={`rounded-full px-2.5 py-0.5 text-[10px] sm:text-[11px] font-bold border ${
                     currentProfile.approval_status === "approved"
-                      ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                      : "bg-amber-50 text-amber-700 border-amber-200"
+                      ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
+                      : "bg-amber-500/20 text-amber-300 border-amber-500/30"
                   }`}
                 >
                   {currentProfile.approval_status === "approved"
@@ -334,31 +334,31 @@ export default function Profile() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5 sm:p-4">
+                <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-3.5 sm:p-4">
                   <span className="text-xs font-semibold text-slate-400">Property City</span>
-                  <p className="mt-1 text-xs sm:text-sm font-bold text-slate-900">
+                  <p className="mt-1 text-xs sm:text-sm font-bold text-white">
                     {currentProfile.propertyCity || currentProfile.city || "Delhi"}
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5 sm:p-4">
+                <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-3.5 sm:p-4">
                   <span className="text-xs font-semibold text-slate-400">Locality / Sector</span>
-                  <p className="mt-1 text-xs sm:text-sm font-bold text-slate-900">
+                  <p className="mt-1 text-xs sm:text-sm font-bold text-white">
                     {currentProfile.propertyLocality || currentProfile.locality || "Central"}
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5 sm:p-4">
+                <div className="rounded-2xl border border-white/10 bg-slate-950/60 p-3.5 sm:p-4">
                   <span className="text-xs font-semibold text-slate-400">ID Proof Document</span>
-                  <p className="mt-1 text-xs sm:text-sm font-bold text-slate-900">
+                  <p className="mt-1 text-xs sm:text-sm font-bold text-white">
                     {currentProfile.idProofType || "Aadhaar Card"}
                   </p>
                 </div>
               </div>
 
-              <div className="mt-4 rounded-2xl border border-slate-100 bg-slate-50/70 p-3.5 sm:p-4">
+              <div className="mt-4 rounded-2xl border border-white/10 bg-slate-950/60 p-3.5 sm:p-4">
                 <span className="text-xs font-semibold text-slate-400">Full Property Registered Address</span>
-                <p className="mt-1 text-xs sm:text-sm font-bold text-slate-900">
+                <p className="mt-1 text-xs sm:text-sm font-bold text-white">
                   {currentProfile.propertyAddress || "Verified on file"}
                 </p>
               </div>
@@ -366,25 +366,25 @@ export default function Profile() {
           )}
 
           {/* 5. Quick Settings & Navigation Links */}
-          <div className="divide-y divide-slate-100 overflow-hidden rounded-3xl border border-slate-200/80 bg-white shadow-sm">
-            <Link to="/profile/edit" className="flex items-center gap-3 px-4 sm:px-6 py-3.5 sm:py-4 hover:bg-slate-50 transition-all">
-              <span className="rounded-xl bg-amber-50 p-2 sm:p-2.5 text-amber-600">
+          <div className="divide-y divide-white/10 overflow-hidden rounded-3xl border border-white/10 bg-slate-900/80 backdrop-blur-xl shadow-2xl text-white">
+            <Link to="/profile/edit" className="flex items-center gap-3 px-4 sm:px-6 py-3.5 sm:py-4 hover:bg-white/[0.05] transition-all">
+              <span className="rounded-xl bg-amber-500/20 p-2 sm:p-2.5 text-amber-400 border border-amber-500/30">
                 <Settings size={17} />
               </span>
               <span className="flex-1">
-                <p className="text-xs font-bold text-slate-900">Edit Profile & Contact Details</p>
+                <p className="text-xs font-bold text-white">Edit Profile & Contact Details</p>
                 <p className="text-[10px] sm:text-[11px] text-slate-400">Update full name, phone number, bio, photo, gender and city</p>
               </span>
               <ChevronRight size={16} className="text-slate-400" />
             </Link>
 
             {isSeeker && (
-              <Link to="/profile/preferences" className="flex items-center gap-3 px-4 sm:px-6 py-3.5 sm:py-4 hover:bg-slate-50 transition-all">
-                <span className="rounded-xl bg-blue-50 p-2 sm:p-2.5 text-blue-600">
+              <Link to="/profile/preferences" className="flex items-center gap-3 px-4 sm:px-6 py-3.5 sm:py-4 hover:bg-white/[0.05] transition-all">
+                <span className="rounded-xl bg-blue-500/20 p-2 sm:p-2.5 text-blue-400 border border-blue-500/30">
                   <Sliders size={17} />
                 </span>
                 <span className="flex-1">
-                  <p className="text-xs font-bold text-slate-900">Matching Preferences & Budget</p>
+                  <p className="text-xs font-bold text-white">Matching Preferences & Budget</p>
                   <p className="text-[10px] sm:text-[11px] text-slate-400">Change monthly budget, roommate lifestyle habits and locations</p>
                 </span>
                 <ChevronRight size={16} className="text-slate-400" />
@@ -392,12 +392,12 @@ export default function Profile() {
             )}
 
             {isSeeker && (
-              <Link to="/roommates/me" className="flex items-center gap-3 px-4 sm:px-6 py-3.5 sm:py-4 hover:bg-slate-50 transition-all">
-                <span className="rounded-xl bg-emerald-50 p-2 sm:p-2.5 text-emerald-600">
+              <Link to="/roommates/me" className="flex items-center gap-3 px-4 sm:px-6 py-3.5 sm:py-4 hover:bg-white/[0.05] transition-all">
+                <span className="rounded-xl bg-emerald-500/20 p-2 sm:p-2.5 text-emerald-400 border border-emerald-500/30">
                   <Eye size={17} />
                 </span>
                 <span className="flex-1">
-                  <p className="text-xs font-bold text-slate-900">Preview My Roommate Card</p>
+                  <p className="text-xs font-bold text-white">Preview My Roommate Card</p>
                   <p className="text-[10px] sm:text-[11px] text-slate-400">See how other seekers and roommates see your profile</p>
                 </span>
                 <ChevronRight size={16} className="text-slate-400" />
@@ -405,24 +405,24 @@ export default function Profile() {
             )}
 
             {isOwner && (
-              <Link to="/owner/listings" className="flex items-center gap-3 px-4 sm:px-6 py-3.5 sm:py-4 hover:bg-slate-50 transition-all">
-                <span className="rounded-xl bg-indigo-50 p-2 sm:p-2.5 text-indigo-600">
+              <Link to="/owner/listings" className="flex items-center gap-3 px-4 sm:px-6 py-3.5 sm:py-4 hover:bg-white/[0.05] transition-all">
+                <span className="rounded-xl bg-indigo-500/20 p-2 sm:p-2.5 text-indigo-400 border border-indigo-500/30">
                   <Building2 size={17} />
                 </span>
                 <span className="flex-1">
-                  <p className="text-xs font-bold text-slate-900">My Room Listings</p>
+                  <p className="text-xs font-bold text-white">My Room Listings</p>
                   <p className="text-[10px] sm:text-[11px] text-slate-400">Manage published rooms, add new flats and view visits</p>
                 </span>
                 <ChevronRight size={16} className="text-slate-400" />
               </Link>
             )}
 
-            <Link to="/profile/security" className="flex items-center gap-3 px-4 sm:px-6 py-3.5 sm:py-4 hover:bg-slate-50 transition-all">
-              <span className="rounded-xl bg-purple-50 p-2 sm:p-2.5 text-purple-600">
+            <Link to="/profile/security" className="flex items-center gap-3 px-4 sm:px-6 py-3.5 sm:py-4 hover:bg-white/[0.05] transition-all">
+              <span className="rounded-xl bg-purple-500/20 p-2 sm:p-2.5 text-purple-400 border border-purple-500/30">
                 <ShieldCheck size={17} />
               </span>
               <span className="flex-1">
-                <p className="text-xs font-bold text-slate-900">Security & Account Verification</p>
+                <p className="text-xs font-bold text-white">Security & Account Verification</p>
                 <p className="text-[10px] sm:text-[11px] text-slate-400">KYC verification status, password management and login activity</p>
               </span>
               <ChevronRight size={16} className="text-slate-400" />

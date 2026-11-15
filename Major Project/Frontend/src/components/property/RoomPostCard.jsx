@@ -127,43 +127,43 @@ export default function RoomPostCard({ room }) {
   };
 
   return (
-    <article className="overflow-hidden rounded-3xl border border-slate-200/90 bg-white shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col">
+    <article className="overflow-hidden rounded-3xl border border-white/10 bg-slate-900/80 backdrop-blur-xl shadow-xl hover:shadow-2xl hover:border-amber-400/40 transition-all duration-300 flex flex-col text-white">
       {/* 1. Post Header: Host Profile & Location (Instagram Post Header style) */}
-      <div className="flex items-center justify-between p-4 sm:p-5 border-b border-slate-100">
+      <div className="flex items-center justify-between p-4 sm:p-5 border-b border-white/10 bg-slate-950/40">
         <div className="flex items-center gap-3 min-w-0">
           <div className="relative shrink-0">
             <div className="rounded-full bg-gradient-to-tr from-amber-500 via-orange-500 to-rose-500 p-[2px]">
               <img
                 src={owner.avatarUrl || owner.avatar || defaultAvatar}
                 alt={owner.name || "Room Owner"}
-                className="h-11 w-11 rounded-full object-cover border-2 border-white"
+                className="h-11 w-11 rounded-full object-cover border-2 border-slate-900"
               />
             </div>
-            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-emerald-500" />
+            <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-slate-900 bg-emerald-500" />
           </div>
 
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <h3 className="text-xs sm:text-sm font-black text-slate-900 truncate">
+              <h3 className="text-xs sm:text-sm font-black text-white truncate">
                 {owner.name || "Verified Property Host"}
               </h3>
               {isOwnerVerified && (
-                <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700 border border-amber-200">
-                  <ShieldCheck size={11} className="text-amber-600" /> Verified Host
+                <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-bold text-amber-300 border border-amber-500/30">
+                  <ShieldCheck size={11} className="text-amber-400" /> Verified Host
                 </span>
               )}
             </div>
-            <p className="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5 flex-wrap">
-              <MapPin size={11} className="text-amber-500 shrink-0" />
+            <p className="text-[11px] text-slate-400 flex items-center gap-1 mt-0.5 flex-wrap">
+              <MapPin size={11} className="text-amber-400 shrink-0" />
               <span className="truncate">
                 {room.locality || room.address?.locality ? `${room.locality || room.address?.locality}, ` : ""}{room.city || room.address?.city || "Delhi NCR"}
               </span>
               {room.distance !== undefined && room.distance !== null && (
-                <span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-200">
+                <span className="inline-flex items-center rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-300 border border-emerald-500/30">
                   📍 {room.distance} km away
                 </span>
               )}
-              <span className="text-slate-300">·</span>
+              <span className="text-slate-600">·</span>
               <span>{timeAgo(room.createdAt || room.created_at)}</span>
             </p>
           </div>
@@ -171,7 +171,7 @@ export default function RoomPostCard({ room }) {
 
         {/* Room Price Badge */}
         <div className="text-right shrink-0">
-          <p className="text-base sm:text-lg font-black text-amber-600">
+          <p className="text-base sm:text-lg font-black text-amber-400">
             {formatCurrency(room.rent || room.pricing?.rent || 0)}
             <span className="text-[11px] font-medium text-slate-400">/mo</span>
           </p>
@@ -233,19 +233,19 @@ export default function RoomPostCard({ room }) {
       </div>
 
       {/* 3. Post Action Strip (Instagram style: Like, DM, Share, View) */}
-      <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-slate-100 bg-white">
+      <div className="flex items-center justify-between px-4 sm:px-5 py-3 border-b border-white/10 bg-slate-950/40">
         <div className="flex items-center gap-2 sm:gap-3">
           {/* Like / Favorite Button */}
-          <FavoriteButton roomId={room._id || room.id} className="static shadow-none border border-slate-200 hover:border-rose-300" />
+          <FavoriteButton roomId={room._id || room.id} className="static shadow-none border border-white/15 hover:border-rose-400 text-white" />
 
           {/* DM Button */}
           <button
             type="button"
             onClick={() => handleSendMessage("Hi, I saw your room post and want to connect!")}
-            className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 hover:bg-amber-50 hover:border-amber-300 hover:text-amber-600 px-3.5 py-1.5 text-xs font-bold text-slate-700 transition-all active:scale-95"
+            className="flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-amber-500/20 hover:border-amber-400 hover:text-amber-300 px-3.5 py-1.5 text-xs font-bold text-slate-200 transition-all active:scale-95"
             title="Chat directly with owner"
           >
-            <MessageCircle size={15} className="text-amber-500" />
+            <MessageCircle size={15} className="text-amber-400" />
             <span>Chat (DM)</span>
           </button>
 
@@ -253,7 +253,7 @@ export default function RoomPostCard({ room }) {
           <button
             type="button"
             onClick={handleShare}
-            className="flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600 transition-all active:scale-95"
+            className="flex items-center gap-1 rounded-full border border-white/15 bg-white/5 hover:bg-white/15 px-3 py-1.5 text-xs font-semibold text-slate-300 transition-all active:scale-95"
             title="Share Room Post"
           >
             <Share2 size={14} />
@@ -264,7 +264,7 @@ export default function RoomPostCard({ room }) {
         {/* View Full Room Details Page */}
         <Link
           to={`/rooms/${room._id || room.id}`}
-          className="text-xs font-bold text-amber-600 hover:text-amber-700 flex items-center gap-1 group"
+          className="text-xs font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1 group"
         >
           <span>Details</span>
           <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
@@ -272,12 +272,12 @@ export default function RoomPostCard({ room }) {
       </div>
 
       {/* 4. Post Content: Title, Description & Amenities */}
-      <div className="p-4 sm:p-5 space-y-3 flex-1 bg-white">
+      <div className="p-4 sm:p-5 space-y-3 flex-1 bg-slate-900/40 text-white">
         <div>
-          <h4 className="text-sm sm:text-base font-extrabold text-slate-900 leading-snug">
+          <h4 className="text-sm sm:text-base font-extrabold text-white leading-snug">
             {room.title}
           </h4>
-          <p className="mt-1 text-xs text-slate-600 line-clamp-2 leading-relaxed">
+          <p className="mt-1 text-xs text-slate-300 line-clamp-2 leading-relaxed">
             {room.description || "Spacious, well-ventilated verified room with 24/7 security, proper water supply, and direct owner management."}
           </p>
         </div>
@@ -288,14 +288,14 @@ export default function RoomPostCard({ room }) {
             {room.amenities.slice(0, 5).map((amenity, idx) => (
               <span
                 key={idx}
-                className="inline-flex items-center gap-1 rounded-lg bg-slate-100 px-2.5 py-1 text-[10px] font-semibold text-slate-700"
+                className="inline-flex items-center gap-1 rounded-lg bg-white/10 border border-white/10 px-2.5 py-1 text-[10px] font-semibold text-slate-200"
               >
-                <Sparkles size={10} className="text-amber-500" />
+                <Sparkles size={10} className="text-amber-400" />
                 {amenity}
               </span>
             ))}
             {room.amenities.length > 5 && (
-              <span className="rounded-lg bg-slate-100 px-2 py-1 text-[10px] font-semibold text-slate-500">
+              <span className="rounded-lg bg-white/10 border border-white/10 px-2 py-1 text-[10px] font-semibold text-slate-300">
                 +{room.amenities.length - 5} more
               </span>
             )}
@@ -304,13 +304,13 @@ export default function RoomPostCard({ room }) {
       </div>
 
       {/* 5. Direct Contact Box: Message goes straight to Room Owner (Instagram DM bar) */}
-      <div className="border-t border-slate-100 bg-slate-50/70 p-3.5 sm:p-4 space-y-2.5">
-        <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 px-1">
-          <span className="flex items-center gap-1 text-slate-700">
-            <MessageCircle size={13} className="text-amber-500" /> Quick Message to Host:
+      <div className="border-t border-white/10 bg-slate-950/70 p-3.5 sm:p-4 space-y-2.5">
+        <div className="flex items-center justify-between text-[11px] font-bold text-slate-400 px-1">
+          <span className="flex items-center gap-1 text-slate-200">
+            <MessageCircle size={13} className="text-amber-400" /> Quick Message to Host:
           </span>
-          <span className="text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
             Delivers straight to Owner's DM
           </span>
         </div>
@@ -323,7 +323,7 @@ export default function RoomPostCard({ room }) {
               type="button"
               onClick={() => handleSendMessage(msg)}
               disabled={sending}
-              className="text-[10px] sm:text-[11px] font-medium text-slate-700 bg-white border border-slate-200/90 rounded-full px-2.5 py-1 shadow-2xs hover:border-amber-400 hover:bg-amber-50 hover:text-amber-800 transition-all active:scale-95"
+              className="text-[10px] sm:text-[11px] font-medium text-slate-200 bg-white/5 border border-white/15 rounded-full px-2.5 py-1 hover:border-amber-400/80 hover:bg-amber-500/20 hover:text-amber-200 transition-all active:scale-95"
             >
               💬 {msg}
             </button>
@@ -345,7 +345,7 @@ export default function RoomPostCard({ room }) {
               }}
               placeholder={`Message ${owner.name || "Owner"} directly...`}
               disabled={sending || sendSuccess}
-              className="w-full rounded-2xl border border-slate-200 bg-white px-3.5 py-2 text-xs text-slate-900 placeholder:text-slate-400 focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition-all"
+              className="w-full rounded-2xl border border-white/15 bg-slate-900/90 px-3.5 py-2 text-xs text-white placeholder:text-slate-400 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30 transition-all"
             />
           </div>
 
@@ -353,7 +353,7 @@ export default function RoomPostCard({ room }) {
             type="button"
             onClick={() => handleSendMessage()}
             disabled={(!messageText.trim() && !sending) || sendSuccess}
-            className="flex h-9 items-center gap-1.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 text-xs font-bold text-white shadow-sm hover:from-amber-600 hover:to-orange-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-95 shrink-0"
+            className="flex h-9 items-center gap-1.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 text-xs font-bold text-white shadow-md hover:from-amber-600 hover:to-orange-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all active:scale-95 shrink-0 border border-amber-300/30"
           >
             {sending ? (
               <span className="animate-spin text-xs">⏳</span>
@@ -371,7 +371,7 @@ export default function RoomPostCard({ room }) {
         </div>
 
         {sendSuccess && (
-          <p className="text-[10px] text-center text-emerald-600 font-bold animate-fade-in flex items-center justify-center gap-1">
+          <p className="text-[10px] text-center text-emerald-400 font-bold animate-fade-in flex items-center justify-center gap-1">
             <CheckCircle2 size={12} /> Message delivered! Opening your direct chat with {owner.name || "Owner"}...
           </p>
         )}

@@ -14,8 +14,8 @@ export default function MessageBubble({ message, isOwn }) {
         className={clsx(
           "max-w-[75%] sm:max-w-[65%] rounded-3xl px-4 py-2.5 text-xs sm:text-sm shadow-sm transition-all",
           isOwn
-            ? "rounded-br-xs bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white shadow-amber-500/10"
-            : "rounded-bl-xs bg-slate-100 text-slate-900 border border-slate-200/70"
+            ? "rounded-br-xs bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white shadow-amber-500/20"
+            : "rounded-bl-xs bg-slate-800/90 text-white border border-white/10"
         )}
       >
         {message.imageUrl && (
