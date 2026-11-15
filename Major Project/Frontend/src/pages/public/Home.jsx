@@ -112,39 +112,39 @@ export default function Home() {
         <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent z-0 pointer-events-none" />
       </div>
 
-      {/* 2. Floating Hero Section (Full Viewport, Large Bold Typography, Covers Video Watermark) */}
-      <section className="relative z-10 w-full min-h-[calc(100vh-4.5rem)] flex flex-col justify-center items-center text-center px-4 pt-6 pb-10">
+      {/* 2. Floating Hero Section (Full Viewport, Balanced Clean Typography) */}
+      <section className="relative z-10 w-full min-h-[calc(100vh-4.5rem)] flex flex-col justify-center items-center text-center px-4 pt-4 pb-8">
         {/* Top Floating Badge with Hover Glow */}
-        <div className="group cursor-pointer inline-flex items-center gap-2.5 rounded-full border border-amber-400/60 bg-black/70 px-6 py-2 text-xs sm:text-sm md:text-base font-bold text-amber-300 backdrop-blur-md mb-6 sm:mb-8 shadow-2xl transition-all duration-300 hover:scale-105 hover:border-amber-300 hover:shadow-[0_0_25px_rgba(251,191,36,0.6)]">
-          <Sparkles size={18} className="text-amber-400 group-hover:rotate-12 transition-transform duration-300" />
+        <div className="group cursor-pointer inline-flex items-center gap-2 rounded-full border border-amber-400/50 bg-black/70 px-4 sm:px-5 py-1.5 text-xs sm:text-sm font-bold text-amber-300 backdrop-blur-md mb-4 sm:mb-6 shadow-xl transition-all duration-300 hover:scale-105 hover:border-amber-300">
+          <Sparkles size={16} className="text-amber-400 group-hover:rotate-12 transition-transform duration-300" />
           <span>India's #1 Verified Room & Roommate Finder</span>
         </div>
 
-        {/* Grand Hero Heading with Interactive Arrow Hover Light-Beam Shine */}
-        <div className="group relative cursor-pointer select-none inline-block max-w-6xl px-4 py-2 transition-transform duration-500 hover:scale-[1.03]">
+        {/* Hero Heading with Clean Normalized Proportion */}
+        <div className="group relative cursor-pointer select-none inline-block max-w-5xl px-4 py-1 transition-transform duration-300 hover:scale-[1.02]">
           {/* Shimmer Light Streak Beam across text on hover */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
             <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full duration-1000 ease-in-out bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-12" />
           </div>
 
-          <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tight text-white leading-[1.08] drop-shadow-[0_8px_35px_rgba(0,0,0,0.95)] group-hover:drop-shadow-[0_0_50px_rgba(251,191,36,0.7)] transition-all duration-500">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.15] drop-shadow-[0_6px_25px_rgba(0,0,0,0.95)] group-hover:drop-shadow-[0_0_35px_rgba(251,191,36,0.6)] transition-all duration-300">
             Find Your Perfect <br />
-            <span className="relative inline-block bg-gradient-to-r from-amber-400 via-amber-200 to-yellow-400 bg-clip-text text-transparent underline decoration-amber-500/80 underline-offset-8 sm:underline-offset-[16px] group-hover:from-yellow-300 group-hover:via-white group-hover:to-amber-400 transition-all duration-500">
+            <span className="relative inline-block bg-gradient-to-r from-amber-400 via-amber-200 to-yellow-400 bg-clip-text text-transparent underline decoration-amber-500/80 underline-offset-8 sm:underline-offset-12 group-hover:from-yellow-300 group-hover:via-white group-hover:to-amber-400 transition-all duration-300">
               Room & Roommate
             </span>
           </h1>
         </div>
 
-        {/* Sub-tagline with Increased Size & Hover Radiance */}
-        <p className="mt-6 sm:mt-8 max-w-4xl text-base sm:text-2xl md:text-3xl font-extrabold text-slate-100 leading-relaxed drop-shadow-[0_4px_20px_rgba(0,0,0,0.95)] hover:text-amber-200 transition-colors duration-300">
+        {/* Sub-tagline Normalized Size */}
+        <p className="mt-4 sm:mt-5 max-w-2xl text-xs sm:text-base md:text-lg font-bold text-slate-100 leading-relaxed drop-shadow-[0_3px_15px_rgba(0,0,0,0.95)] hover:text-amber-200 transition-colors duration-300">
           No Brokers • 100% Verified Owners • Instant Direct Chat
         </p>
 
-        {/* Catchy Floating Trust Line Banner (Strategically positioned to cover bottom video watermark) */}
-        <div className="mt-8 sm:mt-12 inline-flex items-center justify-center gap-2.5 sm:gap-3 rounded-full bg-slate-950/85 backdrop-blur-xl border border-amber-400/50 px-5 sm:px-8 py-2.5 sm:py-3 text-xs sm:text-sm font-black text-amber-300 shadow-2xl hover:scale-105 transition-all">
-          <Sparkles size={16} className="text-amber-400 shrink-0 animate-pulse" />
+        {/* Catchy Floating Trust Line Banner */}
+        <div className="mt-6 sm:mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-slate-950/85 backdrop-blur-xl border border-amber-400/50 px-4 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-black text-amber-300 shadow-2xl hover:scale-105 transition-all">
+          <Sparkles size={15} className="text-amber-400 shrink-0 animate-pulse" />
           <span>100% Brokerage Free • Verified Properties • Instant Direct Chat With Owners</span>
-          <Sparkles size={16} className="text-amber-400 shrink-0 animate-pulse" />
+          <Sparkles size={15} className="text-amber-400 shrink-0 animate-pulse" />
         </div>
 
         {/* Subtle Floating Scroll Down Prompt */}

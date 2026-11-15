@@ -26,7 +26,6 @@ const OWNER_NAV_LINKS = [
 const ADMIN_NAV_LINKS = [
   { to: "/admin/users", label: "User Management", icon: Users },
   { to: "/admin/listings", label: "Room Details", icon: DoorOpen },
-  { to: "/admin/complaints", label: "Complaint Management", icon: MessageSquareWarning },
   { to: "/chat", label: "Chat Management", icon: MessageCircle },
 ];
 
