@@ -85,14 +85,14 @@ export default function Home() {
       {/* 1. Fixed Full-Page Cinematic Background Video (Crops 16:9 dynamically on mobile & desktop) */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <iframe
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none border-0"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none border-0 z-0"
           style={{
             width: "max(100vw, 177.78vh)",
             height: "max(56.25vw, 100vh)",
             minWidth: "100%",
             minHeight: "100%",
           }}
-          src="https://www.youtube-nocookie.com/embed/B9MRxkpzZH8?autoplay=1&mute=1&loop=1&playlist=B9MRxkpzZH8&controls=0&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&modestbranding=1&playsinline=1"
+          src="https://www.youtube.com/embed/B9MRxkpzZH8?autoplay=1&mute=1&loop=1&playlist=B9MRxkpzZH8&controls=0&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&modestbranding=1&playsinline=1&enablejsapi=1"
           title="RoomDekho Cinematic Video Tour"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         />
@@ -105,7 +105,7 @@ export default function Home() {
           />
         </div>
         {/* Transparent Subtle Vignette Overlay - Keeps video crystal clear & bright */}
-        <div className="absolute inset-0 bg-slate-950/65 backdrop-blur-[0.5px]" />
+        <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-[0.5px] z-0 pointer-events-none" />
       </div>
 
       {/* 2. Floating Hero Section (Compact & Sleek with Interactive Arrow Hover Shine) */}
