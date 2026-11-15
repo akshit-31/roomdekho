@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Sparkles, ShieldCheck } from "lucide-react";
+import { Sparkles, ShieldCheck, X } from "lucide-react";
 import customLogo from "../../image copy 3.png";
 import RegisterForm from "../../components/auth/RegisterForm";
 import { useAuth } from "../../hooks/useAuth";
@@ -31,6 +31,17 @@ export default function Register() {
 
       {/* Glassmorphism Floating Card */}
       <div className="relative my-auto w-full max-w-md sm:max-w-lg flex flex-col overflow-hidden rounded-3xl border border-white/20 bg-slate-900/85 p-6 sm:p-8 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] backdrop-blur-2xl text-white z-10">
+        {/* Cut / Close Button */}
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          className="absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white/80 transition-all hover:bg-rose-500/80 hover:text-white hover:border-rose-400 active:scale-95 shadow-lg backdrop-blur-sm"
+          title="Cut / Close Register"
+          aria-label="Close"
+        >
+          <X size={18} />
+        </button>
+
         {/* Brand Logo Header */}
         <div className="mb-6 flex flex-col items-center text-center">
           <Link to="/" className="mb-4 flex items-center justify-center gap-2">

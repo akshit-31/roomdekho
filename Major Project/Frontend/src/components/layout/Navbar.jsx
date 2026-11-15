@@ -37,6 +37,7 @@ export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const isHome = location.pathname === "/";
+  const isDarkThemePage = isHome || location.pathname === "/login" || location.pathname === "/register";
 
   const handleLogout = async () => {
     try {
@@ -130,8 +131,8 @@ export default function Navbar() {
         />
       )}
 
-      {/* Top Header Navbar - Glassmorphism Floating Over Video on Home */}
-      <header className={`sticky top-0 z-40 transition-all duration-300 ${isHome ? "bg-slate-950/40 backdrop-blur-md border-b border-white/15 text-white shadow-xl" : "bg-white/95 border-b border-gray-100 backdrop-blur-md text-slate-900"}`}>
+      {/* Top Header Navbar - Seamless Dark Glassmorphism on Home, Login & Register */}
+      <header className={`sticky top-0 z-40 transition-all duration-300 ${isDarkThemePage ? "bg-slate-950/60 backdrop-blur-xl border-b border-white/10 text-white shadow-2xl" : "bg-white/95 border-b border-gray-100 backdrop-blur-md text-slate-900 shadow-sm"}`}>
         <div className="mx-auto flex h-16 sm:h-20 max-w-7xl items-center justify-between px-3 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 sm:gap-3.5">
             {/* Hamburger Button - Shown ONLY when Authenticated */}
@@ -140,7 +141,7 @@ export default function Navbar() {
                 type="button"
                 onClick={() => setDrawerOpen(true)}
                 className={`flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl transition-all shadow-sm active:scale-95 shrink-0 ${
-                  isHome
+                  isDarkThemePage
                     ? "border border-white/25 bg-white/10 text-white hover:bg-white/20 backdrop-blur-md"
                     : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300"
                 }`}
@@ -153,7 +154,7 @@ export default function Navbar() {
             {/* Brand Logo */}
             <Link to="/" className="flex items-center gap-1.5 sm:gap-2 text-decoration-none group">
               <img src={customLogo} alt="RoomDekho Logo" className="h-8 w-8 sm:h-10 sm:w-10 object-contain shrink-0 group-hover:scale-105 transition-transform drop-shadow" />
-              <span className={`text-base sm:text-xl font-black tracking-tight ${isHome ? "text-white drop-shadow-md" : "text-slate-900"}`}>
+              <span className={`text-base sm:text-xl font-black tracking-tight ${isDarkThemePage ? "text-white drop-shadow-md" : "text-slate-900"}`}>
                 Room<span className="text-amber-400">Dekho</span>
               </span>
             </Link>
@@ -166,7 +167,7 @@ export default function Navbar() {
               <Link
                 to="/chat"
                 className={`relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl transition-all shadow-sm active:scale-95 ${
-                  isHome
+                  isDarkThemePage
                     ? "border border-white/25 bg-white/10 text-amber-300 hover:bg-white/20 hover:text-amber-200 backdrop-blur-md"
                     : "border border-slate-200 bg-white text-slate-700 hover:bg-amber-50 hover:text-amber-600 hover:border-amber-300"
                 }`}
@@ -186,7 +187,7 @@ export default function Navbar() {
                   type="button"
                   onClick={() => setUserMenuOpen((prev) => !prev)}
                   className={`flex items-center gap-1.5 sm:gap-2 rounded-full p-1 sm:p-1.5 pr-2.5 sm:pr-3 transition-all ${
-                    isHome
+                    isDarkThemePage
                       ? "border border-white/25 bg-white/10 text-white hover:bg-white/20 backdrop-blur-md shadow-md"
                       : "border border-gray-200 hover:bg-slate-50 text-slate-700"
                   }`}
@@ -194,7 +195,7 @@ export default function Navbar() {
                   <div className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-gradient-to-tr from-amber-500 to-orange-500 text-white font-bold text-xs shrink-0 shadow">
                     {user?.name?.[0]?.toUpperCase() || "U"}
                   </div>
-                  <span className={`text-xs font-semibold max-w-[70px] sm:max-w-[110px] truncate ${isHome ? "text-white" : "text-slate-700"}`}>
+                  <span className={`text-xs font-semibold max-w-[70px] sm:max-w-[110px] truncate ${isDarkThemePage ? "text-white" : "text-slate-700"}`}>
                     {user?.name || "Account"}
                   </span>
                 </button>
@@ -235,6 +236,15 @@ export default function Navbar() {
                   </div>
                 )}
               </div>
+            ) : location.pathname === "/login" ? (
+              <Link
+                to="/"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 hover:bg-white/20 px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-bold text-white backdrop-blur-md transition-all hover:scale-105 active:scale-95 shadow-md"
+                title="Return to Home"
+              >
+                <X size={16} />
+                <span>Close</span>
+              </Link>
             ) : (
               <Link
                 to="/login"
