@@ -43,8 +43,6 @@ export default function Home() {
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [selectedCity, setSelectedCity] = useState("Delhi");
-  const [selectedType, setSelectedType] = useState("");
   const [featuredRooms, setFeaturedRooms] = useState([]);
   const [feedCity, setFeedCity] = useState("All");
   const [loadingFeed, setLoadingFeed] = useState(false);
@@ -82,45 +80,38 @@ export default function Home() {
     }
   }, [isAuthenticated]);
 
-  const handleSearchClick = () => {
-    const query = new URLSearchParams();
-    if (selectedCity) query.set("city", selectedCity);
-    if (selectedType) query.set("propertyType", selectedType);
-    navigate(`/rooms?${query.toString()}`);
-  };
-
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] flex-col bg-slate-50 overflow-x-hidden w-full max-w-full">
-      {/* 1. Full-Bleed Edge-to-Edge Hero with Cinematic Background Video (No Card Borders) */}
-      <section className="relative w-full min-h-[75vh] sm:min-h-[85vh] flex flex-col justify-center items-center overflow-hidden text-white bg-slate-950">
-        {/* Full Responsive Cinematic Video Background (Crops 16:9 dynamically on mobile & desktop) */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-          <iframe
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none border-0"
-            style={{
-              width: "max(100vw, 177.78vh)",
-              height: "max(56.25vw, 100vh)",
-              minWidth: "100%",
-              minHeight: "100%",
-            }}
-            src="https://www.youtube-nocookie.com/embed/B9MRxkpzZH8?autoplay=1&mute=1&loop=1&playlist=B9MRxkpzZH8&controls=0&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&modestbranding=1&playsinline=1"
-            title="RoomDekho Cinematic Video Tour"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    <div className="relative min-h-screen flex flex-col overflow-x-hidden w-full max-w-full text-white">
+      {/* 1. Fixed Full-Page Cinematic Background Video (Crops 16:9 dynamically on mobile & desktop) */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <iframe
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none border-0"
+          style={{
+            width: "max(100vw, 177.78vh)",
+            height: "max(56.25vw, 100vh)",
+            minWidth: "100%",
+            minHeight: "100%",
+          }}
+          src="https://www.youtube-nocookie.com/embed/B9MRxkpzZH8?autoplay=1&mute=1&loop=1&playlist=B9MRxkpzZH8&controls=0&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&modestbranding=1&playsinline=1"
+          title="RoomDekho Cinematic Video Tour"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        />
+        {/* High-res fallback poster */}
+        <div className="absolute inset-0 -z-10">
+          <img
+            src={SLIDE_IMAGES[0]}
+            alt="RoomDekho Interior"
+            className="h-full w-full object-cover object-center"
           />
-          {/* High-res fallback poster */}
-          <div className="absolute inset-0 -z-10">
-            <img
-              src={SLIDE_IMAGES[0]}
-              alt="RoomDekho Interior"
-              className="h-full w-full object-cover object-center"
-            />
-          </div>
-          {/* Transparent Subtle Vignette Overlay - Keeps video crystal clear & bright */}
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-black/20 to-slate-950/40" />
         </div>
+        {/* Transparent Subtle Vignette Overlay - Keeps video crystal clear & bright */}
+        <div className="absolute inset-0 bg-slate-950/65 backdrop-blur-[0.5px]" />
+      </div>
 
+      {/* 2. Floating Hero Section (Spacious, Bold & Clear Typography) */}
+      <section className="relative z-10 w-full min-h-[45vh] sm:min-h-[55vh] flex flex-col justify-center items-center text-center px-4 pt-12 sm:pt-20 pb-6 sm:pb-10">
         {/* Live Tour Indicator Badge */}
-        <div className="absolute top-4 right-4 sm:top-6 sm:right-8 z-20 flex items-center gap-2 rounded-full bg-black/60 px-3.5 py-1.5 backdrop-blur-md border border-white/20 text-xs font-bold text-white shadow-xl">
+        <div className="absolute top-3 right-4 sm:top-5 sm:right-8 z-20 flex items-center gap-2 rounded-full bg-black/60 px-4 py-1.5 backdrop-blur-md border border-white/20 text-xs sm:text-sm font-bold text-white shadow-xl">
           <span className="relative flex h-2.5 w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
@@ -128,102 +119,72 @@ export default function Home() {
           <span>Live 360° Room Tour</span>
         </div>
 
-        {/* Floating Content Layer (Floats smoothly above the clear video) */}
-        <div className="relative z-10 flex flex-col items-center justify-center px-4 sm:px-8 text-center my-auto py-12 sm:py-20 w-full max-w-5xl">
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/50 bg-black/60 px-4 py-1 text-[11px] sm:text-xs font-bold text-amber-300 backdrop-blur-md mb-4 sm:mb-6 shadow-2xl animate-pulse">
-            <Sparkles size={14} className="text-amber-400" />
-            <span>India's #1 Verified Room & Roommate Finder</span>
-          </div>
-
-          <h1 className="text-3xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)] max-w-4xl">
-            Find Your Perfect <br />
-            <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 bg-clip-text text-transparent underline decoration-amber-500/60 underline-offset-4 sm:underline-offset-8">
-              Room & Roommate
-            </span>
-          </h1>
-
-          <p className="mt-3 sm:mt-5 max-w-2xl text-xs sm:text-lg lg:text-xl font-bold text-slate-100 leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]">
-            No Brokers • 100% Verified Owners • Instant Direct Chat
-          </p>
-
-          {/* Floating Search Bar */}
-          <div className="mt-6 sm:mt-10 w-full max-w-2xl rounded-2xl sm:rounded-full bg-slate-900/90 backdrop-blur-xl border border-white/25 p-2 sm:p-2.5 shadow-[0_20px_60px_rgba(0,0,0,0.8)] flex flex-col sm:flex-row items-center gap-2">
-            <div className="flex items-center gap-2 px-3 py-2 sm:py-0 w-full sm:w-1/2 border-b sm:border-b-0 sm:border-r border-white/10">
-              <MapPin size={18} className="text-amber-400 shrink-0" />
-              <input
-                type="text"
-                placeholder="Search city (e.g. Bareilly, Noida)..."
-                value={selectedCity}
-                onChange={(e) => setSelectedCity(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSearchClick()}
-                className="w-full bg-transparent text-xs sm:text-sm text-white placeholder-slate-400 focus:outline-none font-medium"
-              />
-            </div>
-
-            <div className="flex items-center gap-2 px-3 py-2 sm:py-0 w-full sm:w-1/3">
-              <Building2 size={18} className="text-amber-400 shrink-0" />
-              <select
-                value={selectedType}
-                onChange={(e) => setSelectedType(e.target.value)}
-                className="w-full bg-transparent text-xs sm:text-sm text-white focus:outline-none font-medium cursor-pointer"
-              >
-                <option value="" className="bg-slate-900 text-slate-300">All Room Types</option>
-                <option value="single" className="bg-slate-900 text-white">Private Room</option>
-                <option value="shared" className="bg-slate-900 text-white">Shared Room</option>
-                <option value="flat" className="bg-slate-900 text-white">Full Flat / 1BHK</option>
-              </select>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleSearchClick}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl sm:rounded-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-black text-white shadow-lg transition-all active:scale-95 shrink-0"
-            >
-              <Search size={16} />
-              <span>Search</span>
-            </button>
-          </div>
+        <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/60 bg-black/60 px-5 py-1.5 text-xs sm:text-sm font-bold text-amber-300 backdrop-blur-md mb-4 sm:mb-6 shadow-2xl animate-pulse">
+          <Sparkles size={16} className="text-amber-400" />
+          <span>India's #1 Verified Room & Roommate Finder</span>
         </div>
+
+        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.15] drop-shadow-[0_6px_30px_rgba(0,0,0,0.95)] max-w-5xl">
+          Find Your Perfect <br />
+          <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 bg-clip-text text-transparent underline decoration-amber-500/60 underline-offset-8 sm:underline-offset-12">
+            Room & Roommate
+          </span>
+        </h1>
+
+        <p className="mt-4 sm:mt-6 max-w-2xl text-sm sm:text-xl lg:text-2xl font-extrabold text-slate-100 leading-relaxed drop-shadow-[0_3px_16px_rgba(0,0,0,0.95)]">
+          No Brokers • 100% Verified Owners • Instant Direct Chat
+        </p>
       </section>
 
-      {/* 2. Page Content Container */}
-      <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 py-8 sm:py-12 space-y-10 sm:space-y-16">
-        {/* 3. Popular Cities Section */}
-        <section className="w-full">
+      {/* 3. Floating Popular Cities Section (Larger, High-Impact City Cards Scrolling Over Video) */}
+      <section className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-8 py-6 sm:py-10">
         <div className="mb-4 sm:mb-6">
-          <h2 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900">Popular Cities</h2>
-          <p className="text-xs font-semibold text-slate-500">Explore verified room listings in top hubs</p>
+          <h2 className="text-xl sm:text-3xl font-black tracking-tight text-white drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)] flex items-center gap-2.5">
+            <MapPin size={24} className="text-amber-400" />
+            <span>Popular Cities</span>
+          </h2>
+          <p className="text-xs sm:text-sm font-semibold text-slate-200 drop-shadow mt-1">
+            Explore verified room listings in top student & job hubs
+          </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-2.5 sm:gap-4 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-6 sm:grid-cols-4">
           {POPULAR_CITIES.map((c) => (
             <div
               key={c.name}
-              className="relative h-32 sm:h-40 overflow-hidden rounded-2xl sm:rounded-3xl border border-gray-100 shadow-md select-none group cursor-pointer"
+              className="group relative h-36 sm:h-48 lg:h-52 overflow-hidden rounded-2xl sm:rounded-3xl border border-white/25 bg-slate-950/40 backdrop-blur-md shadow-2xl transition-all duration-300 hover:scale-105 hover:border-amber-400/60 hover:shadow-amber-500/30 select-none cursor-pointer"
               onClick={() => navigate(`/rooms?city=${encodeURIComponent(c.name)}`)}
             >
-              <img src={c.image} alt={c.name} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent p-3 sm:p-4 flex flex-col justify-end">
-                <h3 className="text-sm sm:text-lg font-black text-white">{c.name}</h3>
-                <p className="text-[10px] sm:text-[11px] font-semibold text-amber-400">{c.count}</p>
+              <img
+                src={c.image}
+                alt={c.name}
+                className="h-full w-full object-cover opacity-85 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent p-4 sm:p-5 flex flex-col justify-end">
+                <h3 className="text-base sm:text-xl font-black text-white group-hover:text-amber-300 transition-colors drop-shadow">
+                  {c.name}
+                </h3>
+                <p className="text-xs sm:text-sm font-bold text-amber-400 drop-shadow mt-0.5">
+                  {c.count}
+                </p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* 4. Live Room Feed (Social Post Style Feed) */}
-      <section className="mx-auto w-full max-w-5xl px-2 sm:px-4 py-2 sm:py-4 space-y-6">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200/80 pb-4">
+      {/* 4. Live Room Feed ("Living Bala") - Scrolls smoothly over the background video */}
+      <section className="relative z-10 mx-auto w-full max-w-5xl px-3 sm:px-6 py-6 sm:py-8 space-y-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/15 pb-4">
           <div>
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-700 mb-2">
-              <Sparkles size={13} className="text-amber-500" />
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/20 border border-amber-500/30 px-3 py-1 text-xs font-bold text-amber-300 mb-2 backdrop-blur-md">
+              <Sparkles size={13} className="text-amber-400" />
               <span>Live Community Feed</span>
             </div>
-            <h2 className="text-xl sm:text-3xl font-black tracking-tight text-slate-900">
+            <h2 className="text-xl sm:text-3xl font-black tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
               Live Room Posts & Host Listings
             </h2>
-            <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1">
+            <p className="text-xs sm:text-sm font-medium text-slate-200 drop-shadow mt-1">
               Scroll through verified room posts. Like, share, and send instant direct messages straight to the owner's DM inbox!
             </p>
           </div>
@@ -232,7 +193,7 @@ export default function Home() {
           {isAuthenticated && (
             <Link
               to="/chat"
-              className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2.5 text-xs font-bold text-white shadow-md hover:from-amber-600 hover:to-orange-600 transition-all active:scale-95 shrink-0 self-start md:self-auto"
+              className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2.5 text-xs font-bold text-white shadow-lg hover:from-amber-600 hover:to-orange-600 transition-all active:scale-95 shrink-0 self-start md:self-auto border border-amber-300/30"
             >
               <MessageCircle size={16} />
               <span>Open Direct Chats</span>
@@ -247,31 +208,31 @@ export default function Home() {
               key={city}
               type="button"
               onClick={() => setFeedCity(city)}
-              className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-bold transition-all ${
+              className={`shrink-0 rounded-full px-4 py-1.5 text-xs font-bold transition-all backdrop-blur-md ${
                 feedCity === city
-                  ? "bg-slate-900 text-white shadow-sm"
-                  : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                  ? "bg-amber-500 text-white shadow-lg shadow-amber-500/30"
+                  : "bg-slate-900/70 border border-white/20 text-slate-200 hover:bg-slate-800/80 hover:text-white"
               }`}
             >
-              {city === "All" ? "🌍 All Cities" : `📍 ${city}`}
+              {city === "All" ? "🔥 All Cities" : `📍 ${city}`}
             </button>
           ))}
         </div>
 
         {/* Post Feed Container */}
         {loadingFeed ? (
-          <div className="py-12 text-center">
+          <div className="py-12 text-center rounded-3xl bg-slate-900/60 backdrop-blur-md border border-white/10 text-slate-300">
             <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent" />
-            <p className="mt-3 text-xs font-semibold text-slate-500">Loading verified room posts...</p>
+            <p className="mt-3 text-xs font-semibold">Loading verified room posts...</p>
           </div>
         ) : featuredRooms.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-slate-200 bg-white p-10 text-center">
+          <div className="rounded-3xl border border-dashed border-white/20 bg-slate-900/60 backdrop-blur-md p-10 text-center">
             <Building2 size={32} className="mx-auto text-slate-400 mb-2" />
-            <h3 className="text-sm font-bold text-slate-800">No rooms listed in {feedCity} yet</h3>
-            <p className="text-xs text-slate-500 mt-1">Be the first to list a room or explore other cities!</p>
+            <h3 className="text-sm font-bold text-white">No rooms listed in {feedCity} yet</h3>
+            <p className="text-xs text-slate-300 mt-1">Be the first to list a room or explore other cities!</p>
             <button
               onClick={() => setFeedCity("All")}
-              className="mt-4 rounded-xl bg-amber-500 px-4 py-2 text-xs font-bold text-white hover:bg-amber-600"
+              className="mt-4 rounded-xl bg-amber-500 px-4 py-2 text-xs font-bold text-white hover:bg-amber-600 shadow-md"
             >
               Show All Cities
             </button>
@@ -288,7 +249,7 @@ export default function Home() {
         <div className="pt-4 text-center">
           <Link
             to="/rooms"
-            className="inline-flex items-center gap-2 rounded-2xl border-2 border-slate-900 bg-white px-6 py-3 text-xs sm:text-sm font-black text-slate-900 hover:bg-slate-900 hover:text-white transition-all shadow-sm active:scale-95"
+            className="inline-flex items-center gap-2 rounded-2xl bg-white hover:bg-slate-100 px-6 py-3 text-xs sm:text-sm font-black text-slate-900 transition-all shadow-xl hover:scale-105 active:scale-95 border border-white/40"
           >
             <span>Explore All Rooms & Map View</span>
             <ArrowRight size={16} />
@@ -297,27 +258,33 @@ export default function Home() {
       </section>
 
       {/* 5. Why Choose RoomDekho Features Grid */}
-      <section className="mx-auto w-full max-w-7xl px-2 sm:px-4 py-2 sm:py-4">
-        <div className="rounded-3xl bg-amber-500/10 border border-amber-500/20 p-5 sm:p-12">
+      <section className="relative z-10 mx-auto w-full max-w-7xl px-3 sm:px-6 py-8 sm:py-12">
+        <div className="rounded-3xl bg-slate-900/70 backdrop-blur-xl border border-white/15 p-6 sm:p-12 shadow-2xl">
           <div className="text-center mb-6 sm:mb-10">
-            <h2 className="text-xl sm:text-3xl font-black text-slate-900 tracking-tight">Why Choose RoomDekho?</h2>
-            <p className="mt-1 text-xs font-bold text-slate-600">The safest platform for room hunting & roommate discovery</p>
+            <h2 className="text-xl sm:text-3xl font-black text-white tracking-tight drop-shadow">
+              Why Choose RoomDekho?
+            </h2>
+            <p className="mt-1 text-xs sm:text-sm font-bold text-amber-400">
+              The safest platform for room hunting & roommate discovery
+            </p>
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-3">
             {FEATURES.map((f) => (
-              <div key={f.title} className="rounded-2xl bg-white p-5 sm:p-6 shadow-sm border border-gray-100 text-center flex flex-col items-center">
-                <div className="mb-3 sm:mb-4 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-amber-500 text-white font-black shadow-md shadow-amber-500/20 shrink-0">
+              <div
+                key={f.title}
+                className="rounded-2xl bg-slate-950/60 backdrop-blur-md p-5 sm:p-6 shadow-lg border border-white/10 text-center flex flex-col items-center hover:border-amber-400/40 transition-all hover:scale-105"
+              >
+                <div className="mb-3 sm:mb-4 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white font-black shadow-md shadow-amber-500/30 shrink-0">
                   <f.icon size={20} className="sm:h-6 sm:w-6" />
                 </div>
-                <h3 className="text-sm sm:text-base font-extrabold text-slate-900">{f.title}</h3>
-                <p className="mt-1.5 sm:mt-2 text-xs font-semibold text-slate-500 leading-relaxed">{f.desc}</p>
+                <h3 className="text-sm sm:text-base font-extrabold text-white">{f.title}</h3>
+                <p className="mt-1.5 sm:mt-2 text-xs font-semibold text-slate-300 leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
-      </div>
 
       {/* Auto-Triggered Glassmorphism Login Popup Modal */}
       <AuthModal
