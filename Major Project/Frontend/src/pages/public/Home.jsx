@@ -90,18 +90,22 @@ export default function Home() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] flex-col bg-slate-50 p-2 sm:p-4 lg:p-6 space-y-8 sm:space-y-12 overflow-x-hidden w-full max-w-full">
-      {/* 1. Hero Section Container with Full Background Video */}
-      <section className="relative mx-auto flex min-h-[70vh] sm:min-h-[85vh] w-full max-w-7xl flex-col justify-center overflow-hidden rounded-2xl sm:rounded-[2.5rem] bg-[#0b1322] text-white shadow-2xl">
-        {/* Full Cinematic YouTube Video Background */}
+    <div className="flex min-h-[calc(100vh-4rem)] flex-col bg-slate-50 overflow-x-hidden w-full max-w-full">
+      {/* 1. Full-Bleed Edge-to-Edge Hero with Cinematic Background Video (No Card Borders) */}
+      <section className="relative w-full min-h-[75vh] sm:min-h-[85vh] flex flex-col justify-center items-center overflow-hidden text-white bg-slate-950">
+        {/* Full Responsive Cinematic Video Background (Crops 16:9 dynamically on mobile & desktop) */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
           <iframe
-            className="absolute top-1/2 left-1/2 w-[350%] h-[350%] sm:w-[160%] sm:h-[160%] -translate-x-1/2 -translate-y-1/2 object-cover"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none border-0"
+            style={{
+              width: "max(100vw, 177.78vh)",
+              height: "max(56.25vw, 100vh)",
+              minWidth: "100%",
+              minHeight: "100%",
+            }}
             src="https://www.youtube-nocookie.com/embed/B9MRxkpzZH8?autoplay=1&mute=1&loop=1&playlist=B9MRxkpzZH8&controls=0&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&modestbranding=1&playsinline=1"
             title="RoomDekho Cinematic Video Tour"
-            frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
           />
           {/* High-res fallback poster */}
           <div className="absolute inset-0 -z-10">
@@ -111,41 +115,81 @@ export default function Home() {
               className="h-full w-full object-cover object-center"
             />
           </div>
-          {/* Cinematic Dark Gradient Overlay for perfect text contrast & readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0b1322] via-[#0b1322]/70 to-[#0b1322]/50 backdrop-blur-[0.5px]" />
-          <div className="absolute inset-0 bg-slate-950/30" />
+          {/* Transparent Subtle Vignette Overlay - Keeps video crystal clear & bright */}
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-black/20 to-slate-950/40" />
         </div>
 
         {/* Live Tour Indicator Badge */}
-        <div className="absolute top-4 right-4 sm:top-6 sm:right-8 z-20 flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5 backdrop-blur-md border border-white/20 text-xs font-semibold text-white shadow-lg">
-          <span className="relative flex h-2 w-2">
+        <div className="absolute top-4 right-4 sm:top-6 sm:right-8 z-20 flex items-center gap-2 rounded-full bg-black/60 px-3.5 py-1.5 backdrop-blur-md border border-white/20 text-xs font-bold text-white shadow-xl">
+          <span className="relative flex h-2.5 w-2.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
           </span>
           <span>Live 360° Room Tour</span>
         </div>
 
-        {/* Hero Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center px-4 sm:px-12 lg:px-24 text-center my-auto py-8">
-          <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-500/20 px-3 py-1 text-[10px] sm:text-xs font-bold text-amber-300 backdrop-blur-md mb-3 sm:mb-4 animate-bounce">
-            ✨ India's #1 Verified Room & Roommate Finder
+        {/* Floating Content Layer (Floats smoothly above the clear video) */}
+        <div className="relative z-10 flex flex-col items-center justify-center px-4 sm:px-8 text-center my-auto py-12 sm:py-20 w-full max-w-5xl">
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/50 bg-black/60 px-4 py-1 text-[11px] sm:text-xs font-bold text-amber-300 backdrop-blur-md mb-4 sm:mb-6 shadow-2xl animate-pulse">
+            <Sparkles size={14} className="text-amber-400" />
+            <span>India's #1 Verified Room & Roommate Finder</span>
           </div>
 
-          <h1 className="text-2xl sm:text-5xl lg:text-7xl font-black tracking-tight text-white drop-shadow-2xl leading-tight max-w-4xl">
+          <h1 className="text-3xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)] max-w-4xl">
             Find Your Perfect <br />
-            <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-500 bg-clip-text text-transparent underline decoration-amber-500/50 underline-offset-4 sm:underline-offset-8">
+            <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 bg-clip-text text-transparent underline decoration-amber-500/60 underline-offset-4 sm:underline-offset-8">
               Room & Roommate
             </span>
           </h1>
 
-          <p className="mt-3 sm:mt-6 max-w-xl text-xs sm:text-lg lg:text-xl font-medium text-slate-200 leading-relaxed drop-shadow-md">
+          <p className="mt-3 sm:mt-5 max-w-2xl text-xs sm:text-lg lg:text-xl font-bold text-slate-100 leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]">
             No Brokers • 100% Verified Owners • Instant Direct Chat
           </p>
+
+          {/* Floating Search Bar */}
+          <div className="mt-6 sm:mt-10 w-full max-w-2xl rounded-2xl sm:rounded-full bg-slate-900/90 backdrop-blur-xl border border-white/25 p-2 sm:p-2.5 shadow-[0_20px_60px_rgba(0,0,0,0.8)] flex flex-col sm:flex-row items-center gap-2">
+            <div className="flex items-center gap-2 px-3 py-2 sm:py-0 w-full sm:w-1/2 border-b sm:border-b-0 sm:border-r border-white/10">
+              <MapPin size={18} className="text-amber-400 shrink-0" />
+              <input
+                type="text"
+                placeholder="Search city (e.g. Bareilly, Noida)..."
+                value={selectedCity}
+                onChange={(e) => setSelectedCity(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSearchClick()}
+                className="w-full bg-transparent text-xs sm:text-sm text-white placeholder-slate-400 focus:outline-none font-medium"
+              />
+            </div>
+
+            <div className="flex items-center gap-2 px-3 py-2 sm:py-0 w-full sm:w-1/3">
+              <Building2 size={18} className="text-amber-400 shrink-0" />
+              <select
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
+                className="w-full bg-transparent text-xs sm:text-sm text-white focus:outline-none font-medium cursor-pointer"
+              >
+                <option value="" className="bg-slate-900 text-slate-300">All Room Types</option>
+                <option value="single" className="bg-slate-900 text-white">Private Room</option>
+                <option value="shared" className="bg-slate-900 text-white">Shared Room</option>
+                <option value="flat" className="bg-slate-900 text-white">Full Flat / 1BHK</option>
+              </select>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleSearchClick}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl sm:rounded-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-black text-white shadow-lg transition-all active:scale-95 shrink-0"
+            >
+              <Search size={16} />
+              <span>Search</span>
+            </button>
+          </div>
         </div>
       </section>
 
-      {/* 3. Popular Cities Section */}
-      <section className="mx-auto w-full max-w-7xl px-2 sm:px-4 py-2 sm:py-4">
+      {/* 2. Page Content Container */}
+      <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 py-8 sm:py-12 space-y-10 sm:space-y-16">
+        {/* 3. Popular Cities Section */}
+        <section className="w-full">
         <div className="mb-4 sm:mb-6">
           <h2 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900">Popular Cities</h2>
           <p className="text-xs font-semibold text-slate-500">Explore verified room listings in top hubs</p>
@@ -273,6 +317,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </div>
 
       {/* Auto-Triggered Glassmorphism Login Popup Modal */}
       <AuthModal
