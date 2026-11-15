@@ -172,7 +172,7 @@ export default function LoginForm({ onSuccess, isModal = false }) {
           ) : (
             <div className="rounded-2xl border border-rose-500/30 bg-rose-500/15 p-3.5 text-xs text-rose-200 shadow-md animate-fade-in">
               <p className="font-bold flex items-center gap-1.5 text-rose-300 mb-1">
-                <ShieldAlert size={15} /> Role Validation Error
+                <ShieldAlert size={15} /> {roleMismatchTarget ? "Role Validation Error" : "Login Failed"}
               </p>
               <p className="text-[11px] leading-relaxed text-rose-100">{typeof serverError === "string" ? serverError : "Unable to log in"}</p>
               {roleMismatchTarget === "owner" && (
