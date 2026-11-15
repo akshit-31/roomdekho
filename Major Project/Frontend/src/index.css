@@ -6,7 +6,7 @@
 @tailwind utilities;
 
 body {
-  @apply bg-[#F5F7FB] text-gray-900 antialiased;
+  @apply bg-slate-950 text-white antialiased;
 }
 
 html {
@@ -1548,37 +1548,14 @@ html {
 }
 
 
-/* Soft blue page theme */
+/* Universal Dark Theme */
 .app-shell {
-  background: #F5F7FB;
-}
-
-.topbar {
-  background: rgba(255, 255, 255, 0.96);
-  border-bottom-color: #e4e9f2;
-}
-
-.app-sidebar {
-  background: #ffffff;
-  border-right-color: #e4e9f2;
-}
-
-.sidebar-link:hover {
-  background: #f5f8fd;
-}
-
-.sidebar-link-active {
-  background: #eaf3ff;
-  color: #1f63d1;
-}
-
-.sidebar-note {
-  border-color: #e1ebf8;
-  background: linear-gradient(145deg, #f9fbff, #eef6ff);
+  background: #020617;
+  color: #ffffff;
 }
 
 .page-container {
-  background: #F5F7FB;
+  background: transparent;
 }
 
 .account-menu-link {
@@ -1660,7 +1637,7 @@ html {
 }
 
 .matches-page {
-  background: #F5F7FB;
+  background: #020617;
 }
 
 .match-profile-card {

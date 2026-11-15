@@ -17,12 +17,12 @@ export default function PageContainer({
         <div className="mb-6 sm:mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-white/10 pb-5">
           <div>
             {title && (
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight drop-shadow-sm">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight drop-shadow-md">
                 {title}
               </h1>
             )}
             {subtitle && (
-              <p className="mt-1 text-xs sm:text-sm font-medium text-slate-400 leading-relaxed">
+              <p className="mt-1 text-xs sm:text-sm font-medium text-slate-300 leading-relaxed">
                 {subtitle}
               </p>
             )}

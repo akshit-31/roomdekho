@@ -168,9 +168,9 @@ export default function LeafletSearchMap({ rooms = [], center, zoom = 12 }) {
   }, [rooms, center, zoom]);
 
   return (
-    <div className="relative h-full w-full min-h-[450px] rounded-2xl overflow-hidden border border-slate-200 shadow-md">
+    <div className="relative h-full w-full min-h-[450px] rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
       <div ref={mapContainerRef} className="h-full w-full min-h-[450px] z-10" />
-      <div className="absolute top-3 right-3 z-[400] bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-md border border-slate-100 text-xs font-bold text-slate-700 flex items-center gap-1.5 pointer-events-none">
+      <div className="absolute top-3 right-3 z-[400] bg-slate-950/90 backdrop-blur-md px-3.5 py-1.5 rounded-xl shadow-xl border border-white/15 text-xs font-bold text-white flex items-center gap-1.5 pointer-events-none">
         <span>🗺️</span> {rooms.length} Room{rooms.length === 1 ? "" : "s"} on Map
       </div>
     </div>

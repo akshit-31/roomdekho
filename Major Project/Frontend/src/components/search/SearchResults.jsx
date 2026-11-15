@@ -9,9 +9,9 @@ export default function SearchResults({ results, status, sortBy, onSortChange, o
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-between">
-        <p className="text-sm text-gray-500">
-          {total} {total === 1 ? "room" : "rooms"} found
+      <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-3">
+        <p className="text-sm font-bold text-white">
+          <span className="text-amber-400 font-extrabold">{total}</span> {total === 1 ? "room" : "rooms"} found
         </p>
         <SortDropdown value={sortBy} onChange={onSortChange} />
       </div>
