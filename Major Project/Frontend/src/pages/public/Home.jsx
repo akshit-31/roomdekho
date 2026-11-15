@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search, MapPin, Building2, ShieldCheck, Zap, HeartHandshake, ArrowRight, MessageCircle, Sparkles } from "lucide-react";
 import AuthModal from "../../components/auth/AuthModal";
@@ -46,6 +46,16 @@ export default function Home() {
   const [featuredRooms, setFeaturedRooms] = useState([]);
   const [feedCity, setFeedCity] = useState("All");
   const [loadingFeed, setLoadingFeed] = useState(false);
+  const videoRef = useRef(null);
+
+  // Guarantee seamless background video autoplay on all desktop and mobile browsers
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(() => {});
+    }
+  }, []);
 
   // Fetch real PostgreSQL rooms preview for home page feed
   useEffect(() => {
@@ -82,30 +92,22 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen flex flex-col overflow-x-hidden w-full max-w-full text-white">
-      {/* 1. Fixed Full-Page Cinematic Background Video (Crops 16:9 dynamically on mobile & desktop) */}
+      {/* 1. Fixed Full-Page Cinematic Background Video (Downloaded Web-Optimized MP4: Zero YouTube UI, Never pauses, Infinite loop) */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <iframe
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none border-0 z-0"
-          style={{
-            width: "max(100vw, 177.78vh)",
-            height: "max(56.25vw, 100vh)",
-            minWidth: "100%",
-            minHeight: "100%",
-          }}
-          src="https://www.youtube.com/embed/B9MRxkpzZH8?autoplay=1&mute=1&loop=1&playlist=B9MRxkpzZH8&controls=0&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&modestbranding=1&playsinline=1&enablejsapi=1"
-          title="RoomDekho Cinematic Video Tour"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        />
-        {/* High-res fallback poster */}
-        <div className="absolute inset-0 -z-10">
-          <img
-            src={SLIDE_IMAGES[0]}
-            alt="RoomDekho Interior"
-            className="h-full w-full object-cover object-center"
-          />
-        </div>
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          poster={SLIDE_IMAGES[0]}
+          className="h-full w-full object-cover object-center pointer-events-none"
+        >
+          <source src="/videos/hero-bg.mp4" type="video/mp4" />
+        </video>
         {/* Transparent Subtle Vignette Overlay - Keeps video crystal clear & bright */}
-        <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-[0.5px] z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-slate-950/55 backdrop-blur-[0.5px] z-0 pointer-events-none" />
       </div>
 
       {/* 2. Floating Hero Section (Compact & Sleek with Interactive Arrow Hover Shine) */}
