@@ -26,24 +26,50 @@ const chatSlice = createSlice({
         return; // Do NOT append messages from other conversations!
       }
 
-      // Prevent duplicate messages in message list
-      const msgId = msg._id || msg.id;
-      const alreadyExists = state.messages.some(
-        (m) => (msgId && (m._id === msgId || m.id === msgId)) ||
-               (m.sentAt && msg.sentAt && m.sentAt === msg.sentAt && m.text === msg.text)
-      );
-      if (!alreadyExists) {
+      const msgId = String(msg._id || msg.id || "");
+      const msgText = msg.text || msg.body || msg.content || "";
+      const msgTime = new Date(msg.sentAt || msg.created_at || Date.now()).getTime();
+
+      // Check if message already exists by ID or by text + timestamp within 4s
+      const existingIdx = state.messages.findIndex((m) => {
+        const existingId = String(m._id || m.id || "");
+        if (msgId && existingId && msgId === existingId) return true;
+        const existingText = m.text || m.body || m.content || "";
+        const existingTime = new Date(m.sentAt || m.created_at || 0).getTime();
+        return (
+          msgText &&
+          existingText === msgText &&
+          String(m.senderId || m.sender_id || "") === String(msg.senderId || msg.sender_id || "") &&
+          Math.abs(msgTime - existingTime) < 4000
+        );
+      });
+
+      if (existingIdx !== -1) {
+        state.messages[existingIdx] = { ...state.messages[existingIdx], ...msg };
+      } else {
         state.messages.push(msg);
       }
 
-      // Update lastMessage in conversations list
+      // Keep messages sorted chronologically
+      state.messages.sort(
+        (a, b) =>
+          new Date(a.sentAt || a.created_at || 0).getTime() -
+          new Date(b.sentAt || b.created_at || 0).getTime()
+      );
+
+      // Update lastMessage and bump conversation to top
       if (msgConvId) {
-        const targetConv = state.conversations.find(
+        const convIdx = state.conversations.findIndex(
           (c) => String(c._id || c.id) === msgConvId
         );
-        if (targetConv) {
-          targetConv.lastMessage = msg.body || msg.text || targetConv.lastMessage;
-          targetConv.updatedAt = msg.created_at || msg.sentAt || new Date().toISOString();
+        if (convIdx !== -1) {
+          const updatedConv = {
+            ...state.conversations[convIdx],
+            lastMessage: msgText || state.conversations[convIdx].lastMessage,
+            updatedAt: msg.created_at || msg.sentAt || new Date().toISOString(),
+          };
+          state.conversations.splice(convIdx, 1);
+          state.conversations.unshift(updatedConv);
         }
       }
     },

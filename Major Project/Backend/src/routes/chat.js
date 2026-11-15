@@ -138,7 +138,7 @@ r.get("/:id", async (req, res) => {
   );
   if (!rows[0]) return res.status(404).json({ success: false, message: "Conversation not found" });
 
-  const otherUserId = rows[0].user_one === req.user.id ? rows[0].user_two : rows[0].user_one;
+  const otherUserId = Number(rows[0].user_one) === Number(req.user.id) ? rows[0].user_two : rows[0].user_one;
   const otherUserRes = await query("SELECT id, name, email, role, avatar FROM users WHERE id=$1", [otherUserId]);
   const otherUser = otherUserRes.rows[0] || {};
 
@@ -147,7 +147,7 @@ r.get("/:id", async (req, res) => {
      FROM messages m 
      JOIN users u ON u.id = m.sender_id 
      WHERE m.conversation_id = $1 
-     ORDER BY m.created_at ASC`,
+     ORDER BY m.created_at ASC, m.id ASC`,
     [req.params.id]
   );
 
@@ -155,13 +155,17 @@ r.get("/:id", async (req, res) => {
     ...x,
     _id: String(x.id),
     id: String(x.id),
+    conversationId: String(x.conversation_id || req.params.id),
+    conversation_id: String(x.conversation_id || req.params.id),
     text: x.body,
     content: x.body,
     imageUrl: x.image_url,
     sentAt: x.created_at,
     senderId: String(x.sender_id),
+    sender_id: String(x.sender_id),
     sender: {
       _id: String(x.sender_id),
+      id: String(x.sender_id),
       name: x.sender_name,
       avatarUrl: x.sender_avatar,
     },
@@ -208,18 +212,24 @@ r.post("/:id/messages", async (req, res) => {
     [req.params.id, req.user.id, text, imageUrl]
   );
 
+  await query("UPDATE conversations SET updated_at=now() WHERE id=$1", [req.params.id]);
+
   const u = (await query("SELECT name, avatar FROM users WHERE id=$1", [req.user.id])).rows[0] || {};
   const msg = {
     ...rows[0],
     _id: String(rows[0].id),
     id: String(rows[0].id),
+    conversationId: String(req.params.id),
+    conversation_id: String(req.params.id),
     text: rows[0].body,
     content: rows[0].body,
     imageUrl: rows[0].image_url,
     sentAt: rows[0].created_at,
-    senderId: String(rows[0].sender_id),
+    senderId: String(req.user.id),
+    sender_id: String(req.user.id),
     sender: {
-      _id: String(rows[0].sender_id),
+      _id: String(req.user.id),
+      id: String(req.user.id),
       name: u.name,
       avatarUrl: u.avatar,
     },

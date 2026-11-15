@@ -20,15 +20,18 @@ export default function Chat() {
   const { conversationId } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [mobileShowList, setMobileShowList] = useState(!conversationId);
+
+  // Require authentication to access Chat
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/login", { state: { from: { pathname: "/chat" } }, replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const { conversations, active, messages, typingUserId, send } = useChat(conversationId);
 
-  // If we arrived with ?userId=.. or ?ownerId=.. instead of a conversationId,
-  // try to resolve it to an existing conversation. Starting a brand-new
-  // conversation from scratch needs a backend "create conversation"
-  // endpoint (server/src/modules/chat) that isn't wired up yet.
   const targetUserId = searchParams.get("userId") || searchParams.get("ownerId");
   const isSupportAdmin = searchParams.get("support") === "admin";
 
@@ -45,6 +48,8 @@ export default function Chat() {
   }, [conversations, conversationId, targetUserId]);
 
   useEffect(() => {
+    if (!isAuthenticated) return;
+
     if (isSupportAdmin && !conversationId) {
       chatApi
         .createAdminConversation()
@@ -58,7 +63,7 @@ export default function Chat() {
 
     if (targetUserId && !conversationId) {
       if (resolvedConversation) {
-        navigate(`/chat/${resolvedConversation._id}`, { replace: true });
+        navigate(`/chat/${resolvedConversation._id || resolvedConversation.id}`, { replace: true });
       } else {
         chatApi
           .createConversation(targetUserId)
@@ -68,16 +73,16 @@ export default function Chat() {
           })
           .catch(() => {});
       }
-    } else if (!conversationId && conversations.length === 0) {
-      chatApi
-        .createAdminConversation()
-        .then(({ data }) => {
-          const firstId = data?.data?._id || data?.data?.id;
-          if (firstId) navigate(`/chat/${firstId}`, { replace: true });
-        })
-        .catch(() => {});
+    } else if (!conversationId && conversations.length > 0 && window.innerWidth >= 768) {
+      // On desktop, auto-select the first conversation if none selected
+      const firstId = conversations[0]?._id || conversations[0]?.id;
+      if (firstId) {
+        navigate(`/chat/${firstId}`, { replace: true });
+      }
     }
-  }, [resolvedConversation, targetUserId, conversationId, conversations.length, isSupportAdmin]);
+  }, [resolvedConversation, targetUserId, conversationId, conversations, isSupportAdmin, isAuthenticated, navigate]);
+
+  if (!isAuthenticated) return null;
 
   const selectConversation = (id) => {
     navigate(`/chat/${id}`);
@@ -116,7 +121,7 @@ export default function Chat() {
           <ChatWindow
             conversation={active}
             messages={messages}
-            currentUserId={user?.id}
+            currentUserId={user?.id || user?._id}
             typingUserId={typingUserId}
             onSend={send}
           />

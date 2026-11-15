@@ -6,8 +6,8 @@ export default function FloatingChatButton() {
   const location = useLocation();
   const { isAuthenticated } = useAuth();
 
-  // Hide button if already on chat page
-  if (location.pathname.startsWith("/chat")) return null;
+  // Hide button if user is not logged in OR already on chat page
+  if (!isAuthenticated || location.pathname.startsWith("/chat")) return null;
 
   return (
     <div className="fixed bottom-5 right-5 z-40 animate-fade-in">

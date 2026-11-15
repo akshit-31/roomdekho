@@ -78,17 +78,41 @@ io.on("connection",(socket)=>{
     socket.to(`conversation:${conversationId}`).emit("chat:typing",{userId,isTyping});
   });
 
-  socket.on("chat:message",async(payload)=>{
+  socket.on("chat:message", async (payload) => {
     try {
       const convId = payload.conversationId;
       const text = payload.message?.text || payload.text || payload.body;
       const senderId = authUserId || payload.senderId || payload.userId;
+      if (!senderId) {
+        console.warn("Socket message rejected: unknown sender");
+        return;
+      }
       if (convId && text) {
         const { rows } = await query(
           "INSERT INTO messages(conversation_id, sender_id, body) VALUES($1, $2, $3) RETURNING *",
-          [convId, senderId || 1, text]
+          [convId, senderId, text]
         );
-        const msg = { ...rows[0], _id: String(rows[0].id), text: rows[0].body };
+        await query("UPDATE conversations SET updated_at=now() WHERE id=$1", [convId]);
+        const u = (await query("SELECT name, avatar FROM users WHERE id=$1", [senderId])).rows[0] || {};
+        const msg = {
+          ...rows[0],
+          _id: String(rows[0].id),
+          id: String(rows[0].id),
+          conversationId: String(convId),
+          conversation_id: String(convId),
+          text: rows[0].body,
+          content: rows[0].body,
+          imageUrl: rows[0].image_url,
+          sentAt: rows[0].created_at,
+          senderId: String(senderId),
+          sender_id: String(senderId),
+          sender: {
+            _id: String(senderId),
+            id: String(senderId),
+            name: u.name,
+            avatarUrl: u.avatar,
+          },
+        };
         io.to(`conversation:${convId}`).emit("chat:message", msg);
         io.to(`conversation:${convId}`).emit("message:new", msg);
       }

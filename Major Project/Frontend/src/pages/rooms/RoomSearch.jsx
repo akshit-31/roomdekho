@@ -13,8 +13,10 @@ import Modal from "../../components/common/Modal";
 import Button from "../../components/common/Button";
 import { useSearch } from "../../hooks/useSearch";
 import { usePagination } from "../../hooks/usePagination";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function RoomSearch() {
+  const { isAuthenticated } = useAuth();
   const [params, setParams] = useSearchParams();
   const { filters, results, status, search, setFilters, resetFilters } = useSearch();
   const [view, setView] = useState("posts"); // posts | list | map
@@ -142,14 +144,16 @@ export default function RoomSearch() {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          {/* Quick Chat Link */}
-          <Link
-            to="/chat"
-            className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-3 py-2 text-xs font-bold text-white shadow-sm hover:from-amber-600 hover:to-orange-600 transition-all active:scale-95 shrink-0"
-          >
-            <MessageCircle size={15} />
-            <span>Direct Chats</span>
-          </Link>
+          {/* Quick Chat Link - Shown ONLY when Authenticated */}
+          {isAuthenticated && (
+            <Link
+              to="/chat"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 px-3 py-2 text-xs font-bold text-white shadow-sm hover:from-amber-600 hover:to-orange-600 transition-all active:scale-95 shrink-0"
+            >
+              <MessageCircle size={15} />
+              <span>Direct Chats</span>
+            </Link>
+          )}
 
           {/* Mobile Filter Button */}
           <Button

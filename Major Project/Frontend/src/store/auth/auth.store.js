@@ -33,16 +33,41 @@ export const checkSession = createAsyncThunk("auth/checkSession", async (_, { re
   }
 });
 
+const savedToken = typeof window !== "undefined" ? localStorage.getItem("accessToken") || null : null;
+let savedUser = null;
+try {
+  savedUser = typeof window !== "undefined" ? JSON.parse(localStorage.getItem("user") || "null") : null;
+} catch {}
+
+const initialState = {
+  user: savedUser,
+  accessToken: savedToken,
+  status: savedToken ? "succeeded" : "idle",
+  error: null,
+};
+
 const authSlice = createSlice({
   name: "auth",
-  initialState: { user: null, accessToken: null, status: "idle", error: null },
+  initialState,
   reducers: {
     setAccessToken: (state, action) => {
       state.accessToken = action.payload;
+      try {
+        if (action.payload) {
+          localStorage.setItem("accessToken", action.payload);
+        } else {
+          localStorage.removeItem("accessToken");
+        }
+      } catch {}
     },
     logout: (state) => {
       state.user = null;
       state.accessToken = null;
+      state.status = "idle";
+      try {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("user");
+      } catch {}
     },
   },
   extraReducers: (builder) => {
@@ -52,12 +77,20 @@ const authSlice = createSlice({
         state.status = "succeeded";
         state.user = action.payload.user;
         state.accessToken = action.payload.accessToken;
+        try {
+          localStorage.setItem("accessToken", action.payload.accessToken);
+          localStorage.setItem("user", JSON.stringify(action.payload.user));
+        } catch {}
       })
       .addCase(register.fulfilled, (state, action) => {
         state.status = "succeeded";
         if (action.payload?.accessToken) {
           state.user = action.payload.user;
           state.accessToken = action.payload.accessToken;
+          try {
+            localStorage.setItem("accessToken", action.payload.accessToken);
+            localStorage.setItem("user", JSON.stringify(action.payload.user));
+          } catch {}
         }
       })
       .addCase(register.rejected, (state, action) => { state.status = "failed"; state.error = action.payload; })
@@ -67,29 +100,51 @@ const authSlice = createSlice({
         state.accessToken = null;
         state.status = "idle";
         state.error = null;
+        try {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("user");
+        } catch {}
       })
       .addCase(logoutAsync.rejected, (state) => {
         state.user = null;
         state.accessToken = null;
         state.status = "idle";
+        try {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("user");
+        } catch {}
       })
       .addCase(checkSession.fulfilled, (state, action) => {
         if (action.payload?.accessToken) {
           state.accessToken = action.payload.accessToken;
           if (action.payload.user) {
             state.user = action.payload.user;
+            try {
+              localStorage.setItem("user", JSON.stringify(action.payload.user));
+            } catch {}
           }
+          try {
+            localStorage.setItem("accessToken", action.payload.accessToken);
+          } catch {}
           state.status = "succeeded";
         } else {
           state.user = null;
           state.accessToken = null;
           state.status = "idle";
+          try {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("user");
+          } catch {}
         }
       })
       .addCase(checkSession.rejected, (state) => {
         state.user = null;
         state.accessToken = null;
         state.status = "idle";
+        try {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("user");
+        } catch {}
       });
   },
 });

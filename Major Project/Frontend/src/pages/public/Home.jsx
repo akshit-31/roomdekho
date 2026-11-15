@@ -221,14 +221,16 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Quick Chat Link */}
-          <Link
-            to="/chat"
-            className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2.5 text-xs font-bold text-white shadow-md hover:from-amber-600 hover:to-orange-600 transition-all active:scale-95 shrink-0 self-start md:self-auto"
-          >
-            <MessageCircle size={16} />
-            <span>Open Direct Chats</span>
-          </Link>
+          {/* Quick Chat Link - Shown ONLY when Authenticated */}
+          {isAuthenticated && (
+            <Link
+              to="/chat"
+              className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-2.5 text-xs font-bold text-white shadow-md hover:from-amber-600 hover:to-orange-600 transition-all active:scale-95 shrink-0 self-start md:self-auto"
+            >
+              <MessageCircle size={16} />
+              <span>Open Direct Chats</span>
+            </Link>
+          )}
         </div>
 
         {/* City Filter Chips */}

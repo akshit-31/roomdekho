@@ -1,9 +1,28 @@
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Sparkles, ShieldCheck } from "lucide-react";
 import customLogo from "../../image copy 3.png";
 import LoginForm from "../../components/auth/LoginForm";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Login() {
+  const { isAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
+
+  // If already logged in, redirect immediately away from login screen
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      if (user.role === "admin") {
+        navigate("/admin", { replace: true });
+      } else if (user.role === "owner") {
+        navigate("/owner", { replace: true });
+      } else {
+        navigate("/", { replace: true });
+      }
+    }
+  }, [isAuthenticated, user, navigate]);
+
+  if (isAuthenticated) return null;
   return (
     <div className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-hidden">
       {/* Glow Spheres */}

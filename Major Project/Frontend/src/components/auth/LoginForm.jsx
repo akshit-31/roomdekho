@@ -98,7 +98,7 @@ export default function LoginForm({ onSuccess, isModal = false }) {
         } else if (userRole === "owner") {
           navigate("/owner", { replace: true });
         } else {
-          const redirectTo = location.state?.from?.pathname || "/profile";
+          const redirectTo = location.state?.from?.pathname || "/";
           navigate(redirectTo, { replace: true });
         }
       }

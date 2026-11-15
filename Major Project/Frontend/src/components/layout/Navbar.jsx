@@ -58,56 +58,56 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Glassmorphism Slide-Out Navigation Drawer */}
-      <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 sm:w-80 bg-slate-900/80 backdrop-blur-xl border-r border-white/10 p-6 flex flex-col justify-between shadow-2xl transition-all duration-300 ease-in-out text-white ${
-          drawerOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0 pointer-events-none"
-        }`}
-      >
-        <div>
-          {/* Drawer Header with Glass effect */}
-          <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
-            <Link to="/" onClick={() => setDrawerOpen(false)} className="flex items-center gap-2.5">
-              <img src={customLogo} alt="RoomDekho Logo" className="h-9 w-9 object-contain drop-shadow" />
-              <span className="text-xl font-extrabold tracking-tight text-white drop-shadow-sm">
-                RoomDekho
-              </span>
-            </Link>
-            <button
-              type="button"
-              onClick={() => setDrawerOpen(false)}
-              className="rounded-xl p-2 text-white/70 hover:bg-white/10 hover:text-white transition-all backdrop-blur-sm"
-              aria-label="Close menu"
-            >
-              <X size={20} />
-            </button>
+      {/* Glassmorphism Slide-Out Navigation Drawer - Visible ONLY when Authenticated */}
+      {isAuthenticated && (
+        <aside
+          className={`fixed inset-y-0 left-0 z-50 w-72 sm:w-80 bg-slate-900/80 backdrop-blur-xl border-r border-white/10 p-6 flex flex-col justify-between shadow-2xl transition-all duration-300 ease-in-out text-white ${
+            drawerOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0 pointer-events-none"
+          }`}
+        >
+          <div>
+            {/* Drawer Header with Glass effect */}
+            <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
+              <Link to="/" onClick={() => setDrawerOpen(false)} className="flex items-center gap-2.5">
+                <img src={customLogo} alt="RoomDekho Logo" className="h-9 w-9 object-contain drop-shadow" />
+                <span className="text-xl font-extrabold tracking-tight text-white drop-shadow-sm">
+                  RoomDekho
+                </span>
+              </Link>
+              <button
+                type="button"
+                onClick={() => setDrawerOpen(false)}
+                className="rounded-xl p-2 text-white/70 hover:bg-white/10 hover:text-white transition-all backdrop-blur-sm"
+                aria-label="Close menu"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <p className="text-[11px] font-bold uppercase tracking-wider text-amber-400/90 mb-3 px-2">Navigation</p>
+            <nav className="space-y-1.5">
+              {navLinks.map(({ to, label, icon: Icon, end }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  end={end}
+                  onClick={() => setDrawerOpen(false)}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold transition-all ${
+                      isActive
+                        ? "bg-gradient-to-r from-amber-500/90 to-orange-500/90 text-white shadow-lg shadow-amber-500/20 backdrop-blur-md"
+                        : "text-white/80 hover:bg-white/10 hover:text-white"
+                    }`
+                  }
+                >
+                  <Icon size={18} className="shrink-0" />
+                  <span>{label}</span>
+                </NavLink>
+              ))}
+            </nav>
           </div>
 
-          <p className="text-[11px] font-bold uppercase tracking-wider text-amber-400/90 mb-3 px-2">Navigation</p>
-          <nav className="space-y-1.5">
-            {navLinks.map(({ to, label, icon: Icon, end }) => (
-              <NavLink
-                key={to}
-                to={to}
-                end={end}
-                onClick={() => setDrawerOpen(false)}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 rounded-2xl px-4 py-3 text-xs sm:text-sm font-semibold transition-all ${
-                    isActive
-                      ? "bg-gradient-to-r from-amber-500/90 to-orange-500/90 text-white shadow-lg shadow-amber-500/20 backdrop-blur-md"
-                      : "text-white/80 hover:bg-white/10 hover:text-white"
-                  }`
-                }
-              >
-                <Icon size={18} className="shrink-0" />
-                <span>{label}</span>
-              </NavLink>
-            ))}
-          </nav>
-        </div>
-
-        <div className="pt-6 border-t border-white/10">
-          {isAuthenticated ? (
+          <div className="pt-6 border-t border-white/10">
             <button
               type="button"
               onClick={handleLogout}
@@ -116,21 +116,12 @@ export default function Navbar() {
               <LogOut size={16} />
               <span>Logout</span>
             </button>
-          ) : (
-            <Link
-              to="/login"
-              onClick={() => setDrawerOpen(false)}
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 px-4 py-3 text-xs sm:text-sm font-bold text-white shadow-lg shadow-amber-500/30 hover:brightness-110 transition-all"
-            >
-              <User size={16} />
-              <span>Login / Register</span>
-            </Link>
-          )}
-        </div>
-      </aside>
+          </div>
+        </aside>
+      )}
 
       {/* Glassmorphism Backdrop (Click to close) */}
-      {drawerOpen && (
+      {isAuthenticated && drawerOpen && (
         <div
           onClick={() => setDrawerOpen(false)}
           className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300"
@@ -141,15 +132,17 @@ export default function Navbar() {
       <header className="sticky top-0 z-30 bg-white/95 border-b border-gray-100 backdrop-blur-md">
         <div className="mx-auto flex h-16 sm:h-20 max-w-7xl items-center justify-between px-3 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 sm:gap-3.5">
-            {/* Hamburger Button (Instant Glass Drawer Trigger) */}
-            <button
-              type="button"
-              onClick={() => setDrawerOpen(true)}
-              className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm active:scale-95 shrink-0"
-              aria-label="Open Navigation Drawer"
-            >
-              <Menu size={18} />
-            </button>
+            {/* Hamburger Button - Shown ONLY when Authenticated */}
+            {isAuthenticated && (
+              <button
+                type="button"
+                onClick={() => setDrawerOpen(true)}
+                className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all shadow-sm active:scale-95 shrink-0"
+                aria-label="Open Navigation Drawer"
+              >
+                <Menu size={18} />
+              </button>
+            )}
 
             {/* Brand Logo */}
             <Link to="/" className="flex items-center gap-1.5 sm:gap-2 text-decoration-none">
@@ -162,18 +155,20 @@ export default function Navbar() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-2 sm:gap-3.5 shrink-0">
-            {/* Direct Chat Quick Action Button */}
-            <Link
-              to="/chat"
-              className="relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-amber-50 hover:text-amber-600 hover:border-amber-300 transition-all shadow-sm active:scale-95"
-              title="Direct Messages & Host Chats"
-              aria-label="Direct Messages"
-            >
-              <MessageCircle size={18} />
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-[9px] font-black text-white shadow ring-2 ring-white">
-                💬
-              </span>
-            </Link>
+            {/* Direct Chat Quick Action Button - Shown ONLY when Authenticated */}
+            {isAuthenticated && (
+              <Link
+                to="/chat"
+                className="relative flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-amber-50 hover:text-amber-600 hover:border-amber-300 transition-all shadow-sm active:scale-95"
+                title="Direct Messages & Host Chats"
+                aria-label="Direct Messages"
+              >
+                <MessageCircle size={18} />
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-[9px] font-black text-white shadow ring-2 ring-white">
+                  💬
+                </span>
+              </Link>
+            )}
 
             {isAuthenticated ? (
               <div className="relative">

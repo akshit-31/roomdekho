@@ -8,14 +8,17 @@ export default function ConversationList({ conversations = [], activeId, onSelec
 
   return (
     <div className="space-y-1">
-      {conversations.map((c) => (
-        <ConversationItem
-          key={c._id}
-          conversation={c}
-          active={c._id === activeId}
-          onClick={() => onSelect(c._id)}
-        />
-      ))}
+      {conversations.map((c) => {
+        const cId = String(c._id || c.id);
+        return (
+          <ConversationItem
+            key={cId}
+            conversation={c}
+            active={cId === String(activeId)}
+            onClick={() => onSelect(cId)}
+          />
+        );
+      })}
     </div>
   );
 }

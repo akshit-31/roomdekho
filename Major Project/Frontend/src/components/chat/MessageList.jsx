@@ -19,11 +19,15 @@ export default function MessageList({ messages = [], currentUserId }) {
 
   return (
     <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
-      {messages.map((m) => (
+      {messages.map((m, idx) => (
         <MessageBubble
-          key={m._id || m.sentAt}
+          key={m._id || m.id || `${m.sentAt || ""}_${idx}`}
           message={m}
-          isOwn={String(m.senderId || m.sender?._id) === String(currentUserId)}
+          isOwn={
+            Boolean(currentUserId) &&
+            String(m.senderId || m.sender_id || m.sender?._id || m.sender?.id || "") ===
+              String(currentUserId)
+          }
         />
       ))}
       <div ref={bottomRef} />
