@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Search, MapPin, Building2, ShieldCheck, Zap, HeartHandshake, ArrowRight, MessageCircle, Sparkles } from "lucide-react";
+import { Search, MapPin, Building2, ShieldCheck, Zap, HeartHandshake, ArrowRight, MessageCircle, Sparkles } from "lucide-react";
 import AuthModal from "../../components/auth/AuthModal";
 import { useAuth } from "../../hooks/useAuth";
 import VendorDashboard from "../vendor/VendorDashboard";
@@ -42,7 +42,6 @@ const FEATURES = [
 export default function Home() {
   const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState("Delhi");
   const [selectedType, setSelectedType] = useState("");
@@ -73,14 +72,6 @@ export default function Home() {
     }
   }, [isAuthenticated, user?.role, navigate]);
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % SLIDE_IMAGES.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + SLIDE_IMAGES.length) % SLIDE_IMAGES.length);
-  };
-
   // Auto-open Glassmorphism Login modal on initial screen load if user is not authenticated
   useEffect(() => {
     if (!isAuthenticated) {
@@ -91,14 +82,6 @@ export default function Home() {
     }
   }, [isAuthenticated]);
 
-  // Auto carousel slide timer
-  useEffect(() => {
-    const timer = setInterval(() => {
-      nextSlide();
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
-
   const handleSearchClick = () => {
     const query = new URLSearchParams();
     if (selectedCity) query.set("city", selectedCity);
@@ -108,58 +91,38 @@ export default function Home() {
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] flex-col bg-slate-50 p-2 sm:p-4 lg:p-6 space-y-8 sm:space-y-12 overflow-x-hidden w-full max-w-full">
-      {/* 1. Hero Section Container */}
-      <section className="relative mx-auto flex min-h-[70vh] sm:min-h-[85vh] w-full max-w-7xl flex-col justify-center overflow-hidden rounded-2xl sm:rounded-[2.5rem] bg-[#1a293e] text-white shadow-2xl">
-        {/* Background Image Carousel */}
-        {SLIDE_IMAGES.map((img, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 z-0 transition-opacity duration-1000 ease-in-out ${
-              index === currentSlide ? "opacity-55 scale-100" : "opacity-0 scale-105 pointer-events-none"
-            }`}
-          >
+      {/* 1. Hero Section Container with Full Background Video */}
+      <section className="relative mx-auto flex min-h-[70vh] sm:min-h-[85vh] w-full max-w-7xl flex-col justify-center overflow-hidden rounded-2xl sm:rounded-[2.5rem] bg-[#0b1322] text-white shadow-2xl">
+        {/* Full Cinematic YouTube Video Background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+          <iframe
+            className="absolute top-1/2 left-1/2 w-[350%] h-[350%] sm:w-[160%] sm:h-[160%] -translate-x-1/2 -translate-y-1/2 object-cover"
+            src="https://www.youtube-nocookie.com/embed/B9MRxkpzZH8?autoplay=1&mute=1&loop=1&playlist=B9MRxkpzZH8&controls=0&showinfo=0&rel=0&iv_load_policy=3&disablekb=1&modestbranding=1&playsinline=1"
+            title="RoomDekho Cinematic Video Tour"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+          {/* High-res fallback poster */}
+          <div className="absolute inset-0 -z-10">
             <img
-              src={img}
-              alt={`Slide ${index + 1}`}
+              src={SLIDE_IMAGES[0]}
+              alt="RoomDekho Interior"
               className="h-full w-full object-cover object-center"
             />
           </div>
-        ))}
+          {/* Cinematic Dark Gradient Overlay for perfect text contrast & readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0b1322] via-[#0b1322]/70 to-[#0b1322]/50 backdrop-blur-[0.5px]" />
+          <div className="absolute inset-0 bg-slate-950/30" />
+        </div>
 
-        {/* Subtle Gradient Overlay */}
-        <div className="absolute inset-0 z-1 bg-gradient-to-t from-[#0f172a]/80 via-[#0f172a]/40 to-[#0f172a]/30" />
-
-        {/* Carousel Arrow Controls - Compact & Non-overlapping on mobile */}
-        <button
-          type="button"
-          onClick={prevSlide}
-          className="absolute left-2 sm:left-6 top-1/2 z-20 flex h-8 w-8 sm:h-12 sm:w-12 -translate-y-1/2 items-center justify-center rounded-full bg-slate-900/60 text-white backdrop-blur-md transition-all hover:scale-110 active:scale-95 border border-white/20 shrink-0"
-          aria-label="Previous slide"
-        >
-          <ChevronLeft size={18} className="sm:h-6 sm:w-6" />
-        </button>
-
-        <button
-          type="button"
-          onClick={nextSlide}
-          className="absolute right-2 sm:right-6 top-1/2 z-20 flex h-8 w-8 sm:h-12 sm:w-12 -translate-y-1/2 items-center justify-center rounded-full bg-slate-900/60 text-white backdrop-blur-md transition-all hover:scale-110 active:scale-95 border border-white/20 shrink-0"
-          aria-label="Next slide"
-        >
-          <ChevronRight size={18} className="sm:h-6 sm:w-6" />
-        </button>
-
-        {/* Slide Indicators Dots */}
-        <div className="absolute top-3 right-3 sm:top-6 sm:right-8 z-20 flex items-center gap-1.5 sm:gap-2 rounded-full bg-black/40 px-2.5 py-1 sm:px-4 sm:py-2 backdrop-blur-md border border-white/10">
-          {SLIDE_IMAGES.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentSlide(idx)}
-              className={`h-2 sm:h-2.5 rounded-full transition-all ${
-                idx === currentSlide ? "w-5 sm:w-7 bg-amber-500" : "w-2 sm:w-2.5 bg-white/50 hover:bg-white"
-              }`}
-              aria-label={`Go to slide ${idx + 1}`}
-            />
-          ))}
+        {/* Live Tour Indicator Badge */}
+        <div className="absolute top-4 right-4 sm:top-6 sm:right-8 z-20 flex items-center gap-2 rounded-full bg-black/60 px-3 py-1.5 backdrop-blur-md border border-white/20 text-xs font-semibold text-white shadow-lg">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+          </span>
+          <span>Live 360° Room Tour</span>
         </div>
 
         {/* Hero Content */}
