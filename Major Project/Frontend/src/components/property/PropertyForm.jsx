@@ -72,10 +72,13 @@ export default function PropertyForm({ initialValues, onSubmit, submitLabel = "S
 
         // Reverse geocode to fill city & locality
         try {
-          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=en`);
           const geo = await res.json();
-          const city = geo.address?.city || geo.address?.state_district || geo.address?.town || geo.address?.suburb;
-          const locality = geo.address?.neighbourhood || geo.address?.suburb || geo.address?.residential;
+          let city = geo.address?.city || geo.address?.town || geo.address?.municipality || geo.address?.district || geo.address?.state_district || geo.address?.county || geo.address?.suburb;
+          if (typeof city === "string") {
+            city = city.replace(/\s*(District|Division)\s*/gi, "").trim();
+          }
+          const locality = geo.address?.neighbourhood || geo.address?.suburb || geo.address?.residential || geo.address?.road;
           const pincode = geo.address?.postcode;
           if (city) setValue("address.city", city);
           if (locality) setValue("address.locality", locality);

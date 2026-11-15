@@ -20,6 +20,7 @@ import { userApi } from "../../services/api/user.api";
 import { fetchMe } from "../../store/user/user.store";
 
 const INDIAN_CITIES = [
+  "Bareilly",
   "Delhi",
   "Noida",
   "Gurgaon",
@@ -28,6 +29,7 @@ const INDIAN_CITIES = [
   "Mumbai",
   "Pune",
   "Hyderabad",
+  "Lucknow",
   "Chandigarh",
   "Kolkata"
 ];
@@ -56,6 +58,17 @@ export default function CompleteProfileModal({ isOpen, user }) {
   const [locationError, setLocationError] = useState(null);
   const [serverError, setServerError] = useState(null);
 
+  const initialCity = user?.preferredLocations?.[0] || user?.property_city || "Bareilly";
+  const [cityList, setCityList] = useState(() => {
+    if (initialCity && !INDIAN_CITIES.includes(initialCity)) {
+      return [initialCity, ...INDIAN_CITIES];
+    }
+    return INDIAN_CITIES;
+  });
+  const [isCustomCity, setIsCustomCity] = useState(() => {
+    return Boolean(initialCity && !INDIAN_CITIES.includes(initialCity));
+  });
+
   const {
     register,
     handleSubmit,
@@ -68,7 +81,7 @@ export default function CompleteProfileModal({ isOpen, user }) {
       age: user?.age || 23,
       occupation: user?.occupation || "Working Professional",
       bio: user?.bio || "",
-      city: user?.preferredLocations?.[0] || user?.property_city || "Delhi",
+      city: initialCity,
       locality: user?.preferredLocations?.[1] || user?.property_locality || "",
       budgetMin: user?.budgetMin || 6000,
       budgetMax: user?.budgetMax || 16000,
@@ -80,15 +93,15 @@ export default function CompleteProfileModal({ isOpen, user }) {
     },
   });
 
-  const city = watch("city");
+  const cityValue = watch("city");
 
-  // Geolocation detection handler
+  // Geolocation detection handler with English language geocoding
   const handleDetectLocation = () => {
     setLocationError(null);
     setLocationSuccess(null);
 
     if (!navigator.geolocation) {
-      setLocationError("Geolocation is not supported by your browser. Please select your city manually.");
+      setLocationError("Geolocation is not supported by your browser. Please select or type your city.");
       return;
     }
 
@@ -97,29 +110,45 @@ export default function CompleteProfileModal({ isOpen, user }) {
       async (position) => {
         const { latitude, longitude } = position.coords;
         try {
-          // Attempt reverse geocoding via OpenStreetMap Nominatim
+          // Reverse geocoding via OpenStreetMap Nominatim with English accept-language
           const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&accept-language=en`
           );
           const data = await res.json();
-          const detectedCity =
+          let detectedCity =
             data.address?.city ||
-            data.address?.state_district ||
             data.address?.town ||
+            data.address?.municipality ||
+            data.address?.district ||
+            data.address?.state_district ||
             data.address?.county ||
-            "Delhi";
+            "Bareilly";
+
+          // Clean up any "District" or "Division" suffix
+          if (typeof detectedCity === "string") {
+            detectedCity = detectedCity.replace(/\s*(District|Division)\s*/gi, "").trim();
+          }
+
+          if (!detectedCity) detectedCity = "Bareilly";
+
           const detectedLocality =
             data.address?.suburb ||
             data.address?.neighbourhood ||
+            data.address?.residential ||
             data.address?.road ||
             "";
 
-          setValue("city", detectedCity);
-          if (detectedLocality) setValue("locality", detectedLocality);
-          setLocationSuccess(`Location detected: ${detectedLocality ? detectedLocality + ", " : ""}${detectedCity}`);
+          // Add to city list if not already present
+          setCityList((prev) => (prev.includes(detectedCity) ? prev : [detectedCity, ...prev]));
+          setValue("city", detectedCity, { shouldValidate: true });
+          if (detectedLocality) setValue("locality", detectedLocality, { shouldValidate: true });
+
+          setLocationSuccess(
+            `Location auto-detected: ${detectedLocality ? detectedLocality + ", " : ""}${detectedCity}`
+          );
         } catch {
           // Fallback
-          setLocationSuccess(`Device GPS coordinates locked (${latitude.toFixed(2)}, ${longitude.toFixed(2)})`);
+          setLocationSuccess(`GPS coordinates locked (${latitude.toFixed(2)}, ${longitude.toFixed(2)})`);
         } finally {
           setDetectingLocation(false);
         }
@@ -127,14 +156,28 @@ export default function CompleteProfileModal({ isOpen, user }) {
       (err) => {
         setDetectingLocation(false);
         if (err.code === 1) {
-          setLocationError("Location permission denied. Please select your city and locality manually.");
+          setLocationError("Location permission denied. Please select or type your city manually.");
         } else {
-          setLocationError("Unable to retrieve device location. Please select your city manually.");
+          setLocationError("Unable to retrieve device location. Please select or type your city manually.");
         }
       },
       { timeout: 10000, enableHighAccuracy: true }
     );
   };
+
+  // Try auto-detecting on modal open if browser permission is already granted
+  useEffect(() => {
+    if (isOpen && navigator.geolocation && navigator.permissions) {
+      navigator.permissions
+        .query({ name: "geolocation" })
+        .then((perm) => {
+          if (perm.state === "granted" && !locationSuccess) {
+            handleDetectLocation();
+          }
+        })
+        .catch(() => {});
+    }
+  }, [isOpen]);
 
   const onSubmit = async (data) => {
     setServerError(null);
@@ -233,22 +276,66 @@ export default function CompleteProfileModal({ isOpen, user }) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
               <div>
-                <label className="mb-1 block text-xs font-medium text-slate-200">Preferred City *</label>
-                <select
-                  className="w-full rounded-xl border border-white/20 bg-slate-800 px-3 py-2 text-xs text-white focus:border-amber-400 focus:outline-none"
-                  {...register("city", { required: "City is required" })}
-                >
-                  {INDIAN_CITIES.map((c) => (
-                    <option key={c} value={c} className="bg-slate-900 text-white">
-                      {c}
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-medium text-slate-200">Preferred City *</label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!isCustomCity) {
+                        setIsCustomCity(true);
+                      } else {
+                        setIsCustomCity(false);
+                        const current = watch("city");
+                        if (!cityList.includes(current)) {
+                          setValue("city", cityList[0] || "Bareilly", { shouldValidate: true });
+                        }
+                      }
+                    }}
+                    className="text-[11px] font-semibold text-amber-300 hover:text-amber-200 underline transition-all"
+                  >
+                    {isCustomCity ? "📋 Select from list" : "✍️ Type manually"}
+                  </button>
+                </div>
+
+                {isCustomCity ? (
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Type your city (e.g. Bareilly, Lucknow)..."
+                      className="w-full rounded-xl border border-amber-400/60 bg-slate-800 px-3 py-2 text-xs text-white placeholder-slate-400 focus:border-amber-400 focus:outline-none ring-1 ring-amber-400/30"
+                      {...register("city", { required: "City is required" })}
+                    />
+                  </div>
+                ) : (
+                  <select
+                    className="w-full rounded-xl border border-white/20 bg-slate-800 px-3 py-2 text-xs text-white focus:border-amber-400 focus:outline-none"
+                    value={cityList.includes(watch("city")) ? watch("city") : "__OTHER__"}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === "__OTHER__") {
+                        setIsCustomCity(true);
+                        setValue("city", "", { shouldValidate: true });
+                      } else {
+                        setValue("city", val, { shouldValidate: true });
+                      }
+                    }}
+                  >
+                    {cityList.map((c) => (
+                      <option key={c} value={c} className="bg-slate-900 text-white">
+                        {c}
+                      </option>
+                    ))}
+                    <option value="__OTHER__" className="bg-slate-900 text-amber-300 font-semibold">
+                      ➕ Other (Type city manually)...
                     </option>
-                  ))}
-                </select>
+                  </select>
+                )}
+                {errors.city && <p className="text-[11px] text-red-400 mt-1">{errors.city.message}</p>}
               </div>
 
               <Input
                 label="Locality / Area *"
-                placeholder="e.g. Karol Bagh / Sector 62 / Koramangala"
+                placeholder="e.g. Karol Bagh / Sector 62 / Civil Lines"
                 error={errors.locality?.message}
                 {...register("locality", { required: "Locality is required" })}
               />
