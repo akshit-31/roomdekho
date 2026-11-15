@@ -131,9 +131,9 @@ export default function Navbar() {
         />
       )}
 
-      {/* Top Header Navbar - Seamless Dark Glassmorphism on Home, Login & Register */}
-      <header className={`sticky top-0 z-40 transition-all duration-300 ${isDarkThemePage ? "bg-slate-950/60 backdrop-blur-xl border-b border-white/10 text-white shadow-2xl" : "bg-white/95 border-b border-gray-100 backdrop-blur-md text-slate-900 shadow-sm"}`}>
-        <div className="mx-auto flex h-16 sm:h-20 max-w-7xl items-center justify-between px-3 sm:px-6 lg:px-8">
+      {/* Top Header Navbar - Full-Width Edge-to-Edge with Seamless Dark Glassmorphism */}
+      <header className={`sticky top-0 z-40 transition-all duration-300 w-full ${isDarkThemePage ? "bg-slate-950/60 backdrop-blur-xl border-b border-white/10 text-white shadow-2xl" : "bg-white/95 border-b border-gray-100 backdrop-blur-md text-slate-900 shadow-sm"}`}>
+        <div className="w-full flex h-16 sm:h-20 items-center justify-between px-4 sm:px-8 lg:px-12">
           <div className="flex items-center gap-2 sm:gap-3.5">
             {/* Hamburger Button - Shown ONLY when Authenticated */}
             {isAuthenticated && (

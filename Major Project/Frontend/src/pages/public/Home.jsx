@@ -102,25 +102,18 @@ export default function Home() {
           playsInline
           preload="auto"
           poster={SLIDE_IMAGES[0]}
-          className="h-full w-full object-cover object-center pointer-events-none scale-105"
+          className="h-full w-full object-cover object-bottom pointer-events-none scale-110 -translate-y-4 sm:-translate-y-6"
         >
           <source src="/videos/hero-bg.mp4" type="video/mp4" />
         </video>
         {/* Transparent Subtle Vignette Overlay - Keeps video crystal clear & bright */}
-        <div className="absolute inset-0 bg-slate-950/55 backdrop-blur-[0.5px] z-0 pointer-events-none" />
+        <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-[0.5px] z-0 pointer-events-none" />
+        {/* Bottom Gradient Mask - Permanently hides any bottom video watermarks/addresses */}
+        <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent z-0 pointer-events-none" />
       </div>
 
       {/* 2. Floating Hero Section (Full Viewport, Large Bold Typography, Covers Video Watermark) */}
-      <section className="relative z-10 w-full min-h-[calc(100vh-4.5rem)] flex flex-col justify-center items-center text-center px-4 pt-8 pb-12">
-        {/* Live Tour Indicator Badge */}
-        <div className="absolute top-4 right-4 sm:top-6 sm:right-8 z-20 flex items-center gap-2 rounded-full bg-black/60 px-4 py-2 backdrop-blur-md border border-white/20 text-xs sm:text-sm font-bold text-white shadow-2xl">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
-          </span>
-          <span>Live 360° Room Tour</span>
-        </div>
-
+      <section className="relative z-10 w-full min-h-[calc(100vh-4.5rem)] flex flex-col justify-center items-center text-center px-4 pt-6 pb-10">
         {/* Top Floating Badge with Hover Glow */}
         <div className="group cursor-pointer inline-flex items-center gap-2.5 rounded-full border border-amber-400/60 bg-black/70 px-6 py-2 text-xs sm:text-sm md:text-base font-bold text-amber-300 backdrop-blur-md mb-6 sm:mb-8 shadow-2xl transition-all duration-300 hover:scale-105 hover:border-amber-300 hover:shadow-[0_0_25px_rgba(251,191,36,0.6)]">
           <Sparkles size={18} className="text-amber-400 group-hover:rotate-12 transition-transform duration-300" />
