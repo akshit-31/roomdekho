@@ -3,46 +3,45 @@ import { useNavigate } from "react-router-dom";
 import {
   MessageSquare,
   ShieldCheck,
-  Headphones,
-  HelpCircle,
-  FileQuestion,
   CheckCircle2,
   Clock,
   Sparkles,
   ArrowRight,
-  ChevronDown,
-  ChevronUp,
-  Building2,
-  AlertCircle
+  AlertCircle,
+  Info,
+  HelpCircle
 } from "lucide-react";
 import PageContainer from "../../components/layout/PageContainer";
 import Button from "../../components/common/Button";
 import { chatApi } from "../../services/api/chat.api";
 import { useAuth } from "../../hooks/useAuth";
 
-const FAQS = [
+const INSTRUCTIONS = [
   {
-    q: "How does the Room Owner verification & listing approval work?",
-    a: "Once an owner submits their government ID proof (Aadhaar/PAN/Voter ID) and property details, our Super Admin verifies the credentials. Approved listings get the official 'Verified Owner' trust badge instantly."
+    title: "1. Listing Approval & Updates",
+    desc: "Naye room post karne ke baad ya price/photos update karne ke baad Admin ko direct message karein for fast-track approval."
   },
   {
-    q: "How can I directly chat with Room Seekers or Roommates?",
-    a: "Seekers can click 'Message Owner' on any room details page to start a direct, Instagram-style real-time chat. Owners can see all incoming seeker inquiries in their 'Seeker Chats' tab."
+    title: "2. KYC & Verified Trust Badge",
+    desc: "Aap apna government ID proof (Aadhaar / PAN / Voter ID) Admin chat mein share karke 'Verified Host' badge pa sakte hain."
   },
   {
-    q: "What should I do if a seeker or owner is unresponsive?",
-    a: "You can message the Super Admin directly via this Help Desk. Admin will check the user's activity status or assist you in finding alternative verified listings."
+    title: "3. Direct 1-on-1 Realtime Chat",
+    desc: "'Chat to Admin' button par click karte hi aapke Messages mein Admin ke sath direct private chat open ho jayegi."
   },
   {
-    q: "Is there any brokerage or hidden fee on RoomDekho?",
-    a: "No! RoomDekho is 100% direct owner-to-tenant and roommate-to-roommate platform. There are zero brokerages or platform commission fees."
+    title: "4. Report Issues & Safety",
+    desc: "Agar koi user, owner ya tenant suspicious lage ya terms violate kare, toh turant Admin ko report karein."
+  },
+  {
+    title: "5. Response Time & Fee",
+    desc: "Super Admin aamtaur par 5-10 minutes mein live reply deta hai. Support poori tarah 100% free aur confidential hai."
   }
 ];
 
 export default function HelpBox() {
   const [connecting, setConnecting] = useState(false);
   const [error, setError] = useState(null);
-  const [openFaq, setOpenFaq] = useState(0);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -69,56 +68,54 @@ export default function HelpBox() {
   return (
     <PageContainer
       title="Help Box & Admin Support"
-      subtitle="Direct 1-on-1 priority support desk for Room Owners, Room Seekers, and Roommates"
+      subtitle="Direct 1-on-1 priority support desk with Super Admin"
     >
-      <div className="max-w-4xl mx-auto space-y-6">
-        {/* Priority Admin Live Chat Banner */}
-        <div className="relative overflow-hidden rounded-3xl border border-amber-200/80 bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 p-6 sm:p-8 text-white shadow-xl">
-          {/* Subtle decorative circles */}
-          <div className="pointer-events-none absolute -right-12 -top-12 h-56 w-56 rounded-full bg-white/10 blur-2xl" />
-          <div className="pointer-events-none absolute -left-12 -bottom-12 h-56 w-56 rounded-full bg-black/10 blur-2xl" />
+      <div className="max-w-3xl mx-auto space-y-6">
+        {/* Priority "Chat to Admin" Hero Card */}
+        <div className="relative overflow-hidden rounded-3xl border border-amber-400/40 bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600 p-6 sm:p-8 text-white shadow-xl">
+          {/* Decorative Glow */}
+          <div className="pointer-events-none absolute -right-12 -top-12 h-48 w-48 rounded-full bg-white/15 blur-2xl" />
+          <div className="pointer-events-none absolute -left-12 -bottom-12 h-48 w-48 rounded-full bg-black/15 blur-2xl" />
 
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="space-y-3 max-w-xl">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/20 px-3 py-1 text-xs font-semibold backdrop-blur-md">
+          <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            <div className="space-y-3 max-w-lg">
+              <div className="inline-flex items-center gap-2 rounded-full bg-black/30 border border-white/20 px-3.5 py-1 text-xs font-bold text-amber-200 backdrop-blur-md">
                 <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
                 </span>
-                <span>Super Admin is Online • Instant Reply</span>
+                <span>Super Admin Online • Active Now</span>
               </div>
 
-              <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight">
-                Need Help, Verification or Listing Support?
+              <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
+                Chat to Admin
               </h2>
 
-              <p className="text-xs sm:text-sm text-white/90 leading-relaxed">
-                Connect directly with our dedicated Super Admin team. We resolve room approvals, tenant inquiries, account verification and platform questions in real-time.
+              <p className="text-xs sm:text-sm text-white/95 leading-relaxed font-medium">
+                Kissi bhi help, listing approval, KYC verification ya platform issue ke liye Super Admin se direct baat karein.
               </p>
 
-              <div className="flex flex-wrap gap-4 pt-1 text-xs text-white/80">
-                <span className="flex items-center gap-1.5 font-medium">
-                  <CheckCircle2 size={15} className="text-emerald-300" /> 1-on-1 Direct Chat
+              <div className="flex flex-wrap gap-4 pt-1 text-xs text-white/90">
+                <span className="flex items-center gap-1.5 font-semibold">
+                  <CheckCircle2 size={15} className="text-emerald-300" /> Direct 1-on-1 Chat
                 </span>
-                <span className="flex items-center gap-1.5 font-medium">
-                  <ShieldCheck size={15} className="text-emerald-300" /> Fast-track KYC
-                </span>
-                <span className="flex items-center gap-1.5 font-medium">
-                  <Clock size={15} className="text-emerald-300" /> Avg reply: &lt; 5 mins
+                <span className="flex items-center gap-1.5 font-semibold">
+                  <Clock size={15} className="text-emerald-300" /> Fast Response
                 </span>
               </div>
             </div>
 
-            <div className="shrink-0 flex flex-col gap-2">
+            <div className="shrink-0 flex flex-col items-center sm:items-end gap-2">
               <Button
                 onClick={handleStartAdminChat}
                 loading={connecting}
-                className="!bg-white !text-slate-900 hover:!bg-slate-100 font-extrabold shadow-lg px-6 py-3 text-sm rounded-2xl flex items-center gap-2 transition-all active:scale-95"
+                className="!bg-white !text-slate-900 hover:!bg-slate-100 font-black shadow-xl px-7 py-3.5 text-sm sm:text-base rounded-2xl flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95 border border-white/80"
               >
-                <MessageSquare size={18} className="text-amber-500" />
-                Chat with Admin Now
+                <MessageSquare size={19} className="text-amber-500 fill-amber-500/20" />
+                <span>Chat to Admin</span>
+                <ArrowRight size={16} className="text-slate-500" />
               </Button>
-              <p className="text-[11px] text-center text-white/70">Secure & Confidential Support</p>
+              <p className="text-[11px] text-white/80 font-medium">100% Free & Confidential</p>
             </div>
           </div>
         </div>
@@ -130,86 +127,57 @@ export default function HelpBox() {
           </div>
         )}
 
-        {/* Quick Resolution Help Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm hover:shadow-md transition-all">
-            <div className="h-10 w-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-3">
-              <Building2 size={20} />
+        {/* Instructions / Guidelines Section */}
+        <div className="rounded-3xl border border-slate-200/90 bg-white p-6 sm:p-8 shadow-sm">
+          <div className="flex items-center gap-2.5 mb-5 pb-3 border-b border-slate-100">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+              <Info size={18} />
             </div>
-            <h3 className="text-sm font-bold text-slate-900 mb-1">Room Listing Approval</h3>
-            <p className="text-xs text-slate-500 leading-relaxed mb-3">
-              Get your newly posted room listed faster or request urgent updates to pricing and photos.
-            </p>
-            <button
-              onClick={handleStartAdminChat}
-              className="text-xs font-bold text-amber-600 hover:text-amber-700 inline-flex items-center gap-1"
-            >
-              Ask Admin <ArrowRight size={13} />
-            </button>
-          </div>
-
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm hover:shadow-md transition-all">
-            <div className="h-10 w-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-3">
-              <ShieldCheck size={20} />
+            <div>
+              <h3 className="text-base font-extrabold text-slate-900">
+                Instructions & Guidelines
+              </h3>
+              <p className="text-xs text-slate-500">
+                Admin support se baat karne se pehle zaroori baatein
+              </p>
             </div>
-            <h3 className="text-sm font-bold text-slate-900 mb-1">KYC & Verified Badge</h3>
-            <p className="text-xs text-slate-500 leading-relaxed mb-3">
-              Submit or verify your ID documents to receive the verified badge and build trust with seekers.
-            </p>
-            <button
-              onClick={handleStartAdminChat}
-              className="text-xs font-bold text-blue-600 hover:text-blue-700 inline-flex items-center gap-1"
-            >
-              Verify Now <ArrowRight size={13} />
-            </button>
           </div>
 
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm hover:shadow-md transition-all">
-            <div className="h-10 w-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3">
-              <Headphones size={20} />
-            </div>
-            <h3 className="text-sm font-bold text-slate-900 mb-1">Live Seeker Queries</h3>
-            <p className="text-xs text-slate-500 leading-relaxed mb-3">
-              Need assistance handling a tenant visit or matching with verified roommates? We are here.
-            </p>
-            <button
-              onClick={handleStartAdminChat}
-              className="text-xs font-bold text-emerald-600 hover:text-emerald-700 inline-flex items-center gap-1"
-            >
-              Open Support <ArrowRight size={13} />
-            </button>
-          </div>
-        </div>
-
-        {/* Frequently Asked Questions */}
-        <div className="rounded-3xl border border-slate-200/80 bg-white p-6 shadow-sm">
-          <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-100">
-            <FileQuestion size={18} className="text-amber-500" />
-            <h3 className="text-sm font-bold text-slate-900">Frequently Asked Questions</h3>
-          </div>
-
-          <div className="divide-y divide-slate-100">
-            {FAQS.map((item, idx) => (
-              <div key={idx} className="py-3.5">
-                <button
-                  type="button"
-                  onClick={() => setOpenFaq(openFaq === idx ? -1 : idx)}
-                  className="w-full flex items-center justify-between text-left text-xs sm:text-sm font-semibold text-slate-800 hover:text-amber-600 transition-colors"
-                >
-                  <span>{item.q}</span>
-                  {openFaq === idx ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                </button>
-                {openFaq === idx && (
-                  <p className="mt-2 text-xs text-slate-500 leading-relaxed pr-4 animate-fade-in">
-                    {item.a}
+          <div className="space-y-4">
+            {INSTRUCTIONS.map((item, idx) => (
+              <div
+                key={idx}
+                className="flex items-start gap-3.5 rounded-2xl bg-slate-50/80 border border-slate-100 p-4 transition-all hover:bg-amber-50/40 hover:border-amber-200/60"
+              >
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white font-black text-xs shadow-sm">
+                  {idx + 1}
+                </div>
+                <div>
+                  <h4 className="text-xs sm:text-sm font-bold text-slate-900">
+                    {item.title}
+                  </h4>
+                  <p className="mt-1 text-xs text-slate-600 leading-relaxed font-normal">
+                    {item.desc}
                   </p>
-                )}
+                </div>
               </div>
             ))}
+          </div>
+
+          <div className="mt-6 pt-5 border-t border-slate-100 flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center gap-2 text-xs text-slate-500">
+              <ShieldCheck size={16} className="text-emerald-500" />
+              <span>RoomDekho Trust & Safety Verified</span>
+            </div>
+            <button
+              onClick={handleStartAdminChat}
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-600 hover:text-amber-700 transition-colors"
+            >
+              Start Chat with Admin <ArrowRight size={14} />
+            </button>
           </div>
         </div>
       </div>
     </PageContainer>
   );
 }
-
