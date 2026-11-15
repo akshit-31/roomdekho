@@ -43,7 +43,12 @@ r.get("/me",auth,async(req,res)=>{
   const userRow = uRes.rows[0] || req.user;
   const p = await query("SELECT * FROM profiles WHERE user_id=$1",[req.user.id]);
   const profileData = p.rows[0] || {};
-  const isComplete = Boolean(userRow.is_profile_completed || (profileData.gender && profileData.occupation));
+  const isComplete = Boolean(
+    userRow.role === "owner" ||
+    userRow.role === "admin" ||
+    userRow.is_profile_completed ||
+    (profileData.gender && profileData.occupation)
+  );
   const user = {
     ...userRow,
     _id: String(userRow.id),

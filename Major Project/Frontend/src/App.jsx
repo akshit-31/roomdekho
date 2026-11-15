@@ -34,9 +34,14 @@ export default function App() {
     location.pathname.startsWith("/admin") ||
     location.pathname.startsWith("/vendor");
 
-  // Show profile completion modal if user is authenticated and profile is not completed
+  // Show profile completion modal ONLY for seekers who have not yet completed their roommate profile
   const showCompleteProfile =
-    Boolean(isAuthenticated && userProfile && userProfile.isProfileCompleted === false && userProfile.role !== "admin");
+    Boolean(
+      isAuthenticated &&
+      userProfile &&
+      userProfile.role === "seeker" &&
+      userProfile.isProfileCompleted === false
+    );
 
   return (
     <div className="flex min-h-screen flex-col app-shell bg-[#F4F7FE] text-slate-900 w-full max-w-full overflow-x-hidden">

@@ -301,7 +301,12 @@ router.post("/login",async(req,res)=>{
   await query("UPDATE users SET last_login_at=now(),updated_at=now() WHERE id=$1",[user.id]);
   const p = await query("SELECT * FROM profiles WHERE user_id=$1",[user.id]);
   const profileData = p.rows[0] || {};
-  const isComplete = Boolean(user.is_profile_completed || (profileData.gender && profileData.occupation));
+  const isComplete = Boolean(
+    user.role === "owner" ||
+    user.role === "admin" ||
+    user.is_profile_completed ||
+    (profileData.gender && profileData.occupation)
+  );
   const safe={
     id:user.id,
     _id:String(user.id),
@@ -370,7 +375,12 @@ router.post("/refresh",async(req,res)=>{
     const u = rows[0];
     const prof = await query("SELECT * FROM profiles WHERE user_id=$1",[u.id]);
     const profileData = prof.rows[0] || {};
-    const isComplete = Boolean(u.is_profile_completed || (profileData.gender && profileData.occupation));
+    const isComplete = Boolean(
+      u.role === "owner" ||
+      u.role === "admin" ||
+      u.is_profile_completed ||
+      (profileData.gender && profileData.occupation)
+    );
     const safeUser = {
       ...u,
       _id: String(u.id),

@@ -75,8 +75,8 @@ console.log("Seeding 2 Super Admins...");
 const adminEmails = ["admin1@roomdekho.com", "admin2@roomdekho.com"];
 for (let i = 0; i < adminEmails.length; i++) {
   await query(
-    `INSERT INTO users(name, email, password_hash, role, is_kyc_verified, approval_status, avatar)
-     VALUES($1, $2, $3, 'admin', true, 'approved', $4)`,
+    `INSERT INTO users(name, email, password_hash, role, is_kyc_verified, approval_status, is_profile_completed, avatar)
+     VALUES($1, $2, $3, 'admin', true, 'approved', true, $4)`,
     [`Super Admin ${i + 1}`, adminEmails[i], defaultPasswordHash, AVATARS[i]]
   );
 }
@@ -137,8 +137,8 @@ for (let i = 1; i <= 50; i++) {
   const avatar = AVATARS[(i - 1) % AVATARS.length];
 
   const res = await query(
-    `INSERT INTO users(name, email, password_hash, role, phone, is_kyc_verified, approval_status, property_city, property_locality, property_address, avatar)
-     VALUES($1, $2, $3, 'owner', $4, true, 'approved', $5, $6, $7, $8)
+    `INSERT INTO users(name, email, password_hash, role, phone, is_kyc_verified, approval_status, is_profile_completed, property_city, property_locality, property_address, avatar)
+     VALUES($1, $2, $3, 'owner', $4, true, 'approved', true, $5, $6, $7, $8)
      RETURNING id`,
     [
       name,
@@ -156,9 +156,9 @@ for (let i = 1; i <= 50; i++) {
 
 // Also seed alias owner111@roomdekho.com mapped to Akshit Sharma for backward-compatibility
 await query(
-  `INSERT INTO users(name, email, password_hash, role, phone, is_kyc_verified, approval_status, property_city, property_locality, property_address, avatar)
-   VALUES('Akshit Sharma', 'owner111@roomdekho.com', $1, 'owner', '+91 98765 43210', true, 'approved', 'Bareilly', 'Civil Lines', 'House 42, Civil Lines Road, Bareilly', $2)
-   ON CONFLICT(email) DO UPDATE SET password_hash = $1, role = 'owner', is_kyc_verified = true, approval_status = 'approved'`,
+  `INSERT INTO users(name, email, password_hash, role, phone, is_kyc_verified, approval_status, is_profile_completed, property_city, property_locality, property_address, avatar)
+   VALUES('Akshit Sharma', 'owner111@roomdekho.com', $1, 'owner', '+91 98765 43210', true, 'approved', true, 'Bareilly', 'Civil Lines', 'House 42, Civil Lines Road, Bareilly', $2)
+   ON CONFLICT(email) DO UPDATE SET password_hash = $1, role = 'owner', is_kyc_verified = true, approval_status = 'approved', is_profile_completed = true`,
   [defaultPasswordHash, AVATARS[0]]
 );
 
@@ -410,6 +410,9 @@ if (owner1Rooms.length > 0 && user1) {
     [convId, user1.id, owner1.id]
   );
 }
+
+// Ensure all seeded users, owners, and admins have is_profile_completed = true
+await query("UPDATE users SET is_profile_completed = true");
 
 console.log("\n=======================================================");
 console.log("🎉 PRODUCTION DATABASE SEED COMPLETED SUCCESSFULLY!");
