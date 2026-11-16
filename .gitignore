@@ -22,3 +22,7 @@ Thumbs.db
 .idea/
 .vscode/
 
+#Temporary files
+*.tmp
+*.temp
+
