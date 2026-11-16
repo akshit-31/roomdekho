@@ -18,5 +18,6 @@ build/
 # IDE / OS files
 .DS_Store
 Thumbs.db
+.idea/
 .vscode/
 
