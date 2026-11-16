@@ -26,9 +26,6 @@ Thumbs.db
 *.tmp
 *.temp
 
-#Log files
-*.log
-
 #OS generated files
 .DS_Store
 Thumbs.db
