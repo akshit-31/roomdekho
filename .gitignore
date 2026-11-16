@@ -30,3 +30,5 @@ Thumbs.db
 .DS_Store
 Thumbs.db
 
+#Log files
+*.log
