@@ -72,7 +72,11 @@ RoomDekho/
 Prerequisites
 - Node.js (LTS version recommended)
 - npm
-- A PostgreSQL database (local PostgreSQL or Supabase PostgreSQL)
+- A PostgreSQL database (local PostgreSQL or Supabase PostgreSQL
   🎯 Project Objective
 The objective of RoomDekho is to provide a convenient and organized platform for people looking for accommodation and roommates. By bringing room discovery, roommate matching, communication, and visit management together, the platform aims to simplify the room-search process for both tenants and property owners.
 Note: This README describes the project structure and technologies found in this repository. Some integrations may require valid API keys or service configuration before they work in a local or deployed environment.
+
+<p align="center">
+  <strong>RoomDekho — Your room search, made simpler. 🏡</strong>
+</p>
