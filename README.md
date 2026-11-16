@@ -68,7 +68,12 @@ RoomDekho/
         ├── .env.example
         └── package.json
 
-        ⚙️ Getting Started
+⚡ Run RoomDekho Locally
+Requirements
+- Node.js and npm
+- PostgreSQL database, either local or hosted
+- Git
+  ⚙️ Getting Started
 Prerequisites
 - Node.js (LTS version recommended)
 - npm
